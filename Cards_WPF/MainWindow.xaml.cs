@@ -24,7 +24,11 @@ namespace Cards_WPF
         public MainWindow()
         {
             InitializeComponent();
+            Start_New_Game();
+        }
 
+        private void Start_New_Game()
+        {
             InitializeDeck();
             DeckOfCards = ShuffleDeck(DeckOfCards);
 
@@ -45,9 +49,11 @@ namespace Cards_WPF
             Label_PlayaTricks.Content = $"({TricksCount[3].Count()})";
         }
 
-        public List<List<Card>> TricksCount = new List<List<Card>>();
+        public List<List<Card>> TricksCount { get; set; }
         private void HowManyTricks()
         {
+            TricksCount = new List<List<Card>>();
+
             List<Card> NorthTricks = new List<Card>(new List<Card>());
             TricksCount.Add(NorthTricks);
             List<Card> EastnTricks = new List<Card>(new List<Card>());
@@ -85,10 +91,19 @@ namespace Cards_WPF
                 }
                 else if (TricksCount[i].Count == 3) //Om man har tre "säkra" kort på handen
                 {
-                    if (KollaOmDetFinnsFyraKortISammaFärg(Players[i].Hand.ToList())) //Metod som kollar om alla kort utom 1st är i samma färg
+                    if (TricksCount[i].GroupBy(c => c.Suit).Select(grp =>
                     {
-
+                        int antal = grp.Count();
+                        return new { grp.Key, antal };
+                    }).All(c => c.antal != 3)) //Om någon färg har tre "säkra" kort
+                    {
+                        if (KollaOmDetFinnsFyraKortISammaFärg(Players[i].Hand.ToList())) //Metod som kollar om 4st kort utav 5st är i samma färg
+                        {
+                            TricksCount[i] = Players[i].Hand.ToList();
+                            break;
+                        }
                     }
+                    else { } //Om man kommer hit så har man inte varit i överstående IF
                     int num = r.Next(0, 2);
                     if (num == 1) //Varannan gång så tar man tior och över
                     {
@@ -110,18 +125,27 @@ namespace Cards_WPF
             }
         }
 
+        bool FyraLikaYao = false;
         private bool KollaOmDetFinnsFyraKortISammaFärg(List<Card> playerList)
         {
-            var ÄrAllaKortUtomEttISammaFärg = playerList.GroupBy(c => c.Suit).Select(grp => { int antal = grp.Count(); return new { grp.Key, antal }; });
+            var ÄrAllaKortUtomEttISammaFärg = playerList
+                .GroupBy(c => c.Suit)
+                .Select(grp =>
+                {
+                    int antal = grp.Count();
+                    return new { grp.Key, antal };
+                });
+
             string s = "---";
             foreach (var item in ÄrAllaKortUtomEttISammaFärg)
             {
-                s += item.Key + ", " + item.antal + "-?-";
+                s += item.antal + ", " + item.Key + "---";
             }
-            MessageBox.Show(s);
+            //MessageBox.Show(s);
             if (ÄrAllaKortUtomEttISammaFärg.Any(c => c.antal == 4))
             {
-                MessageBox.Show("Fyra lika yao!");
+                //MessageBox.Show("Fyra lika yao!");
+                FyraLikaYao = true;
                 return true;
             }
             return false;
@@ -215,6 +239,29 @@ namespace Cards_WPF
             Label_SouthHand.Content = CardToPlay_South;
             Label_EastnHand.Content = CardToPlay_Eastn;
             Label_PlayaHand.Content = CardToPlay_Playa;
+        }
+
+        private void HowManyRestarts()
+        {
+            int numberOfRestarts = 0;
+            do
+            {
+                numberOfRestarts++;
+                Label_Number.Content = numberOfRestarts.ToString();
+                Start_New_Game();
+            } while (!FyraLikaYao);
+            FyraLikaYao = false;
+            //int numberOfRestarts = 100;
+            //for (int i = 0; i < numberOfRestarts; i++)
+            //{
+            //    Label_Number.Content = i.ToString();
+            //    Start_New_Game();
+            //}
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            HowManyRestarts();
         }
     }
 }
