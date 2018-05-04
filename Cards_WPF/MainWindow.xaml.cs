@@ -57,7 +57,7 @@ namespace Cards_WPF
             List<Card> PlayaTricks = new List<Card>(new List<Card>());
             TricksCount.Add(PlayaTricks);
 
-            // TODO - i 66% av fallen ta med en Knekt som ett stick???
+            // Plockar ut alla kort som är över KNEKT som "säkra" kort
             for (int i = 0; i < 4; i++)
             {
                 TricksCount[i] = Players[i].Hand.Where(v => v.Rank > Card.CardRank.Knekt).ToList();
@@ -85,6 +85,10 @@ namespace Cards_WPF
                 }
                 else if (TricksCount[i].Count == 3) //Om man har tre "säkra" kort på handen
                 {
+                    if (KollaOmDetFinnsFyraKortISammaFärg(Players[i].Hand.ToList())) //Metod som kollar om alla kort utom 1st är i samma färg
+                    {
+
+                    }
                     int num = r.Next(0, 2);
                     if (num == 1) //Varannan gång så tar man tior och över
                     {
@@ -104,6 +108,23 @@ namespace Cards_WPF
                     TricksCount[i] = AllaMedSammaFärgSomDeÖverKnekt;
                 }
             }
+        }
+
+        private bool KollaOmDetFinnsFyraKortISammaFärg(List<Card> playerList)
+        {
+            var ÄrAllaKortUtomEttISammaFärg = playerList.GroupBy(c => c.Suit).Select(grp => { int antal = grp.Count(); return new { grp.Key, antal }; });
+            string s = "";
+            foreach (var item in ÄrAllaKortUtomEttISammaFärg)
+            {
+                s += item.Key + ", " + item.antal + "---";
+            }
+            MessageBox.Show(s);
+            if (ÄrAllaKortUtomEttISammaFärg.Any(c => c.antal == 4))
+            {
+                MessageBox.Show("Fyra lika yao!");
+                return true;
+            }
+            return false;
         }
 
         public Card CardToPlay_North { get; set; }
@@ -179,7 +200,7 @@ namespace Cards_WPF
             }
             foreach (var player in Players)
             {
-                var nyHand = player.Hand.OrderBy(c => c.Suit).ThenBy(c => c.Rank).ToList();
+                var nyHand = player.Hand.OrderBy(c => c.Suit).ThenByDescending(c => c.Rank).ToList();
                 player.Hand.Clear();
                 foreach (var card in nyHand)
                 {
