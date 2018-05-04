@@ -116,7 +116,7 @@ namespace Cards_WPF
             string s = "---";
             foreach (var item in ÄrAllaKortUtomEttISammaFärg)
             {
-                s += item.Key + ", " + item.antal + "---";
+                s += item.Key + ", " + item.antal + "-?-";
             }
             MessageBox.Show(s);
             if (ÄrAllaKortUtomEttISammaFärg.Any(c => c.antal == 4))
