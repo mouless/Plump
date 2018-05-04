@@ -113,7 +113,7 @@ namespace Cards_WPF
         private bool KollaOmDetFinnsFyraKortISammaFärg(List<Card> playerList)
         {
             var ÄrAllaKortUtomEttISammaFärg = playerList.GroupBy(c => c.Suit).Select(grp => { int antal = grp.Count(); return new { grp.Key, antal }; });
-            string s = "";
+            string s = "---";
             foreach (var item in ÄrAllaKortUtomEttISammaFärg)
             {
                 s += item.Key + ", " + item.antal + "---";
