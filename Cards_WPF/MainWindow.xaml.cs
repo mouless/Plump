@@ -62,6 +62,7 @@ namespace Cards_WPF
             TricksCount.Add(SouthTricks);
             List<Card> PlayaTricks = new List<Card>(new List<Card>());
             TricksCount.Add(PlayaTricks);
+            BytUtKortenIPlayaListan(Players[3]);
 
             // Plockar ut alla kort som är över KNEKT som "säkra" kort
             for (int i = 0; i < 4; i++)
@@ -79,18 +80,21 @@ namespace Cards_WPF
                 }
                 else if (TricksCount[i].Count == 1) //Om man har ett "säkert" kort på handen
                 {
+                    KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
                     int num = r.Next(0, 2);
                     if (num == 1) //Bara varannan gång så väljer AI att ta Knekt som ett "säkert" stickkort
                         TricksCount[i] = Players[i].Hand.Where(v => v.Rank > Card.CardRank.Tio).ToList();
                 }
                 else if (TricksCount[i].Count == 2) //Om man har två "säkra" kort på handen, så tar man även kort som är tio och uppåt i SAMMA färg
                 {
+                    KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
                     List<Card> AllaMedSammaFärgSomDeÖverKnekt = Players[i].Hand.Where(v => TricksCount[i].Select(c => c.Suit).Contains(v.Suit)).ToList();
                     AllaMedSammaFärgSomDeÖverKnekt.RemoveAll(x => x.Rank < Card.CardRank.Tio);
                     TricksCount[i] = AllaMedSammaFärgSomDeÖverKnekt;
                 }
                 else if (TricksCount[i].Count == 3) //Om man har tre "säkra" kort på handen
                 {
+                    KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
                     if (TricksCount[i].GroupBy(c => c.Suit).Select(grp =>
                     {
                         int antal = grp.Count();
@@ -119,11 +123,47 @@ namespace Cards_WPF
                 }
                 else if (TricksCount[i].Count >= 4) //Om man har fyra "säkra" kort på handen
                 {
+                    KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
                     List<Card> AllaMedSammaFärgSomDeÖverKnekt = Players[i].Hand.Where(v => v.Rank > Card.CardRank.Nio).ToList();
                     TricksCount[i] = AllaMedSammaFärgSomDeÖverKnekt;
                 }
             }
         }
+
+        private void BytUtKortenIPlayaListan(Player player)
+        {
+            player.Hand.Clear();
+            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Dam));
+            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Knekt));
+            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Tio));
+            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Nio));
+            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Åtta));
+        }
+
+        // TODO - Fixa så att den håller koll på vilken färg den Knekten är i så att det inte finns fler Knektar som det rekursiverar sig vidare på sen...
+        private void KollaOmDetFinnsKnektEllerLägreIFärgstege(List<Card> cardList, List<Card> tricksCount, Card.CardRank rank = Card.CardRank.Dam)
+        {
+            var damer = cardList.Where(c => c.Rank == rank);
+            if (damer != null)
+            {
+                foreach (var dam in damer)
+                {
+                    foreach (var card in cardList)
+                    {
+                        if (card.Suit == dam.Suit && card.Rank == dam.Rank - 1)
+                        {
+                            tricksCount.Add(card);
+                            if (cardList.Count() == tricksCount.Count())
+                            {
+                                return;
+                            }
+                            KollaOmDetFinnsKnektEllerLägreIFärgstege(cardList, tricksCount, rank - 1);
+                        }
+                    }
+                }
+            }
+        }
+
 
         bool FyraLikaYao = false;
         private bool KollaOmDetFinnsFyraKortISammaFärg(List<Card> playerList)
@@ -251,6 +291,7 @@ namespace Cards_WPF
                 Start_New_Game();
             } while (!FyraLikaYao);
             FyraLikaYao = false;
+
             //int numberOfRestarts = 100;
             //for (int i = 0; i < numberOfRestarts; i++)
             //{
@@ -262,6 +303,11 @@ namespace Cards_WPF
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             HowManyRestarts();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
