@@ -24,8 +24,8 @@
         <Label x:Name="Label_EastnTricks" Content="Stick" HorizontalAlignment="Left" Margin="1001,284,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Label x:Name="Label_SouthTricks" Content="Stick" HorizontalAlignment="Left" Margin="566,601,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Label x:Name="Label_PlayaTricks" Content="Stick" HorizontalAlignment="Left" Margin="103,284,0,0" VerticalAlignment="Top" FontSize="18"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="261,152,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Label x:Name="Label_Number" Content="Label" HorizontalAlignment="Left" Margin="274,113,0,0" VerticalAlignment="Top" FontSize="18"/>
+        <Button Content="Kör tills det finns 4 kort&#xD;&#xA;i samma färg samt&#xD;&#xA;ett klätt kort i en&#xD;&#xA;annan färg" HorizontalAlignment="Left" Margin="261,152,0,0" VerticalAlignment="Top" Width="140" Click="Button_Click" Height="73"/>
+        <Label x:Name="Label_Number" Content="Antal rundor" HorizontalAlignment="Left" Margin="274,113,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Button Content="Skapa spec situation" HorizontalAlignment="Left" Margin="889,91,0,0" VerticalAlignment="Top" Width="159" Height="39" Click="Button_Click_1"/>
 
     </Grid>
