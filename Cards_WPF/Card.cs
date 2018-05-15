@@ -8,7 +8,7 @@ namespace Cards_WPF
 {
     public class Card
     {
-        public enum CardSuit { Hjärter, Spader, Ruter, Klöver}
+        public enum CardSuit { Hjärter = 1, Spader, Ruter, Klöver}
         public enum CardRank { Två = 2, Tre, Fyra, Fem, Sexa, Sju, Åtta, Nio, Tio, Knekt, Dam, Knug, Ess }
 
         public CardSuit Suit { get; set; }

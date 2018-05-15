@@ -17,8 +17,8 @@
         <Label Content="PLAYER1" HorizontalAlignment="Left" Margin="10,281,0,0" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
         <Ellipse Fill="#FF40B240" HorizontalAlignment="Left" Height="344" Margin="163,249,0,0" Stroke="Black" VerticalAlignment="Top" Width="755"/>
         <Label x:Name="Label_NorthHand" Content="Label" HorizontalAlignment="Left" Margin="498,323,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <Label x:Name="Label_SouthHand" Content="Label" HorizontalAlignment="Left" Margin="651,400,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <Label x:Name="Label_EastnHand" Content="Label" HorizontalAlignment="Left" Margin="498,459,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <Label x:Name="Label_EastnHand" Content="Label" HorizontalAlignment="Left" Margin="651,400,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <Label x:Name="Label_SouthHand" Content="Label" HorizontalAlignment="Left" Margin="498,459,0,0" VerticalAlignment="Top" FontSize="20"/>
         <Label x:Name="Label_PlayaHand" Content="Label" HorizontalAlignment="Left" Margin="344,400,0,0" VerticalAlignment="Top" FontSize="20"/>
         <Label x:Name="Label_NorthTricks" Content="Stick" HorizontalAlignment="Left" Margin="569,13,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Label x:Name="Label_EastnTricks" Content="Stick" HorizontalAlignment="Left" Margin="1001,284,0,0" VerticalAlignment="Top" FontSize="18"/>
@@ -27,6 +27,10 @@
         <Button Content="Kör tills det finns 4 kort&#xD;&#xA;i samma färg samt&#xD;&#xA;ett klätt kort i en&#xD;&#xA;annan färg" HorizontalAlignment="Left" Margin="261,152,0,0" VerticalAlignment="Top" Width="140" Click="Button_Click" Height="73"/>
         <Label x:Name="Label_Number" Content="Antal rundor" HorizontalAlignment="Left" Margin="274,113,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Button Content="Skapa spec situation" HorizontalAlignment="Left" Margin="889,91,0,0" VerticalAlignment="Top" Width="159" Height="39" Click="Button_Click_1"/>
+        <Image x:Name="Image_NorthHand" HorizontalAlignment="Left" Height="100" Margin="636,281,0,0" VerticalAlignment="Top" Width="100"/>
+        <Image x:Name="Image_EastnHand" HorizontalAlignment="Left" Height="100" Margin="713,431,0,0" VerticalAlignment="Top" Width="100"/>
+        <Image x:Name="Image_SouthHand" HorizontalAlignment="Left" Height="100" Margin="488,501,0,0" VerticalAlignment="Top" Width="100"/>
+        <Image x:Name="Image_PlayaHand" HorizontalAlignment="Left" Height="100" Margin="204,363,0,0" VerticalAlignment="Top" Width="100"/>
 
     </Grid>
 </Window>

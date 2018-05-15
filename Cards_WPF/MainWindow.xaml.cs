@@ -210,9 +210,24 @@ namespace Cards_WPF
         public void PlayHighestCard()
         {
             CardToPlay_North = Players[0].Hand.OrderByDescending(v => v.Rank).First();
-            CardToPlay_South = Players[1].Hand.OrderByDescending(v => v.Rank).First();
-            CardToPlay_Eastn = Players[2].Hand.OrderByDescending(v => v.Rank).First();
+            string cardNumber = CardImageNumber(CardToPlay_North);
+            var uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            Image_NorthHand.Source = new BitmapImage(uri);
+
+            CardToPlay_Eastn = Players[1].Hand.OrderByDescending(v => v.Rank).First();
+            cardNumber = CardImageNumber(CardToPlay_Eastn);
+            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            Image_EastnHand.Source = new BitmapImage(uri);
+
+            CardToPlay_South = Players[2].Hand.OrderByDescending(v => v.Rank).First();
+            cardNumber = CardImageNumber(CardToPlay_South);
+            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            Image_SouthHand.Source = new BitmapImage(uri);
+
             CardToPlay_Playa = Players[3].Hand.OrderByDescending(v => v.Rank).First();
+            cardNumber = CardImageNumber(CardToPlay_Playa);
+            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            Image_PlayaHand.Source = new BitmapImage(uri);
         }
 
         public List<Card> DeckOfCards { get; set; }
@@ -315,6 +330,18 @@ namespace Cards_WPF
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Start_New_Game();
+        }
+
+        private string CardImageNumber(Card cardToNum)
+        {
+            int suit = (int)cardToNum.Suit;
+            int rank = (int)cardToNum.Rank;
+            string temp = rank.ToString();
+            if (rank < 10)
+            {
+                temp = "0" + rank.ToString();
+            }
+            return suit.ToString() + temp;
         }
     }
 }
