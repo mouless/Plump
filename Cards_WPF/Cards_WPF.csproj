@@ -96,5 +96,78 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Graphics\Hjärter\101.jpeg" />
+    <Resource Include="Graphics\Hjärter\102.jpeg" />
+    <Resource Include="Graphics\Hjärter\103.jpeg" />
+    <Resource Include="Graphics\Hjärter\104.jpeg" />
+    <Resource Include="Graphics\Hjärter\105.jpeg" />
+    <Resource Include="Graphics\Hjärter\106.jpeg" />
+    <Resource Include="Graphics\Hjärter\107.jpeg" />
+    <Resource Include="Graphics\Hjärter\108.jpeg" />
+    <Resource Include="Graphics\Hjärter\109.jpeg" />
+    <Resource Include="Graphics\Hjärter\110.jpeg" />
+    <Resource Include="Graphics\Hjärter\111.jpeg" />
+    <Resource Include="Graphics\Hjärter\112.jpeg" />
+    <Resource Include="Graphics\Hjärter\113.jpeg" />
+    <Resource Include="Graphics\Hjärter\114.jpeg" />
+    <Resource Include="Graphics\Hjärter\115.jpeg" />
+    <Resource Include="Graphics\Hjärter\Hjärter.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Klöver\401.jpeg" />
+    <Resource Include="Graphics\Klöver\402.jpeg" />
+    <Resource Include="Graphics\Klöver\403.jpeg" />
+    <Resource Include="Graphics\Klöver\404.jpeg" />
+    <Resource Include="Graphics\Klöver\405.jpeg" />
+    <Resource Include="Graphics\Klöver\406.jpeg" />
+    <Resource Include="Graphics\Klöver\407.jpeg" />
+    <Resource Include="Graphics\Klöver\408.jpeg" />
+    <Resource Include="Graphics\Klöver\409.jpeg" />
+    <Resource Include="Graphics\Klöver\410.jpeg" />
+    <Resource Include="Graphics\Klöver\411.jpeg" />
+    <Resource Include="Graphics\Klöver\412.jpeg" />
+    <Resource Include="Graphics\Klöver\413.jpeg" />
+    <Resource Include="Graphics\Klöver\414.jpeg" />
+    <Resource Include="Graphics\Klöver\415.jpeg" />
+    <Resource Include="Graphics\Klöver\Klöver.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Ruter\301.jpeg" />
+    <Resource Include="Graphics\Ruter\302.jpeg" />
+    <Resource Include="Graphics\Ruter\303.jpeg" />
+    <Resource Include="Graphics\Ruter\304.jpeg" />
+    <Resource Include="Graphics\Ruter\305.jpeg" />
+    <Resource Include="Graphics\Ruter\306.jpeg" />
+    <Resource Include="Graphics\Ruter\307.jpeg" />
+    <Resource Include="Graphics\Ruter\308.jpeg" />
+    <Resource Include="Graphics\Ruter\309.jpeg" />
+    <Resource Include="Graphics\Ruter\310.jpeg" />
+    <Resource Include="Graphics\Ruter\311.jpeg" />
+    <Resource Include="Graphics\Ruter\312.jpeg" />
+    <Resource Include="Graphics\Ruter\313.jpeg" />
+    <Resource Include="Graphics\Ruter\314.jpeg" />
+    <Resource Include="Graphics\Ruter\315.jpeg" />
+    <Resource Include="Graphics\Ruter\Ruter.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\Spader\201.jpeg" />
+    <Resource Include="Graphics\Spader\202.jpeg" />
+    <Resource Include="Graphics\Spader\203.jpeg" />
+    <Resource Include="Graphics\Spader\204.jpeg" />
+    <Resource Include="Graphics\Spader\205.jpeg" />
+    <Resource Include="Graphics\Spader\206.jpeg" />
+    <Resource Include="Graphics\Spader\207.jpeg" />
+    <Resource Include="Graphics\Spader\208.jpeg" />
+    <Resource Include="Graphics\Spader\209.jpeg" />
+    <Resource Include="Graphics\Spader\210.jpeg" />
+    <Resource Include="Graphics\Spader\211.jpeg" />
+    <Resource Include="Graphics\Spader\212.jpeg" />
+    <Resource Include="Graphics\Spader\213.jpeg" />
+    <Resource Include="Graphics\Spader\214.jpeg" />
+    <Resource Include="Graphics\Spader\215.jpeg" />
+    <Resource Include="Graphics\Spader\Spader.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

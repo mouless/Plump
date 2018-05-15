@@ -150,11 +150,11 @@ namespace Cards_WPF
         private void BytUtKortenIPlayaListan(Player player)
         {
             player.Hand.Clear();
-            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Åtta));
-            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Tio));
-            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Dam));
-            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Nio));
-            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Knekt));
+            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Åtta));
+            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Tio));
+            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Dam));
+            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Nio));
+            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Knekt));
         }
 
         // TODO - Fixa så att den håller koll på vilken färg den Knekten är i så att det inte finns fler Knektar som det rekursiverar sig vidare på sen...
@@ -174,26 +174,6 @@ namespace Cards_WPF
             }
 
             return tricksCount;
-
-            //var damer = cardList.Where(c => c.Rank == Card.CardRank.Dam);
-            //if (damer != null)
-            //{
-            //    foreach (var dam in damer)
-            //    {
-            //        foreach (var card in cardList)
-            //        {
-            //            if (card.Suit == dam.Suit && card.Rank == dam.Rank - 1)
-            //            {
-            //                tricksCount.Add(card);
-            //                if (cardList.Count() == tricksCount.Count())
-            //                {
-            //                    return;
-            //                }
-            //                KollaOmDetFinnsKnektEllerLägreIFärgstege(cardList, tricksCount, rank - 1);
-            //            }
-            //        }
-            //    }
-            //}
         }
 
 
