@@ -37,8 +37,23 @@ namespace Cards_WPF
             HowManyTricks();
             ShowTricks();
 
+            ShowImageCards();
+
             PlayHighestCard();
             ShowHands();
+        }
+
+        private void ShowImageCards()
+        {
+            string cardNumber = "";
+            for (int j = 0; j < Players[0].Hand.Count; j++)
+            {
+                cardNumber = CardImageNumber(Players[0].Hand[j]);
+                Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                Image img = FindName("Image_North" + j) as Image;
+                img.Source = new BitmapImage(uri);
+
+            }
         }
 
         private void ShowTricks()
@@ -87,8 +102,8 @@ namespace Cards_WPF
                 {
                     TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
                     if (TricksCount[i].Count == Players[i].Hand.Count())
-                        break;
-                    
+                        continue;
+
                     int num = r.Next(0, 2);
                     if (num == 1) //Bara varannan gång så väljer AI att ta Knekt som ett "säkert" stickkort
                         TricksCount[i] = Players[i].Hand.Where(v => v.Rank > Card.CardRank.Tio).ToList();
@@ -97,7 +112,7 @@ namespace Cards_WPF
                 {
                     TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
                     if (TricksCount[i].Count == Players[i].Hand.Count())
-                        break;
+                        continue;
 
                     List<Card> AllaMedSammaFärgSomDeÖverKnekt = Players[i].Hand.Where(v => TricksCount[i].Select(c => c.Suit).Contains(v.Suit)).ToList();
                     AllaMedSammaFärgSomDeÖverKnekt.RemoveAll(x => x.Rank < Card.CardRank.Tio);
@@ -107,7 +122,7 @@ namespace Cards_WPF
                 {
                     TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
                     if (TricksCount[i].Count == Players[i].Hand.Count())
-                        break;
+                        continue;
 
                     if (TricksCount[i].GroupBy(c => c.Suit).Select(grp =>
                     {
@@ -135,11 +150,19 @@ namespace Cards_WPF
                         TricksCount[i] = AllaMedSammaFärgSomDeÖverKnekt;
                     }
                 }
-                else if (TricksCount[i].Count >= 4) //Om man har fyra "säkra" kort på handen
+                else if (TricksCount[i].Count == 4) //Om man har fyra "säkra" kort på handen
                 {
+                    TricksCount[i] = FyraSäkraVaravTvåIEnFärgManHarTreKortAv(Players[i].Hand.ToList(), TricksCount[i]);
+                    if (TricksCount[i].Count == Players[i].Hand.Count())
+                        continue;
+
                     TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
                     if (TricksCount[i].Count == Players[i].Hand.Count())
-                        break;
+                        continue;
+
+                    TricksCount[i] = FyraKortIEnFärgMedEssOchKung(Players[i].Hand.ToList(), TricksCount[i]);
+                    if (TricksCount[i].Count == Players[i].Hand.Count())
+                        continue;
 
                     List<Card> AllaMedSammaFärgSomDeÖverKnekt = Players[i].Hand.Where(v => v.Rank > Card.CardRank.Nio).ToList();
                     TricksCount[i] = AllaMedSammaFärgSomDeÖverKnekt;
@@ -147,14 +170,48 @@ namespace Cards_WPF
             }
         }
 
+        // Om man har fyra kort i en färg och man har Ess och Kung i den färgen = 5 säkra stick
+        private List<Card> FyraKortIEnFärgMedEssOchKung(List<Card> cardList, List<Card> tricksCount)
+        {
+            foreach (var card in cardList)
+            {
+                if (true)
+                {
+
+                } card.Suit
+            }
+        }
+
+        private List<Card> FyraSäkraVaravTvåIEnFärgManHarTreKortAv(List<Card> cardList, List<Card> tricksCount)
+        {
+            // Är två stickkort i samma färg?
+            IEnumerable<Card.CardSuit> q;
+            try
+            {
+                q = tricksCount.GroupBy(c => c.Suit).Where(d => d.Count() >= 2).Select(f => f.First().Suit);
+
+            }
+            catch (Exception)
+            {
+                return tricksCount; // SKA returnera de gamla korten. Vi vill inte spara något nytt.
+            }
+
+            // IF TRUE => Är det icke stick-kortet i samma färg som två av stick-korten
+            if (q.Contains(cardList.Last().Suit))
+            {
+                return cardList; // Vi har hittat ett extra kort som vi vill ha med, nämligen det sista.
+            }
+            return tricksCount;
+        }
+
         private void BytUtKortenIPlayaListan(Player player)
         {
             player.Hand.Clear();
-            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Åtta));
-            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Tio));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Knug));
+            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Ess));
             player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Dam));
-            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Nio));
-            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Knekt));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Tre));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Dam));
         }
 
         // TODO - Fixa så att den håller koll på vilken färg den Knekten är i så att det inte finns fler Knektar som det rekursiverar sig vidare på sen...
@@ -212,22 +269,22 @@ namespace Cards_WPF
             CardToPlay_North = Players[0].Hand.OrderByDescending(v => v.Rank).First();
             string cardNumber = CardImageNumber(CardToPlay_North);
             var uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Image_NorthHand.Source = new BitmapImage(uri);
+            Image_NorthPlayed.Source = new BitmapImage(uri);
 
             CardToPlay_Eastn = Players[1].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(CardToPlay_Eastn);
             uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Image_EastnHand.Source = new BitmapImage(uri);
+            Image_EastnPlayed.Source = new BitmapImage(uri);
 
             CardToPlay_South = Players[2].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(CardToPlay_South);
             uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Image_SouthHand.Source = new BitmapImage(uri);
+            Image_SouthPlayed.Source = new BitmapImage(uri);
 
             CardToPlay_Playa = Players[3].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(CardToPlay_Playa);
             uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Image_PlayaHand.Source = new BitmapImage(uri);
+            Image_PlayaPlayed.Source = new BitmapImage(uri);
         }
 
         public List<Card> DeckOfCards { get; set; }
