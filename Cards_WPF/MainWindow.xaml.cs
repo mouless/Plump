@@ -82,7 +82,7 @@ namespace Cards_WPF
             TricksCount.Add(SouthTricks);
             List<Card> PlayaTricks = new List<Card>(new List<Card>());
             TricksCount.Add(PlayaTricks);
-            //BytUtKortenIPlayaListan(Players[3]);
+            BytUtKortenIPlayaListan(Players[3]);
 
             // Plockar ut alla kort som är över KNEKT som "säkra" kort
             for (int i = 0; i < 4; i++)
@@ -113,10 +113,7 @@ namespace Cards_WPF
                     TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
                     if (TricksCount[i].Count == Players[i].Hand.Count())
                         continue;
-
-                    List<Card> AllaMedSammaFärgSomDeÖverKnekt = Players[i].Hand.Where(v => TricksCount[i].Select(c => c.Suit).Contains(v.Suit)).ToList();
-                    AllaMedSammaFärgSomDeÖverKnekt.RemoveAll(x => x.Rank < Card.CardRank.Tio);
-                    TricksCount[i] = AllaMedSammaFärgSomDeÖverKnekt;
+                    TricksCount[i] = TaMedEnTiaSomStickOchKollaOmDetFinnsNiaISammaFärg(i);
                 }
                 else if (TricksCount[i].Count == 3) //Om man har tre "säkra" kort på handen
                 {
@@ -152,15 +149,15 @@ namespace Cards_WPF
                 }
                 else if (TricksCount[i].Count == 4) //Om man har fyra "säkra" kort på handen
                 {
+                    TricksCount[i] = FyraKortIEnFärgMedEssOchKung(Players[i].Hand.ToList(), TricksCount[i]);
+                    if (TricksCount[i].Count == Players[i].Hand.Count())
+                        continue;
+
                     TricksCount[i] = FyraSäkraVaravTvåIEnFärgManHarTreKortAv(Players[i].Hand.ToList(), TricksCount[i]);
                     if (TricksCount[i].Count == Players[i].Hand.Count())
                         continue;
 
                     TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
-                    if (TricksCount[i].Count == Players[i].Hand.Count())
-                        continue;
-
-                    TricksCount[i] = FyraKortIEnFärgMedEssOchKung(Players[i].Hand.ToList(), TricksCount[i]);
                     if (TricksCount[i].Count == Players[i].Hand.Count())
                         continue;
 
@@ -170,34 +167,97 @@ namespace Cards_WPF
             }
         }
 
+
+
+
+
+        private List<Card> idk(List<Card> cardList, List<Card> tricksCount, Card current)
+        {
+            Card NyttKortSomViVillHaMed = cardList.SingleOrDefault(c => c.Suit == current.Suit && c.Rank == current.Rank - 1);
+
+            if (NyttKortSomViVillHaMed == null)
+            {
+                return tricksCount;
+            }
+
+            tricksCount.Add(NyttKortSomViVillHaMed);
+            return idk(cardList, tricksCount, NyttKortSomViVillHaMed);
+        }
+
+
+
+
+
+
+
+        private List<Card> TaMedEnTiaSomStickOchKollaOmDetFinnsNiaISammaFärg(int i)
+        {
+            List<Card> tempList = new List<Card>(Players[i].Hand);
+            List<Card> AllaMedSammaFärgSomDeÖverKnekt = Players[i].Hand.Where(v => TricksCount[i].Select(c => c.Suit).Contains(v.Suit)).ToList();
+            AllaMedSammaFärgSomDeÖverKnekt.RemoveAll(x => x.Rank < Card.CardRank.Tio);
+            tempList.OrderByDescending(r => r.Rank);
+
+            foreach (var card in AllaMedSammaFärgSomDeÖverKnekt)
+            {
+                if (card.Rank == Card.CardRank.Tio)
+                {
+                    foreach (var kort in tempList)
+                    {
+                        if (kort.Rank == Card.CardRank.Nio && kort.Suit == card.Suit)
+                        {
+                            AllaMedSammaFärgSomDeÖverKnekt.Add(kort); //????????
+                        }
+                    }
+                }
+            }
+            var tiansFärg = AllaMedSammaFärgSomDeÖverKnekt.Where(c => c.Rank == Card.CardRank.Tio).Select(s => s.Suit);
+
+            var nyaTrickscount = idk(Players[i].Hand.ToList(), TricksCount[i], Players[3].Hand[1]);
+
+            return AllaMedSammaFärgSomDeÖverKnekt; // TODO - Lägga till om tian har en nia i samma färg lägg även till den då
+        }
+
         // Om man har fyra kort i en färg och man har Ess och Kung i den färgen = 5 säkra stick
         private List<Card> FyraKortIEnFärgMedEssOchKung(List<Card> cardList, List<Card> tricksCount)
         {
+            //IEnumerable<Card.CardSuit> q;
+            var q = cardList.GroupBy(c => c.Suit).Where(d => d.Count() >= 4).Select(f => f.Key);
+            if (!q.Any())
+            {
+                return tricksCount; // SKA returnera de gamla stick-korten. Vi vill inte spara något nytt.
+            }
+
+            bool essISammaFärg = false;
+            bool knugISammaFärg = false;
             foreach (var card in cardList)
             {
-                if (true)
+                if (card.Rank == Card.CardRank.Ess && q.Contains(card.Suit))
                 {
+                    essISammaFärg = true;
+                }
+                else if (card.Rank == Card.CardRank.Knug && q.Contains(card.Suit))
+                {
+                    knugISammaFärg = true;
+                }
 
-                } card.Suit
+                if (essISammaFärg && knugISammaFärg)
+                    return cardList;
             }
+
+            return tricksCount;
         }
 
         private List<Card> FyraSäkraVaravTvåIEnFärgManHarTreKortAv(List<Card> cardList, List<Card> tricksCount)
         {
             // Är två stickkort i samma färg?
-            IEnumerable<Card.CardSuit> q;
-            try
+            var q = tricksCount.GroupBy(c => c.Suit).Where(d => d.Count() >= 2).Select(f => f.Key);
+            if (!q.Any())
             {
-                q = tricksCount.GroupBy(c => c.Suit).Where(d => d.Count() >= 2).Select(f => f.First().Suit);
-
-            }
-            catch (Exception)
-            {
-                return tricksCount; // SKA returnera de gamla korten. Vi vill inte spara något nytt.
+                return tricksCount; // SKA returnera de gamla stick-korten. Vi vill inte spara något nytt.
             }
 
             // IF TRUE => Är det icke stick-kortet i samma färg som två av stick-korten
-            if (q.Contains(cardList.Last().Suit))
+            if (q.Contains(cardList.OrderByDescending(c => c.Rank).Last().Suit))
             {
                 return cardList; // Vi har hittat ett extra kort som vi vill ha med, nämligen det sista.
             }
@@ -207,11 +267,11 @@ namespace Cards_WPF
         private void BytUtKortenIPlayaListan(Player player)
         {
             player.Hand.Clear();
-            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Knug));
-            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Ess));
-            player.Hand.Add(new Card(Card.CardSuit.Klöver, Card.CardRank.Dam));
-            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Tre));
+            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Ess));
             player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Dam));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Knekt));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Tio));
+            player.Hand.Add(new Card(Card.CardSuit.Hjärter, Card.CardRank.Tio));
         }
 
         // TODO - Fixa så att den håller koll på vilken färg den Knekten är i så att det inte finns fler Knektar som det rekursiverar sig vidare på sen...
@@ -399,6 +459,16 @@ namespace Cards_WPF
                 temp = "0" + rank.ToString();
             }
             return suit.ToString() + temp;
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            int numberOfRestarts = 100;
+            do
+            {
+                numberOfRestarts -= 1;
+                Start_New_Game();
+            } while (numberOfRestarts != 0);
         }
     }
 }
