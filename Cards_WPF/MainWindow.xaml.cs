@@ -196,8 +196,9 @@ namespace Cards_WPF
             List<Card> AllaMedSammaFärgSomDeÖverKnekt = Players[i].Hand.Where(v => TricksCount[i].Select(c => c.Suit).Contains(v.Suit)).ToList();
             AllaMedSammaFärgSomDeÖverKnekt.RemoveAll(x => x.Rank < Card.CardRank.Tio);
             tempList.OrderByDescending(r => r.Rank);
+            List<Card> temporärAllaMedLista = new List<Card>(AllaMedSammaFärgSomDeÖverKnekt);
 
-            foreach (var card in AllaMedSammaFärgSomDeÖverKnekt)
+            foreach (var card in temporärAllaMedLista)
             {
                 if (card.Rank == Card.CardRank.Tio)
                 {
@@ -210,9 +211,9 @@ namespace Cards_WPF
                     }
                 }
             }
-            var tiansFärg = AllaMedSammaFärgSomDeÖverKnekt.Where(c => c.Rank == Card.CardRank.Tio).Select(s => s.Suit);
+            //var tiansFärg = AllaMedSammaFärgSomDeÖverKnekt.Where(c => c.Rank == Card.CardRank.Tio).Select(s => s.Suit);
 
-            var nyaTrickscount = idk(Players[i].Hand.ToList(), TricksCount[i], Players[3].Hand[1]);
+            //var nyaTrickscount = idk(Players[i].Hand.ToList(), TricksCount[i], Players[3].Hand[1]);
 
             return AllaMedSammaFärgSomDeÖverKnekt; // TODO - Lägga till om tian har en nia i samma färg lägg även till den då
         }
@@ -267,10 +268,10 @@ namespace Cards_WPF
         private void BytUtKortenIPlayaListan(Player player)
         {
             player.Hand.Clear();
-            player.Hand.Add(new Card(Card.CardSuit.Ruter, Card.CardRank.Ess));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Ess));
             player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Dam));
-            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Knekt));
             player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Tio));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Nio));
             player.Hand.Add(new Card(Card.CardSuit.Hjärter, Card.CardRank.Tio));
         }
 
