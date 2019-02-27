@@ -1,24 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Cards_WPF
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -27,6 +15,15 @@ namespace Cards_WPF
             Start_New_Game();
         }
 
+        public List<Card> DeckOfCards { get; set; }
+        static Random r = new Random();
+        public List<Player> Players { get; set; }
+        public Card CardToPlay_North { get; set; }
+        public Card CardToPlay_Eastn { get; set; }
+        public Card CardToPlay_South { get; set; }
+        public Card CardToPlay_Playa { get; set; }
+        public List<List<Card>> TricksCount { get; set; }
+
         private void Start_New_Game()
         {
             InitializeDeck();
@@ -34,6 +31,7 @@ namespace Cards_WPF
 
             CreatePlayers();
             DealCards();
+
             HowManyTricks();
             ShowTricks();
 
@@ -62,14 +60,10 @@ namespace Cards_WPF
             Label_EastnTricks.Content = $"({TricksCount[1].Count()})";
             Label_SouthTricks.Content = $"({TricksCount[2].Count()})";
             string text = $"({TricksCount[3].Count()})";
-            //if (text == "(1)")
-            //{
-            //    MessageBox.Show("HEJKON");
-            //}
+
             Label_PlayaTricks.Content = text;
         }
 
-        public List<List<Card>> TricksCount { get; set; }
         private void HowManyTricks()
         {
             TricksCount = new List<List<Card>>();
@@ -134,6 +128,7 @@ namespace Cards_WPF
                         }
                     }
                     else { } //Om man kommer hit så har man inte varit i överstående IF
+
                     int num = r.Next(0, 2);
                     if (num == 1) //Varannan gång så tar man tior och över
                     {
@@ -167,29 +162,6 @@ namespace Cards_WPF
             }
         }
 
-
-
-
-
-        private List<Card> idk(List<Card> cardList, List<Card> tricksCount, Card current)
-        {
-            Card NyttKortSomViVillHaMed = cardList.SingleOrDefault(c => c.Suit == current.Suit && c.Rank == current.Rank - 1);
-
-            if (NyttKortSomViVillHaMed == null)
-            {
-                return tricksCount;
-            }
-
-            tricksCount.Add(NyttKortSomViVillHaMed);
-            return idk(cardList, tricksCount, NyttKortSomViVillHaMed);
-        }
-
-
-
-
-
-
-
         private List<Card> TaMedEnTiaSomStickOchKollaOmDetFinnsNiaISammaFärg(int i)
         {
             List<Card> tempList = new List<Card>(Players[i].Hand);
@@ -211,9 +183,6 @@ namespace Cards_WPF
                     }
                 }
             }
-            //var tiansFärg = AllaMedSammaFärgSomDeÖverKnekt.Where(c => c.Rank == Card.CardRank.Tio).Select(s => s.Suit);
-
-            //var nyaTrickscount = idk(Players[i].Hand.ToList(), TricksCount[i], Players[3].Hand[1]);
 
             return AllaMedSammaFärgSomDeÖverKnekt; // TODO - Lägga till om tian har en nia i samma färg lägg även till den då
         }
@@ -221,7 +190,6 @@ namespace Cards_WPF
         // Om man har fyra kort i en färg och man har Ess och Kung i den färgen = 5 säkra stick
         private List<Card> FyraKortIEnFärgMedEssOchKung(List<Card> cardList, List<Card> tricksCount)
         {
-            //IEnumerable<Card.CardSuit> q;
             var q = cardList.GroupBy(c => c.Suit).Where(d => d.Count() >= 4).Select(f => f.Key);
             if (!q.Any())
             {
@@ -265,16 +233,6 @@ namespace Cards_WPF
             return tricksCount;
         }
 
-        private void BytUtKortenIPlayaListan(Player player)
-        {
-            player.Hand.Clear();
-            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Ess));
-            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Dam));
-            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Tio));
-            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Nio));
-            player.Hand.Add(new Card(Card.CardSuit.Hjärter, Card.CardRank.Tio));
-        }
-
         // TODO - Fixa så att den håller koll på vilken färg den Knekten är i så att det inte finns fler Knektar som det rekursiverar sig vidare på sen...
         private List<Card> KollaOmDetFinnsKnektEllerLägreIFärgstege(List<Card> cardList, List<Card> tricksCount)
         {
@@ -294,8 +252,8 @@ namespace Cards_WPF
             return tricksCount;
         }
 
-
-        bool FyraLikaYao = false;
+        public bool FyraLikaYao { get; set; } = false;
+        //bool FyraLikaYao = false;
         private bool KollaOmDetFinnsFyraKortISammaFärg(List<Card> playerList)
         {
             var ÄrAllaKortUtomEttISammaFärg = playerList
@@ -321,10 +279,6 @@ namespace Cards_WPF
             return false;
         }
 
-        public Card CardToPlay_North { get; set; }
-        public Card CardToPlay_Eastn { get; set; }
-        public Card CardToPlay_South { get; set; }
-        public Card CardToPlay_Playa { get; set; }
         public void PlayHighestCard()
         {
             CardToPlay_North = Players[0].Hand.OrderByDescending(v => v.Rank).First();
@@ -348,9 +302,6 @@ namespace Cards_WPF
             Image_PlayaPlayed.Source = new BitmapImage(uri);
         }
 
-        public List<Card> DeckOfCards { get; set; }
-        static Random r = new Random();
-        public List<Player> Players { get; set; }
 
         public void InitializeDeck()
         {
@@ -471,5 +422,28 @@ namespace Cards_WPF
                 Start_New_Game();
             } while (numberOfRestarts != 0);
         }
+
+        private void BytUtKortenIPlayaListan(Player player)
+        {
+            player.Hand.Clear();
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Ess));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Dam));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Tio));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Nio));
+            player.Hand.Add(new Card(Card.CardSuit.Hjärter, Card.CardRank.Tio));
+        }
+
+        //private List<Card> idk(List<Card> cardList, List<Card> tricksCount, Card current)
+        //{
+        //    Card NyttKortSomViVillHaMed = cardList.SingleOrDefault(c => c.Suit == current.Suit && c.Rank == current.Rank - 1);
+
+        //    if (NyttKortSomViVillHaMed == null)
+        //    {
+        //        return tricksCount;
+        //    }
+
+        //    tricksCount.Add(NyttKortSomViVillHaMed);
+        //    return idk(cardList, tricksCount, NyttKortSomViVillHaMed);
+        //}
     }
 }

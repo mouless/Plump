@@ -55,6 +55,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Tricks.cs" />
+    <Compile Include="TricksCalculator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -88,6 +89,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Graphics\Hjärter.xcf" />
+    <None Include="Graphics\Klöver.xcf" />
+    <None Include="Graphics\Ruter.xcf" />
+    <None Include="Graphics\Spader.xcf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -96,7 +101,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Graphics\Hjärter_Transp.png" />
+    <Resource Include="Graphics\Klöver_Transp.png" />
+    <Resource Include="Graphics\Ruter_Transp.png" />
+    <Resource Include="Graphics\Spader_Transp.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Graphics\101.jpeg" />
     <Resource Include="Graphics\102.jpeg" />
