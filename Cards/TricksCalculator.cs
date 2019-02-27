@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Cards.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,24 +6,9 @@ namespace Cards
 {
     public class TricksCalculator
     {
-
-        static Random r = new Random();
-
-        public List<List<Card>> TricksCount { get; set; }
-        public List<Card> DeckOfCards { get; set; }
-        public List<Player> Players { get; set; }
-
-        public Card CardToPlay_North { get; set; }
-        public Card CardToPlay_Eastn { get; set; }
-        public Card CardToPlay_South { get; set; }
-        public Card CardToPlay_Playa { get; set; }
-
-        public bool FyraLikaYao { get; set; } = false;
-        //bool FyraLikaYao = false;
-
-        public void HowManyTricks()
+        public List<List<Card>> HowManyTricks()
         {
-            TricksCount = new List<List<Card>>();
+            var TricksCount = new List<List<Card>>();
 
             List<Card> NorthTricks = new List<Card>(new List<Card>());
             TricksCount.Add(NorthTricks);
@@ -228,7 +213,7 @@ namespace Cards
             if (ÄrAllaKortUtomEttISammaFärg.Any(c => c.antal == 4))
             {
                 //MessageBox.Show("Fyra lika yao!");
-                FyraLikaYao = true;
+                GameService.FyraLikaYao = true;
                 return true;
             }
             return false;

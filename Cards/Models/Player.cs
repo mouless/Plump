@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace Cards
+namespace Cards.Models
 {
     public class Player
     {

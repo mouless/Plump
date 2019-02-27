@@ -13,6 +13,10 @@ namespace Cards_WPF
         public MainWindow()
         {
             InitializeComponent();
+
+            var gameRound = new GameService();
+            gameRound.StartNewGame();
+
             Start_New_Game();
         }
 
@@ -86,59 +90,49 @@ namespace Cards_WPF
 
         
 
-        static public List<Card> ShuffleDeck(List<Card> deck)
-        {
-            for (int n = deck.Count - 1; n > 0; --n)
-            {
-                int k = r.Next(n + 1);
-                var temp = deck[n];
-                deck[n] = deck[k];
-                deck[k] = temp;
-            }
-            return deck;
-        }
+        
 
-        public void CreatePlayers()
-        {
-            Players = new List<Player>();
+        //public void CreatePlayers()
+        //{
+        //    Players = new List<Player>();
 
-            Player north = new Player("North");
-            ListBox_North.ItemsSource = north.Hand;
-            Players.Add(north);
+        //    Player north = new Player("North");
+        //    ListBox_North.ItemsSource = north.Hand;
+        //    Players.Add(north);
 
-            Player east = new Player("East");
-            ListBox_East.ItemsSource = east.Hand;
-            Players.Add(east);
+        //    Player east = new Player("East");
+        //    ListBox_East.ItemsSource = east.Hand;
+        //    Players.Add(east);
 
-            Player south = new Player("South");
-            ListBox_South.ItemsSource = south.Hand;
-            Players.Add(south);
+        //    Player south = new Player("South");
+        //    ListBox_South.ItemsSource = south.Hand;
+        //    Players.Add(south);
 
-            Player player1 = new Player("Player1");
-            ListBox_Player1.ItemsSource = player1.Hand;
-            Players.Add(player1);
-        }
+        //    Player player1 = new Player("Player1");
+        //    ListBox_Player1.ItemsSource = player1.Hand;
+        //    Players.Add(player1);
+        //}
 
-        public void DealCards()
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                foreach (var player in Players)
-                {
-                    player.Hand.Add(DeckOfCards[0]);
-                    DeckOfCards.RemoveAt(0);
-                }
-            }
-            foreach (var player in Players)
-            {
-                var nyHand = player.Hand.OrderBy(c => c.Suit).ThenByDescending(c => c.Rank).ToList();
-                player.Hand.Clear();
-                foreach (var card in nyHand)
-                {
-                    player.Hand.Add(card);
-                }
-            }
-        }
+        //public void DealCards()
+        //{
+        //    for (int i = 0; i < 5; i++)
+        //    {
+        //        foreach (var player in Players)
+        //        {
+        //            player.Hand.Add(DeckOfCards[0]);
+        //            DeckOfCards.RemoveAt(0);
+        //        }
+        //    }
+        //    foreach (var player in Players)
+        //    {
+        //        var nyHand = player.Hand.OrderBy(c => c.Suit).ThenByDescending(c => c.Rank).ToList();
+        //        player.Hand.Clear();
+        //        foreach (var card in nyHand)
+        //        {
+        //            player.Hand.Add(card);
+        //        }
+        //    }
+        //}
 
         public void ShowHands()
         {
