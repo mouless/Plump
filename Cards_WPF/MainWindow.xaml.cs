@@ -13,34 +13,41 @@ namespace Cards_WPF
         {
             InitializeComponent();
 
+            //TODO: SKAPA EN NY KLASS SOM FÅR FUNGERA SOM EN WRAPPER FÖR HELA SPELET.
+            //      MAN SKA KUNNA ANROPA DEN FÖR ATT KUNNA SKAPA NYTT SPEL, ÄVEN GÅ VIDARE MED FÄRRE KORT I NÄSTA OMGÅNG OSV...
             var gameRound = new GameService();
             gameRound.StartNewGame();
 
             FrontEnd(gameRound);
         }
 
-        // TODO: MÅSTE SKICKA MED DEN HÄR TILL FRONTEND PÅ NÅGOT SÄTT SEN
-        //ListBox_North.ItemsSource = north.Hand;
-        //ListBox_East.ItemsSource = east.Hand;
-        //ListBox_South.ItemsSource = south.Hand;
-        //ListBox_Player1.ItemsSource = player1.Hand;
-
         private void FrontEnd(GameService currentGame)
         {
+            ShowHandText(currentGame);
+
             ShowTricks(currentGame);
 
             ShowImageCards(currentGame);
 
             PlayHighestCard(currentGame);
+
             ShowHands(currentGame);
+        }
+
+        private void ShowHandText(GameService currentGame)
+        {
+            ListBox_North.ItemsSource = currentGame.Players.Find(name => name.Name == "North").Hand;
+            ListBox_East.ItemsSource = currentGame.Players.Find(name => name.Name == "East").Hand;
+            ListBox_South.ItemsSource = currentGame.Players.Find(name => name.Name == "South").Hand;
+            ListBox_Player1.ItemsSource = currentGame.Players.Find(name => name.Name == "Player1").Hand;
         }
 
         private void ShowTricks(GameService currentGame)
         {
-            Label_NorthTricks.Content = $"({currentGame.TricksCount[0].Count()})";
-            Label_EastnTricks.Content = $"({currentGame.TricksCount[1].Count()})";
-            Label_SouthTricks.Content = $"({currentGame.TricksCount[2].Count()})";
-            Label_PlayaTricks.Content = $"({currentGame.TricksCount[3].Count()})";
+            Label_NorthTricks.Content = $"({currentGame.TricksCount[0].Count})";
+            Label_EastnTricks.Content = $"({currentGame.TricksCount[1].Count})";
+            Label_SouthTricks.Content = $"({currentGame.TricksCount[2].Count})";
+            Label_PlayaTricks.Content = $"({currentGame.TricksCount[3].Count})";
         }
 
         private void ShowImageCards(GameService currentGame)

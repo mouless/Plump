@@ -1,21 +1,26 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Cards.Models;
 
 namespace Cards
 {
     public class DealCards
     {
-        public void DistributeCards()
+        public void DistributeCards(List<Player> players, List<Card> deckOfCards)
         {
             for (int i = 0; i < 5; i++)
             {
-                foreach (var player in GameService.Players)
+                foreach (var player in players)
                 {
-                    player.Hand.Add(GameService.DeckOfCards[0]);
-                    GameService.DeckOfCards.RemoveAt(0);
+                    player.Hand.Add(deckOfCards[0]);
+                    deckOfCards.RemoveAt(0);
                 }
             }
 
-            foreach (var player in GameService.Players)
+            Stack urb = new Stack(); // TODO: GÖRA OM KORTLEKEN TILL EN "STACK"
+            
+            foreach (var player in players)
             {
                 var newHand = player.Hand.OrderBy(c => c.Suit).ThenByDescending(c => c.Rank).ToList();
                 player.Hand.Clear();

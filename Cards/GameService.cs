@@ -32,10 +32,10 @@ namespace Cards
             Players = PlayerService.CreatePlayers();
 
             var fördelaKort = new DealCards();
-            Players = fördelaKort.DistributeCards(Players, DeckOfCards);
+            fördelaKort.DistributeCards(Players, DeckOfCards);
 
             var tricksCalculator = new TricksCalculator();
-            TricksCount = tricksCalculator.HowManyTricks();
+            tricksCalculator.HowManyTricks(Players, TricksCount);
             //ShowTricks();
 
             //ShowImageCards();
