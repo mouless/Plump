@@ -1,6 +1,6 @@
-﻿using Cards.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Cards.Models;
 
 namespace Cards
 {
@@ -18,43 +18,43 @@ namespace Cards
             TricksCount.Add(SouthTricks);
             List<Card> PlayaTricks = new List<Card>(new List<Card>());
             TricksCount.Add(PlayaTricks);
-            BytUtKortenIPlayaListan(Players[3]);
+            BytUtKortenIPlayaListan(GameService.Players[3]);
 
             // Plockar ut alla kort som är över KNEKT som "säkra" kort
             for (int i = 0; i < 4; i++)
             {
-                TricksCount[i] = Players[i].Hand.Where(v => v.Rank > Card.CardRank.Knekt).ToList();
+                TricksCount[i] = GameService.Players[i].Hand.Where(v => v.Rank > Card.CardRank.Knekt).ToList();
             }
 
             for (int i = 0; i < 4; i++)
             {
                 if (TricksCount[i].Count == 0)
                 {
-                    int num = r.Next(0, 2);
+                    int num = GameService.r.Next(0, 2);
                     if (num == 1) //Bara varannan gång så väljer AI att ta Knekt som ett "säkert" stickkort
-                        TricksCount[i] = Players[i].Hand.Where(v => v.Rank > Card.CardRank.Tio).ToList();
+                        TricksCount[i] = GameService.Players[i].Hand.Where(v => v.Rank > Card.CardRank.Tio).ToList();
                 }
                 else if (TricksCount[i].Count == 1) //Om man har ett "säkert" kort på handen
                 {
-                    TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
-                    if (TricksCount[i].Count == Players[i].Hand.Count())
+                    TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(GameService.Players[i].Hand.ToList(), TricksCount[i]);
+                    if (TricksCount[i].Count == GameService.Players[i].Hand.Count())
                         continue;
 
-                    int num = r.Next(0, 2);
+                    int num = GameService.r.Next(0, 2);
                     if (num == 1) //Bara varannan gång så väljer AI att ta Knekt som ett "säkert" stickkort
-                        TricksCount[i] = Players[i].Hand.Where(v => v.Rank > Card.CardRank.Tio).ToList();
+                        TricksCount[i] = GameService.Players[i].Hand.Where(v => v.Rank > Card.CardRank.Tio).ToList();
                 }
                 else if (TricksCount[i].Count == 2) //Om man har två "säkra" kort på handen, så tar man även kort som är tio och uppåt i SAMMA färg
                 {
-                    TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
-                    if (TricksCount[i].Count == Players[i].Hand.Count())
+                    TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(GameService.Players[i].Hand.ToList(), TricksCount[i]);
+                    if (TricksCount[i].Count == GameService.Players[i].Hand.Count())
                         continue;
                     TricksCount[i] = TaMedEnTiaSomStickOchKollaOmDetFinnsNiaISammaFärg(i);
                 }
                 else if (TricksCount[i].Count == 3) //Om man har tre "säkra" kort på handen
                 {
-                    TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
-                    if (TricksCount[i].Count == Players[i].Hand.Count())
+                    TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(GameService.Players[i].Hand.ToList(), TricksCount[i]);
+                    if (TricksCount[i].Count == GameService.Players[i].Hand.Count())
                         continue;
 
                     if (TricksCount[i].GroupBy(c => c.Suit).Select(grp =>
@@ -63,51 +63,52 @@ namespace Cards
                         return new { grp.Key, antal };
                     }).All(c => c.antal != 3)) //Om någon färg har tre "säkra" kort
                     {
-                        if (KollaOmDetFinnsFyraKortISammaFärg(Players[i].Hand.ToList())) //Metod som kollar om 4st kort utav 5st är i samma färg
+                        if (KollaOmDetFinnsFyraKortISammaFärg(GameService.Players[i].Hand.ToList())) //Metod som kollar om 4st kort utav 5st är i samma färg
                         {
-                            TricksCount[i] = Players[i].Hand.ToList();
+                            TricksCount[i] = GameService.Players[i].Hand.ToList();
                             continue;
                         }
                     }
                     else { } //Om man kommer hit så har man inte varit i överstående IF
 
-                    int num = r.Next(0, 2);
+                    int num = GameService.r.Next(0, 2);
                     if (num == 1) //Varannan gång så tar man tior och över
                     {
-                        List<Card> AllaMedSammaFärgSomDeÖverKnekt = Players[i].Hand.Where(v => v.Rank > Card.CardRank.Nio).ToList();
-                        TricksCount[i] = AllaMedSammaFärgSomDeÖverKnekt;
+                        TricksCount[i] = GameService.Players[i].Hand.Where(v => v.Rank > Card.CardRank.Nio).ToList();
                     }
                     else //Varannan gång så tar man bara tior och över om de är i samma färg
                     {
-                        List<Card> AllaMedSammaFärgSomDeÖverKnekt = Players[i].Hand.Where(v => TricksCount[i].Select(c => c.Suit).Contains(v.Suit)).ToList();
+                        List<Card> AllaMedSammaFärgSomDeÖverKnekt = GameService.Players[i].Hand.Where(v => TricksCount[i].Select(c => c.Suit).Contains(v.Suit)).ToList();
                         AllaMedSammaFärgSomDeÖverKnekt.RemoveAll(x => x.Rank < Card.CardRank.Tio);
                         TricksCount[i] = AllaMedSammaFärgSomDeÖverKnekt;
                     }
                 }
                 else if (TricksCount[i].Count == 4) //Om man har fyra "säkra" kort på handen
                 {
-                    TricksCount[i] = FyraKortIEnFärgMedEssOchKung(Players[i].Hand.ToList(), TricksCount[i]);
-                    if (TricksCount[i].Count == Players[i].Hand.Count())
+                    TricksCount[i] = FyraKortIEnFärgMedEssOchKung(GameService.Players[i].Hand.ToList(), TricksCount[i]);
+                    if (TricksCount[i].Count == GameService.Players[i].Hand.Count())
                         continue;
 
-                    TricksCount[i] = FyraSäkraVaravTvåIEnFärgManHarTreKortAv(Players[i].Hand.ToList(), TricksCount[i]);
-                    if (TricksCount[i].Count == Players[i].Hand.Count())
+                    TricksCount[i] = FyraSäkraVaravTvåIEnFärgManHarTreKortAv(GameService.Players[i].Hand.ToList(), TricksCount[i]);
+                    if (TricksCount[i].Count == GameService.Players[i].Hand.Count())
                         continue;
 
-                    TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(Players[i].Hand.ToList(), TricksCount[i]);
-                    if (TricksCount[i].Count == Players[i].Hand.Count())
+                    TricksCount[i] = KollaOmDetFinnsKnektEllerLägreIFärgstege(GameService.Players[i].Hand.ToList(), TricksCount[i]);
+                    if (TricksCount[i].Count == GameService.Players[i].Hand.Count())
                         continue;
 
-                    List<Card> AllaMedSammaFärgSomDeÖverKnekt = Players[i].Hand.Where(v => v.Rank > Card.CardRank.Nio).ToList();
-                    TricksCount[i] = AllaMedSammaFärgSomDeÖverKnekt;
+                    TricksCount[i] = GameService.Players[i].Hand.Where(v => v.Rank > Card.CardRank.Nio).ToList();
                 }
             }
+
+            // RETURNERA HUR MÅNGA TRICKS SOM VARJE AI-SPELARE TROR ATT DE KOMMER ATT KUNNA TA
+            return TricksCount;
         }
 
         private List<Card> TaMedEnTiaSomStickOchKollaOmDetFinnsNiaISammaFärg(int i)
         {
-            List<Card> tempList = new List<Card>(Players[i].Hand);
-            List<Card> AllaMedSammaFärgSomDeÖverKnekt = Players[i].Hand.Where(v => TricksCount[i].Select(c => c.Suit).Contains(v.Suit)).ToList();
+            List<Card> tempList = new List<Card>(GameService.Players[i].Hand);
+            List<Card> AllaMedSammaFärgSomDeÖverKnekt = GameService.Players[i].Hand.Where(v => GameService.TricksCount[i].Select(c => c.Suit).Contains(v.Suit)).ToList();
             AllaMedSammaFärgSomDeÖverKnekt.RemoveAll(x => x.Rank < Card.CardRank.Tio);
             tempList.OrderByDescending(r => r.Rank);
             List<Card> temporärAllaMedLista = new List<Card>(AllaMedSammaFärgSomDeÖverKnekt);
@@ -213,11 +214,20 @@ namespace Cards
             if (ÄrAllaKortUtomEttISammaFärg.Any(c => c.antal == 4))
             {
                 //MessageBox.Show("Fyra lika yao!");
-                GameService.FyraLikaYao = true;
+                //GameService.FyraLikaYao = true; // TODO: Ta bort gammal bool som inte längre används???
                 return true;
             }
             return false;
         }
 
+        private void BytUtKortenIPlayaListan(Player player)
+        {
+            player.Hand.Clear();
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Ess));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Dam));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Tio));
+            player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Nio));
+            player.Hand.Add(new Card(Card.CardSuit.Hjärter, Card.CardRank.Tio));
+        }
     }
 }

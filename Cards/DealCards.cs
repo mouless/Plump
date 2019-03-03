@@ -2,9 +2,9 @@
 
 namespace Cards
 {
-    public static class DealCards
+    public class DealCards
     {
-        public static void DistributeCards()
+        public void DistributeCards()
         {
             for (int i = 0; i < 5; i++)
             {

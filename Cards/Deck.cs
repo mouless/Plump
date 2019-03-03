@@ -1,14 +1,11 @@
-﻿using Cards.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Cards.Models;
 
 namespace Cards
 {
-    static class Deck
+    class Deck
     {
-        static readonly Random r = new Random();
-
-        public static List<Card> CreateDeck()
+        public List<Card> CreateDeck()
         {
             var DeckOfCards = new List<Card>();
             for (Card.CardSuit i = Card.CardSuit.Hjärter; i <= Card.CardSuit.Klöver; i++)
@@ -18,16 +15,15 @@ namespace Cards
                     DeckOfCards.Add(new Card(i, j));
                 }
             }
-            DeckOfCards = ShuffleDeck(DeckOfCards);
 
-            return DeckOfCards;
+            return ShuffleDeck(DeckOfCards);
         }
 
         static public List<Card> ShuffleDeck(List<Card> deck)
         {
             for (int n = deck.Count - 1; n > 0; --n)
             {
-                int k = r.Next(n + 1);
+                int k = GameService.r.Next(n + 1);
                 var temp = deck[n];
                 deck[n] = deck[k];
                 deck[k] = temp;

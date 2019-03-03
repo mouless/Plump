@@ -1,21 +1,24 @@
-﻿using Cards.Models;
+﻿using System;
 using System.Collections.Generic;
+using Cards.Models;
 
 namespace Cards
 {
     public class GameService
     {
-        public static bool FyraLikaYao { get; set; } = false;
+        public static readonly Random r = new Random();
+        public bool FyraLikaYao { get; set; } = false;
 
-        public static List<List<Card>> TricksCount { get; set; } = new List<List<Card>>();
-        public static List<Card> DeckOfCards { get; set; } = new List<Card>();
-        public static List<Player> Players { get; set; } = new List<Player>();
+        public List<List<Card>> TricksCount { get; set; } = new List<List<Card>>();
+        public List<Card> DeckOfCards { get; set; } = new List<Card>();
+        public List<Player> Players { get; set; } = new List<Player>();
 
-        public static Card CardToPlay_North { get; set; }
-        public static Card CardToPlay_Eastn { get; set; }
-        public static Card CardToPlay_South { get; set; }
-        public static Card CardToPlay_Playa { get; set; }
+        public Card CardToPlay_North { get; set; }
+        public Card CardToPlay_Eastn { get; set; }
+        public Card CardToPlay_South { get; set; }
+        public Card CardToPlay_Playa { get; set; }
 
+        // TODO: MÅSTE SKICKA MED DEN HÄR TILL FRONTEND PÅ NÅGOT SÄTT SEN
         //ListBox_North.ItemsSource = north.Hand;
         //ListBox_East.ItemsSource = east.Hand;
         //ListBox_South.ItemsSource = south.Hand;
@@ -23,20 +26,22 @@ namespace Cards
 
         public void StartNewGame()
         {
-            // VILL BARA HA ETT ANROP TILL CARDS-Projektet OCH DEN SKA I SIN TUR RETURNERA RESULTATET. SÅ BEHÖVER INSTANSIERA CARD.CS i CARDS-Projektet...?
-            DeckOfCards = Deck.CreateDeck(); // Static class/method
+            var listOfCards = new Deck();
+            DeckOfCards = listOfCards.CreateDeck();
 
             Players = PlayerService.CreatePlayers();
-            DealCards.DistributeCards();
+
+            var fördelaKort = new DealCards();
+            Players = fördelaKort.DistributeCards(Players, DeckOfCards);
 
             var tricksCalculator = new TricksCalculator();
-            tricksCalculator.HowManyTricks();
-            ShowTricks();
+            TricksCount = tricksCalculator.HowManyTricks();
+            //ShowTricks();
 
-            ShowImageCards();
+            //ShowImageCards();
 
-            PlayHighestCard();
-            ShowHands();
+            //PlayHighestCard();
+            //ShowHands();
         }
     }
 }
