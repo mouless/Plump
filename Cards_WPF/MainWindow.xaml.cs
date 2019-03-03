@@ -49,7 +49,8 @@ namespace Cards_WPF
             for (int j = 0; j < Players[0].Hand.Count; j++)
             {
                 cardNumber = CardImageNumber(Players[0].Hand[j]);
-                Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                //Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                 Image img = FindName("Image_North" + j) as Image;
                 img.Source = new BitmapImage(uri);
 
@@ -329,22 +330,22 @@ namespace Cards_WPF
         {
             CardToPlay_North = Players[0].Hand.OrderByDescending(v => v.Rank).First();
             string cardNumber = CardImageNumber(CardToPlay_North);
-            var uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_NorthPlayed.Source = new BitmapImage(uri);
 
             CardToPlay_Eastn = Players[1].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(CardToPlay_Eastn);
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_EastnPlayed.Source = new BitmapImage(uri);
 
             CardToPlay_South = Players[2].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(CardToPlay_South);
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_SouthPlayed.Source = new BitmapImage(uri);
 
             CardToPlay_Playa = Players[3].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(CardToPlay_Playa);
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_PlayaPlayed.Source = new BitmapImage(uri);
         }
 
