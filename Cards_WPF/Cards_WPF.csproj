@@ -54,7 +54,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Tricks.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,14 +62,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Card.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -88,6 +85,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Graphics\Hjärter.xcf" />
+    <None Include="Graphics\Klöver.xcf" />
+    <None Include="Graphics\Ruter.xcf" />
+    <None Include="Graphics\Spader.xcf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -96,7 +97,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Graphics\Hjärter_Transp.png" />
+    <Resource Include="Graphics\Klöver_Transp.png" />
+    <Resource Include="Graphics\Ruter_Transp.png" />
+    <Resource Include="Graphics\Spader_Transp.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Graphics\101.jpeg" />
     <Resource Include="Graphics\102.jpeg" />
@@ -168,6 +174,12 @@
     <Resource Include="Graphics\214.jpeg" />
     <Resource Include="Graphics\215.jpeg" />
     <Resource Include="Graphics\Spader.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cards\Cards.csproj">
+      <Project>{2fb8281b-17b7-4deb-b6aa-64d1cecddda9}</Project>
+      <Name>Cards</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
