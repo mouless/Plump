@@ -7,9 +7,9 @@ namespace Cards
 {
     public class DealCards
     {
-        public void DistributeCards(List<Player> players, List<Card> deckOfCards)
+        public void DistributeCards(List<Player> players, List<Card> deckOfCards, int numberOfSticksThisRound)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < numberOfSticksThisRound; i++)
             {
                 foreach (var player in players)
                 {

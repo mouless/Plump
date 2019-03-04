@@ -37,6 +37,7 @@
         <Image x:Name="Image_North3" HorizontalAlignment="Left" Height="131" Margin="560,52,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
         <Image x:Name="Image_North4" HorizontalAlignment="Left" Height="131" Margin="600,52,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
         <Button Content="100" HorizontalAlignment="Left" Margin="1051,13,0,0" VerticalAlignment="Top" Width="32" Height="39" Click="Starta100NyaRundor_Click"/>
+        <Label x:Name="HighestTricks_Label" FontWeight="Bold" FontSize="18" Content="Vem som har högst stick" HorizontalAlignment="Left" Margin="427,400,0,0" VerticalAlignment="Top" Height="30" Width="273"/>
 
     </Grid>
 </Window>

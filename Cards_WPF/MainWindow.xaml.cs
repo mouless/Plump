@@ -21,10 +21,8 @@ namespace Cards_WPF
         {
             InitializeComponent();
 
-            backgroundWorker.DoWork += BackgroundWorker_DoWork;
-
             gameService = new GameService();
-            StartGame();
+            StartGame_BackEnd();
         }
 
         private void FrontEnd(GameService currentGame)
@@ -36,6 +34,8 @@ namespace Cards_WPF
             ShowImageCards(currentGame);
 
             PlayHighestCard(currentGame);
+
+            PlayCard(currentGame);
 
             ShowHands(currentGame);
         }
@@ -62,8 +62,8 @@ namespace Cards_WPF
             for (int j = 0; j < currentGame.Players[0].Hand.Count; j++)
             {
                 cardNumber = CardImageNumber(currentGame.Players[0].Hand[j]);
-                //Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                //Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                 Image img = FindName("Image_North" + j) as Image;
                 img.Source = new BitmapImage(uri);
             }
@@ -73,29 +73,51 @@ namespace Cards_WPF
         {
             currentGame.CardToPlay_North = currentGame.Players[0].Hand.OrderByDescending(v => v.Rank).First();
             string cardNumber = CardImageNumber(currentGame.CardToPlay_North);
-            //var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_NorthPlayed.Source = new BitmapImage(uri);
 
             currentGame.CardToPlay_Eastn = currentGame.Players[1].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(currentGame.CardToPlay_Eastn);
-            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_EastnPlayed.Source = new BitmapImage(uri);
 
             currentGame.CardToPlay_South = currentGame.Players[2].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(currentGame.CardToPlay_South);
-            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_SouthPlayed.Source = new BitmapImage(uri);
 
             currentGame.CardToPlay_Playa = currentGame.Players[3].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(currentGame.CardToPlay_Playa);
-            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_PlayaPlayed.Source = new BitmapImage(uri);
         }
 
+        private void PlayCard(GameService currentGame)
+        {
+            // WHO HAS THE MOST TRICKS GOING IN ORDER OR STARTING WITH A NEW ONE EVERY ROUND?
+            var numberOfTricks_North = currentGame.TricksCount[0].Count;
+            var numberOfTricks_East = currentGame.TricksCount[1].Count;
+            var numberOfTricks_South = currentGame.TricksCount[2].Count;
+            var numberOfTricks_Player1 = currentGame.TricksCount[3].Count;
+
+            var highestTricks = numberOfTricks_North; // FRÅGAN ÄR OM MAN VILL ATT OLIKA SPELARE SKA BÖRJA RUNDORNA
+            var nameOfHighest = currentGame.Players[0]; // FÖR NU BÖRJAR BARA NORTH HELA TIDEN
+
+            for (int i = 0; i < currentGame.TricksCount.Count; i++)
+            {
+                if (highestTricks < currentGame.TricksCount[i].Count)
+                {
+                    highestTricks = currentGame.TricksCount[i].Count;
+                    nameOfHighest = currentGame.Players[i];
+                }
+            }
+
+            HighestTricks_Label.Content = $"{nameOfHighest.Name} har flest stick med {highestTricks}";
+        }
 
         public void ShowHands(GameService currentGame)
         {
@@ -111,16 +133,17 @@ namespace Cards_WPF
             {
                 NumberOfPlayedRounds++;
                 Label_Number.Content = NumberOfPlayedRounds.ToString();
-                StartGame();
+                StartGame_BackEnd();
 
             } while (!gameService.State.FyraLikaYao);
 
             gameService.State.FyraLikaYao = false;
+            StartGame_FrontEnd();
         }
 
         private void StartAnotherRound_Click(object sender, RoutedEventArgs e)
         {
-            StartGame();
+            StartGame_BackEnd();
         }
 
         private string CardImageNumber(Cards.Models.Card cardToNum)
@@ -141,24 +164,25 @@ namespace Cards_WPF
             do
             {
                 numberOfRestarts--;
-                StartGame();
+                StartGame_BackEnd();
             } while (numberOfRestarts != 0);
+            StartGame_FrontEnd();
         }
 
-        public void StartGame()
+        public void StartGame_BackEnd()
         {
             Label_Number.Content = NumberOfPlayedRounds.ToString();
 
-            backgroundWorker.RunWorkerAsync();
+            gameService.CreateRound(NumberOfSticks);
 
             FrontEnd(gameService);
 
             NumberOfPlayedRounds++;
         }
 
-        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        public void StartGame_FrontEnd()
         {
-            gameService.CreateRound(NumberOfSticks);
+            FrontEnd(gameService);
         }
     }
 }
