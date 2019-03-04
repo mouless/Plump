@@ -6,10 +6,8 @@ namespace Cards
 {
     public class TricksCalculator
     {
-        public List<List<Card>> HowManyTricks(List<Player> players, List<List<Card>> tricksCount)
+        public void HowManyTricks(List<Player> players, List<List<Card>> tricksCount, MyState state)
         {
-            //var tricksCount = new List<List<Card>>();
-
             List<Card> NorthTricks = new List<Card>(new List<Card>());
             tricksCount.Add(NorthTricks);
             List<Card> EastnTricks = new List<Card>(new List<Card>());
@@ -18,7 +16,7 @@ namespace Cards
             tricksCount.Add(SouthTricks);
             List<Card> PlayaTricks = new List<Card>(new List<Card>());
             tricksCount.Add(PlayaTricks);
-            BytUtKortenIPlayaListan(players[3]);
+            //BytUtKortenIPlayaListan(players[3]);
 
             // Plockar ut alla kort som är över KNEKT som "säkra" kort
             for (int i = 0; i < 4; i++)
@@ -65,6 +63,8 @@ namespace Cards
                     {
                         if (KollaOmDetFinnsFyraKortISammaFärg(players[i].Hand.ToList())) //Metod som kollar om 4st kort utav 5st är i samma färg
                         {
+                            state.FyraLikaYao = true;
+
                             tricksCount[i] = players[i].Hand.ToList();
                             continue;
                         }
@@ -101,8 +101,7 @@ namespace Cards
                 }
             }
 
-            // RETURNERA HUR MÅNGA TRICKS SOM VARJE AI-SPELARE TROR ATT DE KOMMER ATT KUNNA TA
-            return tricksCount;
+            // MAN BEHÖVER JU INTE RETURNERA NÅGOT EFTERSOM JAG SKICKADE IN REFERENSEN TILL TRICKSCOUNT-LISTAN
         }
 
         private List<Card> TaMedEnTiaSomStickOchKollaOmDetFinnsNiaISammaFärg(int i, List<Player> players, List<List<Card>> tricksCount)
@@ -214,7 +213,6 @@ namespace Cards
             if (ÄrAllaKortUtomEttISammaFärg.Any(c => c.antal == 4))
             {
                 //MessageBox.Show("Fyra lika yao!");
-                //GameService.FyraLikaYao = true; // TODO: Ta bort gammal bool som inte längre används???
                 return true;
             }
             return false;

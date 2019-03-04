@@ -7,8 +7,7 @@ namespace Cards
     public class GameService
     {
         public static readonly Random r = new Random();
-        public bool FyraLikaYao { get; set; } = false;
-
+        public MyState State { get; set; } = new MyState();
         public List<List<Card>> TricksCount { get; set; } = new List<List<Card>>();
         public List<Card> DeckOfCards { get; set; } = new List<Card>();
         public List<Player> Players { get; set; } = new List<Player>();
@@ -18,13 +17,8 @@ namespace Cards
         public Card CardToPlay_South { get; set; }
         public Card CardToPlay_Playa { get; set; }
 
-        // TODO: MÅSTE SKICKA MED DEN HÄR TILL FRONTEND PÅ NÅGOT SÄTT SEN
-        //ListBox_North.ItemsSource = north.Hand;
-        //ListBox_East.ItemsSource = east.Hand;
-        //ListBox_South.ItemsSource = south.Hand;
-        //ListBox_Player1.ItemsSource = player1.Hand;
 
-        public void StartNewGame()
+        public void CreateRound(int numberOfSticksThisRound)
         {
             var listOfCards = new Deck();
             DeckOfCards = listOfCards.CreateDeck();
@@ -35,13 +29,12 @@ namespace Cards
             fördelaKort.DistributeCards(Players, DeckOfCards);
 
             var tricksCalculator = new TricksCalculator();
-            tricksCalculator.HowManyTricks(Players, TricksCount);
-            //ShowTricks();
-
-            //ShowImageCards();
-
-            //PlayHighestCard();
-            //ShowHands();
+            tricksCalculator.HowManyTricks(Players, TricksCount, State);
         }
+    }
+
+    public class MyState
+    {
+        public bool FyraLikaYao { get; set; }
     }
 }
