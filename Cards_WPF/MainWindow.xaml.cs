@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,7 +14,6 @@ namespace Cards_WPF
         public int NumberOfPlayedRounds { get; set; } = 1;
 
         private GameService gameService;
-        private static BackgroundWorker backgroundWorker = new BackgroundWorker();
 
         public MainWindow()
         {
@@ -23,6 +21,7 @@ namespace Cards_WPF
 
             gameService = new GameService();
             StartGame_BackEnd();
+            StartGame_FrontEnd();
         }
 
         private void FrontEnd(GameService currentGame)
@@ -62,8 +61,8 @@ namespace Cards_WPF
             for (int j = 0; j < currentGame.Players[0].Hand.Count; j++)
             {
                 cardNumber = CardImageNumber(currentGame.Players[0].Hand[j]);
-                Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                //Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                //Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                 Image img = FindName("Image_North" + j) as Image;
                 img.Source = new BitmapImage(uri);
             }
@@ -73,26 +72,26 @@ namespace Cards_WPF
         {
             currentGame.CardToPlay_North = currentGame.Players[0].Hand.OrderByDescending(v => v.Rank).First();
             string cardNumber = CardImageNumber(currentGame.CardToPlay_North);
-            var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            //Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_NorthPlayed.Source = new BitmapImage(uri);
 
             currentGame.CardToPlay_Eastn = currentGame.Players[1].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(currentGame.CardToPlay_Eastn);
-            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_EastnPlayed.Source = new BitmapImage(uri);
 
             currentGame.CardToPlay_South = currentGame.Players[2].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(currentGame.CardToPlay_South);
-            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_SouthPlayed.Source = new BitmapImage(uri);
 
             currentGame.CardToPlay_Playa = currentGame.Players[3].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(currentGame.CardToPlay_Playa);
-            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_PlayaPlayed.Source = new BitmapImage(uri);
         }
 
@@ -144,6 +143,7 @@ namespace Cards_WPF
         private void StartAnotherRound_Click(object sender, RoutedEventArgs e)
         {
             StartGame_BackEnd();
+            StartGame_FrontEnd();
         }
 
         private string CardImageNumber(Cards.Models.Card cardToNum)
@@ -174,8 +174,6 @@ namespace Cards_WPF
             Label_Number.Content = NumberOfPlayedRounds.ToString();
 
             gameService.CreateRound(NumberOfSticks);
-
-            FrontEnd(gameService);
 
             NumberOfPlayedRounds++;
         }
