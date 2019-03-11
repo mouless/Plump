@@ -50,6 +50,7 @@
     <Compile Include="Deck.cs" />
     <Compile Include="Models\Tricks.cs" />
     <Compile Include="TricksCalculator.cs" />
+    <Compile Include="TricksRound.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

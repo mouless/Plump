@@ -9,7 +9,7 @@ namespace Cards_WPF
 {
     public partial class MainWindow : Window
     {
-        public bool StartAnotherRound { get; set; } = false;
+        //public bool StartAnotherRound { get; set; } = false;
         public int NumberOfSticks { get; set; } = 5;
         public int NumberOfPlayedRounds { get; set; } = 1;
 
@@ -32,12 +32,13 @@ namespace Cards_WPF
 
             ShowImageCards(currentGame);
 
-            //PlayHighestCard(currentGame);
-
             HighestTricks(currentGame, NumberOfSticks);
 
-            //ShowHands(currentGame);
+            //WinnerOfTheTrickRound();
+
+            //UpdateScoreboard();
         }
+
 
         private void ShowHandText(GameService currentGame)
         {
@@ -68,7 +69,7 @@ namespace Cards_WPF
             }
         }
 
-        public void PlayHighestCard(GameService currentGame)
+        public void ShowPlayersTrickCard(GameService currentGame)
         {
             currentGame.CardToPlay_North = currentGame.Players[0].Hand.OrderByDescending(v => v.Rank).First();
             string cardNumber = CardImageNumber(currentGame.CardToPlay_North);
@@ -118,28 +119,6 @@ namespace Cards_WPF
             HighestTricks_Label.Content = $"{nameOfHighest.Name} har flest stick med {highestTricks}";
         }
 
-        public void ShowHands(GameService currentGame)
-        {
-            //Label_NorthHand.Content = currentGame.CardToPlay_North;
-            //Label_SouthHand.Content = currentGame.CardToPlay_South;
-            //Label_EastnHand.Content = currentGame.CardToPlay_Eastn;
-            //Label_PlayaHand.Content = currentGame.CardToPlay_Playa;
-        }
-
-        private void KörTillsDetFinnsFyraKortISammaFärg_Click(object sender, RoutedEventArgs e)
-        {
-            do
-            {
-                NumberOfPlayedRounds++;
-                Label_Number.Content = NumberOfPlayedRounds.ToString();
-                StartGame_BackEnd();
-
-            } while (!gameService.State.FyraLikaYao);
-
-            gameService.State.FyraLikaYao = false;
-            StartGame_FrontEnd();
-        }
-
         private void StartAnotherRound_Click(object sender, RoutedEventArgs e)
         {
             StartGame_BackEnd();
@@ -158,17 +137,6 @@ namespace Cards_WPF
             return suit.ToString() + temp;
         }
 
-        private void Starta100NyaRundor_Click(object sender, RoutedEventArgs e)
-        {
-            int numberOfRestarts = 100;
-            do
-            {
-                numberOfRestarts--;
-                StartGame_BackEnd();
-            } while (numberOfRestarts != 0);
-            StartGame_FrontEnd();
-        }
-
         public void StartGame_BackEnd()
         {
             Label_Number.Content = NumberOfPlayedRounds.ToString();
@@ -181,6 +149,11 @@ namespace Cards_WPF
         public void StartGame_FrontEnd()
         {
             FrontEnd(gameService);
+        }
+
+        private void WinnerOfTheTrickRound()
+        {
+            throw new NotImplementedException();
         }
     }
 }

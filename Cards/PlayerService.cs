@@ -3,29 +3,49 @@ using Cards.Models;
 
 namespace Cards
 {
-    public static class PlayerService
+    public class PlayerService
     {
-        public static List<Player> CreatePlayers()
+        public void CreatePlayers(List<Player> players)
         {
-            var players = new List<Player>();
-
             Player north = new Player("North");
-            //ListBox_North.ItemsSource = north.Hand;
             players.Add(north);
 
             Player east = new Player("East");
-            //ListBox_East.ItemsSource = east.Hand;
             players.Add(east);
 
             Player south = new Player("South");
-            //ListBox_South.ItemsSource = south.Hand;
             players.Add(south);
 
             Player player1 = new Player("Player1");
-            //ListBox_Player1.ItemsSource = player1.Hand;
             players.Add(player1);
+        }
 
-            return players;
+        public void OrderOfPlayers(List<Player> players, Player lastWinner, List<Player> orderOfPlayers)
+        {
+            var orderedList = new List<Player>();
+
+            var indexInList = players.FindIndex(x => x.Name == lastWinner.Name);
+            //var indexInList = players.IndexOf(lastWinner);
+
+            orderedList.Add(players[indexInList]);
+
+            for (int i = 0; i < players.Count - 1; i++)
+            {
+                indexInList += 1;
+
+                if (indexInList > players.Count - 1)
+                {
+                    indexInList = 0;
+                }
+
+                orderedList.Add(players[indexInList]);
+            }
+
+            orderOfPlayers.Clear();
+            foreach (var player in orderedList)
+            {
+                orderOfPlayers.Add(player);
+            }
         }
     }
 }

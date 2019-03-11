@@ -15,3 +15,7 @@ TODO:
 7. Låt den som vann föregående stick påbörja nästa stick
 
 /////////////////////////////////////////////////////////////////////
+
+ÖVRIGT:
+
+1. Göra om Deck<Card> till en Stack<Card>

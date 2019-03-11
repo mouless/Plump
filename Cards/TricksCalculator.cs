@@ -16,6 +16,7 @@ namespace Cards
             tricksCount.Add(SouthTricks);
             List<Card> PlayaTricks = new List<Card>(new List<Card>());
             tricksCount.Add(PlayaTricks);
+
             //BytUtKortenIPlayaListan(players[3]);
 
 

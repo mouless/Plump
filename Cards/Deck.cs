@@ -5,7 +5,7 @@ namespace Cards
 {
     class Deck
     {
-        public List<Card> CreateDeck()
+        public List<Card> CreateDeck(List<Card> deckOfCards)
         {
             var DeckOfCards = new List<Card>();
             for (Card.CardSuit i = Card.CardSuit.Hjärter; i <= Card.CardSuit.Klöver; i++)
