@@ -1,5 +1,5 @@
-﻿using Cards.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Cards.Models;
 
 namespace Cards
 {

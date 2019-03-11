@@ -18,6 +18,7 @@ namespace Cards
             tricksCount.Add(PlayaTricks);
             //BytUtKortenIPlayaListan(players[3]);
 
+
             // Plockar ut alla kort som är över KNEKT som "säkra" kort
             for (int i = 0; i < 4; i++)
             {

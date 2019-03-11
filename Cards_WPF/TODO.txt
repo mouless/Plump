@@ -1,0 +1,17 @@
+﻿/////////////////////////////////////////////////////////////////////
+
+TODO:
+
+1. Bestämma vilken spelare som ska få börja, utifrån antalet stick
+2. Se till att det gemensamma antalet stick inte är lika många som omgångens nummer
+3. Första spelaren spelar sitt första stick
+	3.1 Se till att spelaren inte spelar ett kort som riskerar att öka antalet stick över det önskade värdet
+4. De andra AI-spelarna följer färg
+	4.1 Har de inte färgen så vill de spela ut en annan färg
+		4.1.1 Det lägsta kortet om de behöver ta fler stick
+		4.1.2 Det högsta kortet om de INTE vill ta fler stick
+5. Begränsa att Player inte kan lägga kort som inte är i samma färg
+6. Avsluta sticket
+7. Låt den som vann föregående stick påbörja nästa stick
+
+/////////////////////////////////////////////////////////////////////

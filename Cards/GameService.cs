@@ -31,6 +31,11 @@ namespace Cards
             var tricksCalculator = new TricksCalculator();
             tricksCalculator.HowManyTricks(Players, TricksCount, State);
         }
+
+        public void TrickRound(int numberOfSticksThisRound)
+        {
+
+        }
     }
 
     public class MyState

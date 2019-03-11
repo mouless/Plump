@@ -32,11 +32,11 @@ namespace Cards_WPF
 
             ShowImageCards(currentGame);
 
-            PlayHighestCard(currentGame);
+            //PlayHighestCard(currentGame);
 
-            PlayCard(currentGame);
+            HighestTricks(currentGame, NumberOfSticks);
 
-            ShowHands(currentGame);
+            //ShowHands(currentGame);
         }
 
         private void ShowHandText(GameService currentGame)
@@ -95,7 +95,7 @@ namespace Cards_WPF
             Image_PlayaPlayed.Source = new BitmapImage(uri);
         }
 
-        private void PlayCard(GameService currentGame)
+        private void HighestTricks(GameService currentGame, int antalKortIRundan)
         {
             // WHO HAS THE MOST TRICKS GOING IN ORDER OR STARTING WITH A NEW ONE EVERY ROUND?
             var numberOfTricks_North = currentGame.TricksCount[0].Count;
@@ -120,10 +120,10 @@ namespace Cards_WPF
 
         public void ShowHands(GameService currentGame)
         {
-            Label_NorthHand.Content = currentGame.CardToPlay_North;
-            Label_SouthHand.Content = currentGame.CardToPlay_South;
-            Label_EastnHand.Content = currentGame.CardToPlay_Eastn;
-            Label_PlayaHand.Content = currentGame.CardToPlay_Playa;
+            //Label_NorthHand.Content = currentGame.CardToPlay_North;
+            //Label_SouthHand.Content = currentGame.CardToPlay_South;
+            //Label_EastnHand.Content = currentGame.CardToPlay_Eastn;
+            //Label_PlayaHand.Content = currentGame.CardToPlay_Playa;
         }
 
         private void KörTillsDetFinnsFyraKortISammaFärg_Click(object sender, RoutedEventArgs e)

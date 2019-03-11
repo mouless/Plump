@@ -16,10 +16,10 @@
         <Label Content="SOUTH" HorizontalAlignment="Left" Margin="481,598,0,0" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
         <Label Content="PLAYER1" HorizontalAlignment="Left" Margin="10,281,0,0" VerticalAlignment="Top" FontSize="20" FontWeight="Bold"/>
         <Ellipse Fill="#FF40B240" Height="344" Margin="164,249,164,0" Stroke="Black" VerticalAlignment="Top"/>
-        <Label Visibility="Hidden" x:Name="Label_NorthHand" Content="Label" HorizontalAlignment="Left" Margin="498,323,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <Label Visibility="Hidden" x:Name="Label_EastnHand" Content="Label" HorizontalAlignment="Left" Margin="651,400,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <Label Visibility="Hidden" x:Name="Label_SouthHand" Content="Label" HorizontalAlignment="Left" Margin="498,459,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <Label Visibility="Hidden" x:Name="Label_PlayaHand" Content="Label" HorizontalAlignment="Left" Margin="344,400,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <!--<Label Visibility="Hidden" x:Name="Label_NorthHand" Content="Label" HorizontalAlignment="Left" Margin="498,323,0,0" VerticalAlignment="Top" FontSize="20"/>-->
+        <!--<Label Visibility="Hidden" x:Name="Label_EastnHand" Content="Label" HorizontalAlignment="Left" Margin="651,400,0,0" VerticalAlignment="Top" FontSize="20"/>-->
+        <!--<Label Visibility="Hidden" x:Name="Label_SouthHand" Content="Label" HorizontalAlignment="Left" Margin="498,459,0,0" VerticalAlignment="Top" FontSize="20"/>-->
+        <!--<Label Visibility="Hidden" x:Name="Label_PlayaHand" Content="Label" HorizontalAlignment="Left" Margin="344,400,0,0" VerticalAlignment="Top" FontSize="20"/>-->
         <Label x:Name="Label_NorthTricks" Content="Stick" HorizontalAlignment="Left" Margin="562,13,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Label x:Name="Label_EastnTricks" Content="Stick" HorizontalAlignment="Left" Margin="1001,284,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Label x:Name="Label_SouthTricks" Content="Stick" HorizontalAlignment="Left" Margin="559,601,0,0" VerticalAlignment="Top" FontSize="18"/>
