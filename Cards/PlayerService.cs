@@ -7,14 +7,14 @@ namespace Cards
     {
         public void CreatePlayers(List<Player> players)
         {
+            Player west = new Player("West");
+            players.Add(west);
+
             Player north = new Player("North");
             players.Add(north);
 
             Player east = new Player("East");
             players.Add(east);
-
-            Player south = new Player("South");
-            players.Add(south);
 
             Player player1 = new Player("Player1");
             players.Add(player1);

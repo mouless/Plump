@@ -12,13 +12,13 @@ namespace Cards
 
         public List<Player> Players { get; set; } = new List<Player>();
         public List<Player> OrderOfPlayers { get; set; } = new List<Player>();
-        public Player WhoGoesFirst { get; set; } = new Player("North");
+        public Player WhoGoesFirst { get; set; } = new Player("West");
 
         public List<List<Card>> TricksCount { get; set; } = new List<List<Card>>();
 
+        public Card CardToPlay_Westn { get; set; }
         public Card CardToPlay_North { get; set; }
         public Card CardToPlay_Eastn { get; set; }
-        public Card CardToPlay_South { get; set; }
         public Card CardToPlay_Playa { get; set; }
 
 

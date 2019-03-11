@@ -42,66 +42,67 @@ namespace Cards_WPF
 
         private void ShowHandText(GameService currentGame)
         {
+            ListBox_West.ItemsSource = currentGame.Players.Find(name => name.Name == "West").Hand;
             ListBox_North.ItemsSource = currentGame.Players.Find(name => name.Name == "North").Hand;
             ListBox_East.ItemsSource = currentGame.Players.Find(name => name.Name == "East").Hand;
-            ListBox_South.ItemsSource = currentGame.Players.Find(name => name.Name == "South").Hand;
             ListBox_Player1.ItemsSource = currentGame.Players.Find(name => name.Name == "Player1").Hand;
         }
 
         private void ShowTricks(GameService currentGame)
         {
-            Label_NorthTricks.Content = $"({currentGame.TricksCount[0].Count})";
-            Label_EastnTricks.Content = $"({currentGame.TricksCount[1].Count})";
-            Label_SouthTricks.Content = $"({currentGame.TricksCount[2].Count})";
+            Label_WestnTricks.Content = $"({currentGame.TricksCount[0].Count})";
+            Label_NorthTricks.Content = $"({currentGame.TricksCount[1].Count})";
+            Label_EastnTricks.Content = $"({currentGame.TricksCount[2].Count})";
             Label_PlayaTricks.Content = $"({currentGame.TricksCount[3].Count})";
         }
 
         private void ShowImageCards(GameService currentGame)
         {
             string cardNumber = "";
-            for (int j = 0; j < currentGame.Players[0].Hand.Count; j++)
+            for (int j = 0; j < currentGame.Players[3].Hand.Count; j++)
             {
-                cardNumber = CardImageNumber(currentGame.Players[0].Hand[j]);
+                cardNumber = CardImageNumber(currentGame.Players[3].Hand[j]);
                 //Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                 Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                Image img = FindName("Image_North" + j) as Image;
+                Image img = FindName("Image_Playa" + j) as Image;
                 img.Source = new BitmapImage(uri);
             }
         }
 
         public void ShowPlayersTrickCard(GameService currentGame)
         {
-            currentGame.CardToPlay_North = currentGame.Players[0].Hand.OrderByDescending(v => v.Rank).First();
-            string cardNumber = CardImageNumber(currentGame.CardToPlay_North);
+            currentGame.CardToPlay_Westn = currentGame.Players[0].Hand.OrderByDescending(v => v.Rank).First();
+            string cardNumber = CardImageNumber(currentGame.CardToPlay_Westn);
             //var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            Image_WestnPlayed.Source = new BitmapImage(uri);
+
+            currentGame.CardToPlay_North = currentGame.Players[1].Hand.OrderByDescending(v => v.Rank).First();
+            cardNumber = CardImageNumber(currentGame.CardToPlay_North);
+            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_NorthPlayed.Source = new BitmapImage(uri);
 
-            currentGame.CardToPlay_Eastn = currentGame.Players[1].Hand.OrderByDescending(v => v.Rank).First();
+            currentGame.CardToPlay_Eastn = currentGame.Players[2].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(currentGame.CardToPlay_Eastn);
             //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_EastnPlayed.Source = new BitmapImage(uri);
-
-            currentGame.CardToPlay_South = currentGame.Players[2].Hand.OrderByDescending(v => v.Rank).First();
-            cardNumber = CardImageNumber(currentGame.CardToPlay_South);
-            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Image_SouthPlayed.Source = new BitmapImage(uri);
 
             currentGame.CardToPlay_Playa = currentGame.Players[3].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(currentGame.CardToPlay_Playa);
             //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_PlayaPlayed.Source = new BitmapImage(uri);
+
         }
 
         private void HighestTricks(GameService currentGame, int antalKortIRundan)
         {
             // WHO HAS THE MOST TRICKS GOING IN ORDER OR STARTING WITH A NEW ONE EVERY ROUND?
-            var numberOfTricks_North = currentGame.TricksCount[0].Count;
-            var numberOfTricks_East = currentGame.TricksCount[1].Count;
-            var numberOfTricks_South = currentGame.TricksCount[2].Count;
+            var numberOfTricks_West = currentGame.TricksCount[0].Count;
+            var numberOfTricks_North = currentGame.TricksCount[1].Count;
+            var numberOfTricks_East = currentGame.TricksCount[2].Count;
             var numberOfTricks_Player1 = currentGame.TricksCount[3].Count;
 
             var highestTricks = numberOfTricks_North; // FRÅGAN ÄR OM MAN VILL ATT OLIKA SPELARE SKA BÖRJA RUNDORNA

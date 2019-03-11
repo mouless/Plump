@@ -8,12 +8,12 @@ namespace Cards
     {
         public void HowManyTricks(List<Player> players, List<List<Card>> tricksCount, MyState state)
         {
+            List<Card> WestnTricks = new List<Card>(new List<Card>());
+            tricksCount.Add(WestnTricks);
             List<Card> NorthTricks = new List<Card>(new List<Card>());
             tricksCount.Add(NorthTricks);
             List<Card> EastnTricks = new List<Card>(new List<Card>());
             tricksCount.Add(EastnTricks);
-            List<Card> SouthTricks = new List<Card>(new List<Card>());
-            tricksCount.Add(SouthTricks);
             List<Card> PlayaTricks = new List<Card>(new List<Card>());
             tricksCount.Add(PlayaTricks);
 
