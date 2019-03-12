@@ -22,12 +22,11 @@ namespace Cards
 
         public void OrderOfPlayers(List<Player> players, Player lastWinner, List<Player> orderOfPlayers)
         {
-            var orderedList = new List<Player>();
+            var tempOrderedList = new List<Player>();
 
             var indexInList = players.FindIndex(x => x.Name == lastWinner.Name);
-            //var indexInList = players.IndexOf(lastWinner);
 
-            orderedList.Add(players[indexInList]);
+            tempOrderedList.Add(players[indexInList]);
 
             for (int i = 0; i < players.Count - 1; i++)
             {
@@ -38,11 +37,11 @@ namespace Cards
                     indexInList = 0;
                 }
 
-                orderedList.Add(players[indexInList]);
+                tempOrderedList.Add(players[indexInList]);
             }
 
             orderOfPlayers.Clear();
-            foreach (var player in orderedList)
+            foreach (var player in tempOrderedList)
             {
                 orderOfPlayers.Add(player);
             }

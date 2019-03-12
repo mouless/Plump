@@ -6,13 +6,15 @@ namespace Cards
 {
     public class GameService
     {
+        public bool NotPossibleTricks { get; set; } = false;
+
         public static Random r;
         public MyState State { get; set; } = new MyState();
         public List<Card> DeckOfCards { get; set; } = new List<Card>();
 
         public List<Player> Players { get; set; } = new List<Player>();
         public List<Player> OrderOfPlayers { get; set; } = new List<Player>();
-        public Player WhoGoesFirst { get; set; } = new Player("West");
+        public Player WhoGoesFirst { get; set; } = new Player("East");
 
         public List<List<Card>> TricksCount { get; set; } = new List<List<Card>>();
 
@@ -31,14 +33,15 @@ namespace Cards
 
             var players = new PlayerService();
             players.CreatePlayers(Players);
+            players.OrderOfPlayers(Players, WhoGoesFirst, OrderOfPlayers);
 
             var fördelaKort = new DealCards();
             fördelaKort.DistributeCards(Players, DeckOfCards, numberOfSticksThisRound);
 
-            players.OrderOfPlayers(Players, WhoGoesFirst, OrderOfPlayers);
-
             var tricksCalculator = new TricksCalculator();
             tricksCalculator.HowManyTricks(Players, TricksCount, State);
+
+            PlayNextTrick(numberOfSticksThisRound, Players, TricksCount);
         }
 
         private void ResetVariableThings()
@@ -47,14 +50,17 @@ namespace Cards
             TricksCount.Clear();
             DeckOfCards.Clear();
             Players.Clear();
+            NotPossibleTricks = false;
         }
 
-        public void PlayNextTrick(int numberOfSticksThisRound)
+        public void PlayNextTrick(int numberOfSticksThisRound, List<Player> players, List<List<Card>> tricksCount)
         {
             var order = new PlayerService();
             order.OrderOfPlayers(Players, WhoGoesFirst, OrderOfPlayers);
 
             var tricksRound = new TricksRound();
+            NotPossibleTricks = tricksRound.DecideTricks(numberOfSticksThisRound, tricksCount, OrderOfPlayers, players);
+
             tricksRound.PlayTricks(TricksCount, numberOfSticksThisRound);
         }
 

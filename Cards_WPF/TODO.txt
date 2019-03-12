@@ -1,8 +1,14 @@
 ﻿/////////////////////////////////////////////////////////////////////
 
-TODO:
+DONE:
 
 1. Bestämma vilken spelare som ska få börja, utifrån antalet stick
+	1.5 Se till så att ordningen som Players skapas i är samma som ordningen som de ska spela just den omgången
+
+/////////////////////////////////////////////////////////////////////
+
+TODO:
+
 2. Se till att det gemensamma antalet stick inte är lika många som omgångens nummer
 3. Första spelaren spelar sitt första stick
 	3.1 Se till att spelaren inte spelar ett kort som riskerar att öka antalet stick över det önskade värdet

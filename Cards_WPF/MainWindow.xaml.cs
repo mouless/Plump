@@ -21,10 +21,20 @@ namespace Cards_WPF
 
             gameService = new GameService();
             StartGame_BackEnd();
-            StartGame_FrontEnd();
+            StartGame_FrontEnd(gameService);
+
         }
 
-        private void FrontEnd(GameService currentGame)
+        public void StartGame_BackEnd()
+        {
+            Label_Number.Content = NumberOfPlayedRounds.ToString();
+
+            gameService.CreateRound(NumberOfSticks);
+
+            NumberOfPlayedRounds++;
+        }
+
+        private void StartGame_FrontEnd(GameService currentGame)
         {
             ShowHandText(currentGame);
 
@@ -33,6 +43,11 @@ namespace Cards_WPF
             ShowImageCards(currentGame);
 
             HighestTricks(currentGame, NumberOfSticks);
+
+            if (currentGame.NotPossibleTricks == true)
+            {
+                MessageBox.Show("Not conceivable!");
+            }
 
             //WinnerOfTheTrickRound();
 
@@ -105,8 +120,8 @@ namespace Cards_WPF
             var numberOfTricks_East = currentGame.TricksCount[2].Count;
             var numberOfTricks_Player1 = currentGame.TricksCount[3].Count;
 
-            var highestTricks = numberOfTricks_North; // FRÅGAN ÄR OM MAN VILL ATT OLIKA SPELARE SKA BÖRJA RUNDORNA
-            var nameOfHighest = currentGame.Players[0]; // FÖR NU BÖRJAR BARA NORTH HELA TIDEN
+            var highestTricks = numberOfTricks_West; // FRÅGAN ÄR OM MAN VILL ATT OLIKA SPELARE SKA BÖRJA RUNDORNA
+            var nameOfHighest = currentGame.Players[0]; // FÖR NU BÖRJAR BARA WEST HELA TIDEN
 
             for (int i = 0; i < currentGame.TricksCount.Count; i++)
             {
@@ -123,7 +138,7 @@ namespace Cards_WPF
         private void StartAnotherRound_Click(object sender, RoutedEventArgs e)
         {
             StartGame_BackEnd();
-            StartGame_FrontEnd();
+            StartGame_FrontEnd(gameService);
         }
 
         private string CardImageNumber(Cards.Models.Card cardToNum)
@@ -136,20 +151,6 @@ namespace Cards_WPF
                 temp = "0" + rank.ToString();
             }
             return suit.ToString() + temp;
-        }
-
-        public void StartGame_BackEnd()
-        {
-            Label_Number.Content = NumberOfPlayedRounds.ToString();
-
-            gameService.CreateRound(NumberOfSticks);
-
-            NumberOfPlayedRounds++;
-        }
-
-        public void StartGame_FrontEnd()
-        {
-            FrontEnd(gameService);
         }
 
         private void WinnerOfTheTrickRound()
