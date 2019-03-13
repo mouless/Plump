@@ -30,7 +30,7 @@ namespace Cards
 
             for (int i = 0; i < players.Count - 1; i++)
             {
-                indexInList += 1;
+                indexInList++;
 
                 if (indexInList > players.Count - 1)
                 {

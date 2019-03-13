@@ -29,22 +29,18 @@ namespace Cards
         {
             ResetVariableThings(IndexOfWhoGoesFirst, WhoGoesFirst, numberOfSticksThisRound);
 
-            var listOfCards = new Deck();
-            DeckOfCards = listOfCards.CreateDeck(DeckOfCards);
+            var kortleksLista = new Deck();
+            DeckOfCards = kortleksLista.CreateDeck(DeckOfCards);
 
-            var players = new PlayerService();
-            players.CreatePlayers(Players);
-            players.OrderOfPlayers(Players, WhoGoesFirst); // För att korten ska delas ut till förste spelaren först och inte i en annan ordning
+            var spelare = new PlayerService();
+            spelare.CreatePlayers(Players);
+            spelare.OrderOfPlayers(Players, WhoGoesFirst); // Korten delas ut till den spelare som börjar omgången (vilket kommer att roteras)
 
             var fördelaKort = new DealCards();
             fördelaKort.DistributeCards(Players, DeckOfCards, numberOfSticksThisRound);
 
             var tricksCalculator = new TricksCalculator();
             tricksCalculator.HowManyTricks(Players, TricksCount, State);
-
-            // MÅSTE GÖRA DET HÄR STEGVIS EFTERSOM MAN SOM SPELARE INTE SKA KUNNA SE DE VAD AI-SPELARNA HAR VALT FÖR NÅGRA STICKS
-
-            PlayNextTrick();
         }
 
         private void ResetVariableThings(int indexOfWhoGoesFirst, Player whoGoesFirst, int numberOfSticksThisRound)
@@ -80,7 +76,7 @@ namespace Cards
             }
         }
 
-        public void PlayNextTrick()
+        public void PlayNextTrick(int IndexOfWhoGoesFirst)
         {
             var playerService = new PlayerService();
             playerService.OrderOfPlayers(Players, WhoGoesFirst);

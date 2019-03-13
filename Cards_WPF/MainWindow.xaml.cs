@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,17 +10,29 @@ namespace Cards_WPF
 {
     public partial class MainWindow : Window
     {
-        //public bool StartAnotherRound { get; set; } = false;
         public int NumberOfSticks { get; set; } = 5;
         public int NumberOfPlayedRounds { get; set; } = 1;
+        public List<VisualStuff> VisualStuffList { get; set; }
+        public List<CardPicture> CardPicturesList { get; set; } = new List<CardPicture>();
 
         private GameService gameService;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            CreateVisualStuff();
+
+            CreateCroppedBitmapCards(CardPicturesList);
+
             StartNewGame();
 
+        }
+
+        private void CreateCroppedBitmapCards(List<CardPicture> cardPicturesList)
+        {
+            var spriteSheetService = new SpriteSheetService();
+            spriteSheetService.CutImage(cardPicturesList);
         }
 
         private void StartNewGame()
@@ -40,8 +53,6 @@ namespace Cards_WPF
 
         private void StartGame_FrontEnd(GameService currentGame)
         {
-            PlayerTricksCount_Label.Content = "0";
-
             ShowHandText(currentGame);
 
             ShowTricks(currentGame);
@@ -59,6 +70,7 @@ namespace Cards_WPF
 
             //UpdateScoreboard();
         }
+
 
 
         private void ShowHandText(GameService currentGame)
@@ -83,8 +95,8 @@ namespace Cards_WPF
             for (int j = 0; j < currentGame.Players[3].Hand.Count; j++)
             {
                 cardNumber = CardImageNumber(currentGame.Players[3].Hand[j]);
-                //Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                //Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                 Image img = FindName("Image_Playa" + j) as Image;
                 img.Source = new BitmapImage(uri);
             }
@@ -94,26 +106,26 @@ namespace Cards_WPF
         {
             currentGame.CardToPlay_Westn = currentGame.Players[0].Hand.OrderByDescending(v => v.Rank).First();
             string cardNumber = CardImageNumber(currentGame.CardToPlay_Westn);
-            //var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_WestnPlayed.Source = new BitmapImage(uri);
 
             currentGame.CardToPlay_North = currentGame.Players[1].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(currentGame.CardToPlay_North);
-            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_NorthPlayed.Source = new BitmapImage(uri);
 
             currentGame.CardToPlay_Eastn = currentGame.Players[2].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(currentGame.CardToPlay_Eastn);
-            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_EastnPlayed.Source = new BitmapImage(uri);
 
             currentGame.CardToPlay_Playa = currentGame.Players[3].Hand.OrderByDescending(v => v.Rank).First();
             cardNumber = CardImageNumber(currentGame.CardToPlay_Playa);
-            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
             Image_PlayaPlayed.Source = new BitmapImage(uri);
 
         }
@@ -159,27 +171,77 @@ namespace Cards_WPF
             return suit.ToString() + temp;
         }
 
-        private void WinnerOfTheTrickRound()
+        private void UpdateScoreboard()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
-        private void CheckBox_Cards_Checked(object sender, RoutedEventArgs e)
+        private void WinnerOfTheTrickRound()
         {
-            var numberOfTricksSelected = 0;
+            //throw new NotImplementedException();
+        }
 
-            if (CheckBox_Card_1.IsChecked == true)
-                numberOfTricksSelected++;                                     
-            if (CheckBox_Card_2.IsChecked == true)
-                numberOfTricksSelected++;                                    
-            if (CheckBox_Card_3.IsChecked == true)
-                numberOfTricksSelected++;                                    
-            if (CheckBox_Card_4.IsChecked == true)
-                numberOfTricksSelected++;                                   
-            if (CheckBox_Card_5.IsChecked == true)
-                numberOfTricksSelected++;
+        private void CreateVisualStuff()
+        {
+            VisualStuffList = new List<VisualStuff>
+            {
+                new VisualStuff
+                {
+                    CardName = "Image_Playa0",
+                },
+                new VisualStuff
+                {
+                    CardName = "Image_Playa1",
+                },
+                new VisualStuff
+                {
+                    CardName = "Image_Playa2",
+                },
+                new VisualStuff
+                {
+                    CardName = "Image_Playa3",
+                },
+                new VisualStuff
+                {
+                    CardName = "Image_Playa4",
+                },
+            };
+        }
 
-            PlayerTricksCount_Label.Content = numberOfTricksSelected.ToString();
+        private void Image_PlayaCard_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var cardOfSender = (Image)sender;
+            var nameOfSender = cardOfSender.Name;
+            var marginOfSender = cardOfSender.Margin;
+
+            foreach (var bild in VisualStuffList)
+            {
+                if (bild.CardName == nameOfSender)
+                {
+                    if (bild.CardSelected == true)
+                    {
+                        marginOfSender.Top += 30;
+                        cardOfSender.Margin = marginOfSender;
+                        bild.CardSelected = false;
+                    }
+                    else
+                    {
+                        marginOfSender.Top -= 30;
+                        cardOfSender.Margin = marginOfSender;
+                        bild.CardSelected = true;
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        private void Image_Test_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var numberOfCards = CardPicturesList.Count;
+            var randomCard = new Random();
+            var randomNumber = randomCard.Next(0, 52);
+            Image_Test.Source = CardPicturesList[randomNumber].Picture;
         }
     }
 }

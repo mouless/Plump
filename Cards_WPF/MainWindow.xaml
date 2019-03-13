@@ -27,19 +27,13 @@
         <Image x:Name="Image_NorthPlayed" HorizontalAlignment="Left" Height="131" Margin="498,258,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
         <Image x:Name="Image_EastnPlayed" HorizontalAlignment="Left" Height="131" Margin="775,347,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
         <Image x:Name="Image_PlayaPlayed" HorizontalAlignment="Left" Height="131" Margin="498,450,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
-        <Image x:Name="Image_Playa0" HorizontalAlignment="Left" Height="131" Margin="440,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
-        <Image x:Name="Image_Playa1" HorizontalAlignment="Left" Height="131" Margin="480,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
-        <Image x:Name="Image_Playa2" HorizontalAlignment="Left" Height="131" Margin="520,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
-        <Image x:Name="Image_Playa3" HorizontalAlignment="Left" Height="131" Margin="560,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
-        <Image x:Name="Image_Playa4" HorizontalAlignment="Left" Height="131" Margin="600,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
+        <Image x:Name="Image_Playa0" HorizontalAlignment="Left" Height="131" Margin="440,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_PlayaCard_MouseUp"/>
+        <Image x:Name="Image_Playa1" HorizontalAlignment="Left" Height="131" Margin="480,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_PlayaCard_MouseUp"/>
+        <Image x:Name="Image_Playa2" HorizontalAlignment="Left" Height="131" Margin="520,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_PlayaCard_MouseUp"/>
+        <Image x:Name="Image_Playa3" HorizontalAlignment="Left" Height="131" Margin="560,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_PlayaCard_MouseUp"/>
+        <Image x:Name="Image_Playa4" HorizontalAlignment="Left" Height="131" Margin="600,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_PlayaCard_MouseUp"/>
         <Label x:Name="HighestTricks_Label" FontWeight="Bold" FontSize="18" Content="Vem som har högst stick" HorizontalAlignment="Left" Margin="427,400,0,0" VerticalAlignment="Top" Height="30" Width="273"/>
-        <CheckBox x:Name="CheckBox_Card_1" Content="" HorizontalAlignment="Left" Margin="371,634,0,0" VerticalAlignment="Top" Click="CheckBox_Cards_Checked"/>
-        <CheckBox x:Name="CheckBox_Card_2" Content="" HorizontalAlignment="Left" Margin="371,654,0,0" VerticalAlignment="Top" Click="CheckBox_Cards_Checked"/>
-        <CheckBox x:Name="CheckBox_Card_3" Content="" HorizontalAlignment="Left" Margin="371,674,0,0" VerticalAlignment="Top" Click="CheckBox_Cards_Checked"/>
-        <CheckBox x:Name="CheckBox_Card_4" Content="" HorizontalAlignment="Left" Margin="371,694,0,0" VerticalAlignment="Top" Click="CheckBox_Cards_Checked"/>
-        <CheckBox x:Name="CheckBox_Card_5" Content="" HorizontalAlignment="Left" Margin="371,714,0,0" VerticalAlignment="Top" Click="CheckBox_Cards_Checked"/>
-        <Button x:Name="PlayerTricks_Button" Content="Choose tricks" HorizontalAlignment="Left" Margin="371,774,0,0" VerticalAlignment="Top" Width="85" Height="29"/>
-        <Label x:Name="PlayerTricksCount_Label" Content="# of tricks" HorizontalAlignment="Left" Margin="371,743,0,0" VerticalAlignment="Top"/>
+        <Image x:Name="Image_Test" HorizontalAlignment="Left" Height="131" Margin="807,568,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_Test_MouseUp"/>
 
     </Grid>
 </Window>
