@@ -20,7 +20,7 @@ namespace Cards
             players.Add(player1);
         }
 
-        public void OrderOfPlayers(List<Player> players, Player lastWinner, List<Player> orderOfPlayers)
+        public void OrderOfPlayers(List<Player> players, Player lastWinner)
         {
             var tempOrderedList = new List<Player>();
 
@@ -40,11 +40,16 @@ namespace Cards
                 tempOrderedList.Add(players[indexInList]);
             }
 
-            orderOfPlayers.Clear();
+            players.Clear();
             foreach (var player in tempOrderedList)
             {
-                orderOfPlayers.Add(player);
+                players.Add(player);
             }
+        }
+
+        public void WhoGoesFirstHighestTricksAfterDealer(List<Player> players)
+        {
+
         }
     }
 }

@@ -18,11 +18,15 @@ namespace Cards_WPF
         public MainWindow()
         {
             InitializeComponent();
+            StartNewGame();
 
+        }
+
+        private void StartNewGame()
+        {
             gameService = new GameService();
             StartGame_BackEnd();
             StartGame_FrontEnd(gameService);
-
         }
 
         public void StartGame_BackEnd()
@@ -36,17 +40,19 @@ namespace Cards_WPF
 
         private void StartGame_FrontEnd(GameService currentGame)
         {
+            PlayerTricksCount_Label.Content = "0";
+
             ShowHandText(currentGame);
 
             ShowTricks(currentGame);
 
             ShowImageCards(currentGame);
 
-            HighestTricks(currentGame, NumberOfSticks);
+            ShowHighestTricks(currentGame, NumberOfSticks);
 
             if (currentGame.NotPossibleTricks == true)
             {
-                MessageBox.Show("Not conceivable!");
+                MessageBox.Show("Last player's tricks equalled the same as the amount of tricks for the current round...");
             }
 
             //WinnerOfTheTrickRound();
@@ -112,7 +118,7 @@ namespace Cards_WPF
 
         }
 
-        private void HighestTricks(GameService currentGame, int antalKortIRundan)
+        private void ShowHighestTricks(GameService currentGame, int antalKortIRundan)
         {
             // WHO HAS THE MOST TRICKS GOING IN ORDER OR STARTING WITH A NEW ONE EVERY ROUND?
             var numberOfTricks_West = currentGame.TricksCount[0].Count;
@@ -156,6 +162,24 @@ namespace Cards_WPF
         private void WinnerOfTheTrickRound()
         {
             throw new NotImplementedException();
+        }
+
+        private void CheckBox_Cards_Checked(object sender, RoutedEventArgs e)
+        {
+            var numberOfTricksSelected = 0;
+
+            if (CheckBox_Card_1.IsChecked == true)
+                numberOfTricksSelected++;                                     
+            if (CheckBox_Card_2.IsChecked == true)
+                numberOfTricksSelected++;                                    
+            if (CheckBox_Card_3.IsChecked == true)
+                numberOfTricksSelected++;                                    
+            if (CheckBox_Card_4.IsChecked == true)
+                numberOfTricksSelected++;                                   
+            if (CheckBox_Card_5.IsChecked == true)
+                numberOfTricksSelected++;
+
+            PlayerTricksCount_Label.Content = numberOfTricksSelected.ToString();
         }
     }
 }

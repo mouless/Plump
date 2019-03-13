@@ -3,13 +3,14 @@
 DONE:
 
 1. Bestämma vilken spelare som ska få börja, utifrån antalet stick
-	1.5 Se till så att ordningen som Players skapas i är samma som ordningen som de ska spela just den omgången
 
 /////////////////////////////////////////////////////////////////////
 
 TODO:
-
+	1.1 Användaren måste kunna själv välja hur många stick de tror de kommer att kunna ta
+	1.5 Se till så att ordningen som Players skapas i är samma som ordningen som de ska spela just den omgången
 2. Se till att det gemensamma antalet stick inte är lika många som omgångens nummer
+	2.5 Ta bort automatiskt stick-antal från Player1 och skapa en input för antalet stick Player1 vill ha
 3. Första spelaren spelar sitt första stick
 	3.1 Se till att spelaren inte spelar ett kort som riskerar att öka antalet stick över det önskade värdet
 4. De andra AI-spelarna följer färg
