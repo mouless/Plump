@@ -19,7 +19,7 @@ namespace Cards
             }
 
             Stack urb = new Stack(); // TODO: GÖRA OM KORTLEKEN TILL EN "STACK"
-            
+
             foreach (var player in players)
             {
                 var newHand = player.Hand.OrderBy(c => c.Suit).ThenByDescending(c => c.Rank).ToList();

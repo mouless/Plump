@@ -26,3 +26,4 @@ TODO:
 ÖVRIGT:
 
 1. Göra om Deck<Card> till en Stack<Card>
+2. Ändra Player-klassen till att bli tre nya klasser. Human och AI som kan ärva från Player
