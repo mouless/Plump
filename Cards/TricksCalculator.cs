@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Cards.Models;
+using System.Collections.Generic;
 using System.Linq;
-using Cards.Models;
 
 namespace Cards
 {
@@ -8,20 +8,17 @@ namespace Cards
     {
         public void HowManyTricks(List<Player> players, List<List<Card>> tricksCount, MyState state)
         {
-            List<Card> WestnTricks = new List<Card>(new List<Card>());
-            tricksCount.Add(WestnTricks);
-            List<Card> NorthTricks = new List<Card>(new List<Card>());
-            tricksCount.Add(NorthTricks);
-            List<Card> EastnTricks = new List<Card>(new List<Card>());
-            tricksCount.Add(EastnTricks);
-            List<Card> PlayaTricks = new List<Card>(new List<Card>());
-            tricksCount.Add(PlayaTricks);
+            foreach (var player in players)
+            {
+                List<Card> createNewList = new List<Card>(new List<Card>());
+                tricksCount.Add(createNewList);
+            }
 
-            //BytUtKortenIPlayaListan(players[3]);
+            //BytUtKortenIPlayaListan(players.Find(x => x.Name == "Player1"));
 
 
             // Plockar ut alla kort som är över KNEKT som "säkra" kort
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < players.Count - 1; i++)
             {
                 tricksCount[i] = players[i].Hand.Where(v => v.Rank > Card.CardRank.Knekt).ToList();
             }

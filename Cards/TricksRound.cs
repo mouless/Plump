@@ -18,7 +18,7 @@ namespace Cards
 
                 if (numberOfSticksThisRound == totalPlayerSticks) // ÄR DET LIKA MÅNGA STICK TAGNA SOM OMGÅNGEN ÄR PÅ SÅ MÅSTE VI ÅTGÄRDA DEN HÄR
                 {
-                    if (player.Name == "Player1")
+                    if (player is HumanPlayer)
                     {
                         return true; // VI RETURNERAR TRUE OM DET ÄR SPELAREN SOM MÅSTE VÄLJA ETT "VALID" STICKNUMMER
                     }
@@ -52,14 +52,8 @@ namespace Cards
                 var itemToRemove = tricksCount[lastPlayerIndex].Find(x => (int)x.Rank == lowestCardRank && (int)x.Suit == lowestCardSuit);
                 tricksCount[lastPlayerIndex].Remove(itemToRemove);
             }
-            else
+            else // OM SPELAREN INTE HAR VALT NÅGOT STICK SÅ MÅSTE DEN NU VÄLJA MINST ETT
             {
-                if (numberOfSticksThisRound == 1)
-                {
-
-                }
-
-                // LÄGG TILL ETT KORT SÅ ATT DET INTE ALLA STICK SUMMERAS TILL RUNDANS NUMMER
                 var highestCardRank = 15; // ESS är ju 14
                 var highestCardSuit = 0; // HJÄRTER är ju 1
 
@@ -72,7 +66,7 @@ namespace Cards
                     }
                 }
 
-
+                // LÄGG TILL ETT KORT SÅ ATT INTE ALLA STICK SUMMERAS TILL RUNDANS NUMMER
                 var itemToAdd = tricksCount[lastPlayerIndex].Find(x => (int)x.Rank == highestCardRank && (int)x.Suit == highestCardSuit);
                 tricksCount[lastPlayerIndex].Add(itemToAdd);
             }

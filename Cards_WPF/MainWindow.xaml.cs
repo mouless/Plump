@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Cards;
+using Cards.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Cards;
 
 namespace Cards_WPF
 {
@@ -27,6 +29,16 @@ namespace Cards_WPF
 
             StartNewGame();
 
+
+            gameService.OnPlayerTurnStarted = OnPlayerTurnStarted;
+        }
+
+        private void OnPlayerTurnStarted(Player player)
+        {
+            if (player is HumanPlayer)
+            {
+                //Alert("DIN TUR");
+            }
         }
 
         private void CreateCroppedBitmapCards(List<CardPicture> cardPicturesList)
@@ -39,7 +51,24 @@ namespace Cards_WPF
         {
             gameService = new GameService();
             StartGame_BackEnd();
+
             StartGame_FrontEnd(gameService);
+
+        }
+
+        public void On_SpelareSpelatKort()
+        {
+            //var player = gameService.CurrentPlayer;
+            //var card = något;
+
+
+            //gameService.PlayCard(player, card);
+
+        }
+
+        public void On_SpelareValtStick()
+        {
+
         }
 
         public void StartGame_BackEnd()
@@ -63,7 +92,7 @@ namespace Cards_WPF
 
             if (currentGame.NotPossibleTricks == true)
             {
-                MessageBox.Show("Last player's tricks equalled the same as the amount of tricks for the current round...");
+                MessageBox.Show("Last player's tricks equals the same as the amount of tricks for the current round...");
             }
 
             //WinnerOfTheTrickRound();
@@ -83,6 +112,7 @@ namespace Cards_WPF
 
         private void ShowTricks(GameService currentGame)
         {
+
             Label_WestnTricks.Content = $"({currentGame.TricksCount[0].Count})";
             Label_NorthTricks.Content = $"({currentGame.TricksCount[1].Count})";
             Label_EastnTricks.Content = $"({currentGame.TricksCount[2].Count})";
@@ -159,7 +189,7 @@ namespace Cards_WPF
             StartGame_FrontEnd(gameService);
         }
 
-        private string CardImageNumber(Cards.Models.Card cardToNum)
+        private string CardImageNumber(Card cardToNum)
         {
             int suit = (int)cardToNum.Suit;
             int rank = (int)cardToNum.Rank;
@@ -208,7 +238,7 @@ namespace Cards_WPF
             };
         }
 
-        private void Image_PlayaCard_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Image_PlayaCard_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var cardOfSender = (Image)sender;
             var nameOfSender = cardOfSender.Name;
@@ -236,7 +266,7 @@ namespace Cards_WPF
             }
         }
 
-        private void Image_Test_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Image_Test_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var numberOfCards = CardPicturesList.Count;
             var randomCard = new Random();
@@ -246,7 +276,13 @@ namespace Cards_WPF
 
         private void VäljStick_Click(object sender, RoutedEventArgs e)
         {
-            
+            var canPlayerChooseThatTricks = new bool();
+
+            foreach (var player in gameService.Players)
+            {
+                //gameService.DecideTricks(IndexOfWhoGoesFirst, player);
+            }
+
         }
     }
 }
