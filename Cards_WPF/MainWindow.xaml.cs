@@ -244,7 +244,7 @@ namespace Cards_WPF
             Image_Test.Source = CardPicturesList[randomNumber].Picture;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void VäljStick_Click(object sender, RoutedEventArgs e)
         {
             
         }

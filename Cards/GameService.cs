@@ -76,14 +76,13 @@ namespace Cards
             }
         }
 
-        public void PlayNextTrick(int IndexOfWhoGoesFirst)
+        public void PlayNextTrick(int IndexOfWhoGoesFirst, Player player)
         {
             var playerService = new PlayerService();
             playerService.OrderOfPlayers(Players, WhoGoesFirst);
 
             var tricksRound = new TricksRound();
-            tricksRound.DecideTricksForPlayer(Players);
-            NotPossibleTricks = tricksRound.DecideTricksForAI(NumberOfSticksThisRound, TricksCount, Players);
+            NotPossibleTricks = tricksRound.DecideTricksForPlayer(player, NumberOfSticksThisRound, TricksCount, Players);
 
             tricksRound.PlayTricks(TricksCount, NumberOfSticksThisRound);
         }

@@ -35,7 +35,7 @@ namespace Cards_ML
 
             var json = JsonConvert.SerializeObject(mlPlayers);
 
-            File.WriteAllText(@"C:\Plump\PlumpResultat.txt", json);
+            File.WriteAllText(@"W:\PlumpResultat.txt", json);
 
         }
     }
