@@ -243,5 +243,10 @@ namespace Cards_WPF
             var randomNumber = randomCard.Next(0, 52);
             Image_Test.Source = CardPicturesList[randomNumber].Picture;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cards_WPF", "Cards_WPF\Card
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cards", "Cards\Cards.csproj", "{2FB8281B-17B7-4DEB-B6AA-64D1CECDDDA9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cards_ML", "Cards_ML\Cards_ML.csproj", "{07E03E05-DABA-4624-A555-D7B136340454}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2FB8281B-17B7-4DEB-B6AA-64D1CECDDDA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FB8281B-17B7-4DEB-B6AA-64D1CECDDDA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FB8281B-17B7-4DEB-B6AA-64D1CECDDDA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07E03E05-DABA-4624-A555-D7B136340454}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07E03E05-DABA-4624-A555-D7B136340454}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07E03E05-DABA-4624-A555-D7B136340454}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07E03E05-DABA-4624-A555-D7B136340454}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
