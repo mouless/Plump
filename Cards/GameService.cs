@@ -6,10 +6,12 @@ namespace Cards
 {
     public class GameService
     {
-        public bool NotPossibleTricks { get; set; } = false;
+        #region
+        public bool PlayerIsHuman { get; set; } = false;
         public int NumberOfSticksThisRound { get; set; }
 
         public static Random r;
+        public Dictionary<int, Scoreboard> Scoreboard { get; set; } = new Dictionary<int, Scoreboard>();
         public MyState State { get; set; } = new MyState();
         public List<Card> DeckOfCards { get; set; } = new List<Card>();
 
@@ -23,60 +25,41 @@ namespace Cards
         public Card CardToPlay_North { get; set; }
         public Card CardToPlay_Eastn { get; set; }
         public Card CardToPlay_Playa { get; set; }
-
+        #endregion
 
         public Action<Player> OnPlayerTurnStarted { get; set; }
 
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///
         public void CreateRound(int numberOfSticksThisRound)
         {
-            ResetVariableThings(IndexOfWhoGoesFirst, WhoGoesFirst, numberOfSticksThisRound);
+            ConfigureVariableThings(IndexOfWhoGoesFirst, WhoGoesFirst, numberOfSticksThisRound);
 
             var kortleksLista = new Deck();
             DeckOfCards = kortleksLista.CreateDeck(DeckOfCards);
 
             var spelare = new PlayerService();
             spelare.CreatePlayers(Players);
-            spelare.OrderOfPlayers(Players, WhoGoesFirst); // Korten delas ut till den spelare som börjar omgången (vilket kommer att roteras)
+            spelare.InitizialOrderOfPlayers(Players, WhoGoesFirst); // Korten delas ut till den spelare som börjar omgången (vilket kommer att roteras)
 
             var fördelaKort = new DealCards();
             fördelaKort.DistributeCards(Players, DeckOfCards, numberOfSticksThisRound);
 
-            var tricksCalculator = new TricksCalculator();
-            tricksCalculator.HowManyTricks(Players, TricksCount, State);
-
-
-            // NOTIFY NEXT PLAYER OF TURN START
-            Player nextPlayer = Players[0];
-            StartPlayerTurn(nextPlayer);
+            StartRound(Players);
         }
 
-        private void StartPlayerTurn(Player player)
-        {
-            OnPlayerTurnStarted?.Invoke(player);
-        }
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-        public void PlayCard(object player, object card)
-        {
-            // validera att en spelare har kortet dom vill spela
-
-            // end current player turn
-
-
-            Player nextPlayer;
-            // notify next player of turn start
-            //StartPlayerTurn(nextPlayer);
-        }
-
-        private void ResetVariableThings(int indexOfWhoGoesFirst, Player whoGoesFirst, int numberOfSticksThisRound)
+        private void ConfigureVariableThings(int indexOfWhoGoesFirst, Player whoGoesFirst, int numberOfSticksThisRound)
         {
             r = new Random();
+            Scoreboard.Add(numberOfSticksThisRound, new Scoreboard());
             NumberOfSticksThisRound = numberOfSticksThisRound;
             TricksCount.Clear();
             DeckOfCards.Clear();
             Players.Clear();
-            NotPossibleTricks = false;
+            PlayerIsHuman = false;
             indexOfWhoGoesFirst++;
 
             if (indexOfWhoGoesFirst >= Players.Count)
@@ -102,13 +85,40 @@ namespace Cards
             }
         }
 
-        public bool DecideTricks(Player player)
+        public void StartRound(List<Player> players)
+        {
+            var whoGoesFirst = players[0];
+            // ANROPA DEN SPELAREN SÅ DEN KAN SPELA UT SITT KORT
+        }
+
+        private void StartPlayerTurn(Player player)
+        {
+            OnPlayerTurnStarted?.Invoke(player);
+
+            // TODO:
+            // 1. Räkna ut antalet stick
+            // 2. 
+            // 3. 
+            // 4. 
+            // 5. 
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void DecideHowManyTricksToTake(Player player)
+        {
+            var tricksCalculator = new TricksCalculator();
+            tricksCalculator.HowManyTricks(new Player, TricksCount, State);
+        }
+
+        public bool CheckIfTricksCountIsValid(Player player)
         {
             var tricksRound = new TricksRound();
-            NotPossibleTricks = tricksRound.DecideTricksForPlayer(player, NumberOfSticksThisRound, TricksCount, Players);
+            PlayerIsHuman = tricksRound.DecideTricksForPlayer(player, NumberOfSticksThisRound, TricksCount, Players);
 
-            if (NotPossibleTricks == true)
+            if (PlayerIsHuman == true)
             {
+                // TODO: BE OM ETT TRICKS COUNT
                 return true;
             }
             return false;
@@ -117,16 +127,28 @@ namespace Cards
         public void OrderPlayerByTricks()
         {
             var spelare = new PlayerService();
-            spelare.OrderOfPlayers(Players, WhoGoesFirst); // Korten delas ut till den spelare som börjar omgången (vilket kommer att roteras)
-
+            spelare.InitizialOrderOfPlayers(Players, WhoGoesFirst); // Korten delas ut till den spelare som börjar omgången (vilket kommer att roteras)
         }
 
-        public void PlayTrick(Player whoGoesFirst)
+        public void PlayCard(Player player, object card)
         {
+            // validera att en spelare har kortet dom vill spela
+
+            // end current player turn
+
             var tricksRound = new TricksRound();
-            tricksRound.PlayTricks(TricksCount, NumberOfSticksThisRound);
+            tricksRound.PlayTricks(player, TricksCount, NumberOfSticksThisRound);
+
+            Player nextPlayer;
+            // notify next player of turn start
+            //StartPlayerTurn(nextPlayer);
         }
 
+        public void EndGame()
+        {
+            var score = Scoreboard[numberOfSticksThisRound];
+
+        }
     }
 
     public class MyState

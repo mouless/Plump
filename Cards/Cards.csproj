@@ -51,6 +51,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Deck.cs" />
     <Compile Include="Models\Tricks.cs" />
+    <Compile Include="Scoreboard.cs" />
+    <Compile Include="TricksCalculator - Old.cs" />
     <Compile Include="TricksCalculator.cs" />
     <Compile Include="TricksRound.cs" />
   </ItemGroup>

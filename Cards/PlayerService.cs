@@ -20,11 +20,11 @@ namespace Cards
             players.Add(player1);
         }
 
-        public void OrderOfPlayers(List<Player> players, Player lastWinner)
+        public void InitizialOrderOfPlayers(List<Player> players, Player whoGoesFirst)
         {
             var tempOrderedList = new List<Player>();
 
-            var indexInList = players.FindIndex(x => x.Name == lastWinner.Name);
+            var indexInList = players.FindIndex(x => x.Name == whoGoesFirst.Name);
 
             tempOrderedList.Add(players[indexInList]);
 

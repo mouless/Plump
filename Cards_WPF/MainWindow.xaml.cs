@@ -90,7 +90,7 @@ namespace Cards_WPF
 
             ShowHighestTricks(currentGame, NumberOfSticks);
 
-            if (currentGame.NotPossibleTricks == true)
+            if (currentGame.PlayerIsHuman == true)
             {
                 MessageBox.Show("Last player's tricks equals the same as the amount of tricks for the current round...");
             }

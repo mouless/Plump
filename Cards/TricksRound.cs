@@ -65,6 +65,8 @@ namespace Cards
                         highestCardSuit = (int)card.Suit;
                     }
                 }
+                // TODO: Man kanske vill kunna lägga till fler än ett kort om andra spelare inte har valt några stick tex...
+
 
                 // LÄGG TILL ETT KORT SÅ ATT INTE ALLA STICK SUMMERAS TILL RUNDANS NUMMER
                 var itemToAdd = tricksCount[lastPlayerIndex].Find(x => (int)x.Rank == highestCardRank && (int)x.Suit == highestCardSuit);
@@ -72,7 +74,7 @@ namespace Cards
             }
         }
 
-        public void PlayTricks(List<List<Card>> tricksCount, int numberOfSticksThisRound)
+        public void PlayTricks(Player player, List<List<Card>> tricksCount, int numberOfSticksThisRound)
         {
             //throw new NotImplementedException();
         }
