@@ -7,12 +7,9 @@
         {
         }
 
-        public override void StartTurn()
+        public override void BestämmaStick()
         {
-            var myTurnIndex = GameService.Players.IndexOf(this);
-
-
-            GameService.PlayCard(this, Hand[0]);
+            throw new System.NotImplementedException();
         }
     }
 }

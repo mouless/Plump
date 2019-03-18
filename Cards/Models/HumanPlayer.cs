@@ -7,7 +7,7 @@
         {
         }
 
-        public override void StartTurn()
+        public override void BestämmaStick()
         {
             throw new System.NotImplementedException();
         }

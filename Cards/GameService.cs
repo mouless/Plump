@@ -46,7 +46,10 @@ namespace Cards
             var fördelaKort = new DealCards();
             fördelaKort.DistributeCards(Players, DeckOfCards, numberOfSticksThisRound);
 
-            StartRound(Players);
+            // FOR-LOOP FÖR ATT GÅ IGENOM ALLA SPELARE - AI OCH HUMAN HAR SAMMA METOD, MEN DESSA GÖR OLIKA SAKER BARA
+            StartRound();
+            // EN ANNAN FOR-LOOP FÖR ATT SPELA UT KORTEN
+            // EN AVSLUTANDE METOD FÖR ATT HÅLLA REDA PÅ STÄLLNINGEN
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,10 +88,14 @@ namespace Cards
             }
         }
 
-        public void StartRound(List<Player> players)
+        public void StartRound()
         {
-            var whoGoesFirst = players[0];
+            var whoGoesFirst = Players[0];
             // ANROPA DEN SPELAREN SÅ DEN KAN SPELA UT SITT KORT
+            foreach (var player in Players)
+            {
+                player.BestämmaStick();
+            }
         }
 
         private void StartPlayerTurn(Player player)

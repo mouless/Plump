@@ -8,14 +8,12 @@ namespace Cards.Models
 
         public string Name { get; set; }
 
-        public GameService GameService { get; set; }
-
         public Player(string name)
         {
             Hand = new ObservableCollection<Card>();
             Name = name;
         }
 
-        public abstract void StartTurn();
+        public abstract void BestämmaStick();
     }
 }
