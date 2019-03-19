@@ -1,13 +1,18 @@
 ﻿using Cards.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Cards
 {
     public class GameService
     {
         #region
-        public bool PlayerIsHuman { get; set; } = false;
+        public event EventHandler<int> ShowPlayerStick;
+        public AutoResetEvent PlayerStickAwaiter { get; set; } = new AutoResetEvent(false);
+
+        public bool ValidHumanTricksCount { get; set; } = false;
         public int NumberOfSticksThisRound { get; set; }
 
         public static Random r;
@@ -26,12 +31,17 @@ namespace Cards
         public Card CardToPlay_Eastn { get; set; }
         public Card CardToPlay_Playa { get; set; }
         #endregion
+        private void ShowPlayerStickEvent(object sender, int i)
+        {
+            //throw new NotImplementedException();
+        }
 
-        public Action<Player> OnPlayerTurnStarted { get; set; }
-
-
+        public GameService()
+        {
+            ShowPlayerStick += ShowPlayerStickEvent;
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ///
+
         public void CreateRound(int numberOfSticksThisRound)
         {
             ConfigureVariableThings(IndexOfWhoGoesFirst, WhoGoesFirst, numberOfSticksThisRound);
@@ -46,10 +56,9 @@ namespace Cards
             var fördelaKort = new DealCards();
             fördelaKort.DistributeCards(Players, DeckOfCards, numberOfSticksThisRound);
 
-            // FOR-LOOP FÖR ATT GÅ IGENOM ALLA SPELARE - AI OCH HUMAN HAR SAMMA METOD, MEN DESSA GÖR OLIKA SAKER BARA
             StartRound();
-            // EN ANNAN FOR-LOOP FÖR ATT SPELA UT KORTEN
-            // EN AVSLUTANDE METOD FÖR ATT HÅLLA REDA PÅ STÄLLNINGEN
+
+            EndGame();
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,7 +71,7 @@ namespace Cards
             TricksCount.Clear();
             DeckOfCards.Clear();
             Players.Clear();
-            PlayerIsHuman = false;
+            ValidHumanTricksCount = false;
             indexOfWhoGoesFirst++;
 
             if (indexOfWhoGoesFirst >= Players.Count)
@@ -90,71 +99,61 @@ namespace Cards
 
         public void StartRound()
         {
-            var whoGoesFirst = Players[0];
-            // ANROPA DEN SPELAREN SÅ DEN KAN SPELA UT SITT KORT
-            foreach (var player in Players)
-            {
-                player.BestämmaStick();
-            }
+            Task.Run(() =>
+                {
+                    // ANROPA SPELARNA FÖR ATT BESTÄMMA ANTAL STICK
+                    var tricksCalculator = new TricksCalculator();
+                    foreach (var player in Players)
+                    {
+                        if (player is AiPlayer)
+                        {
+                            tricksCalculator.HowManyTricks(player, TricksCount, State);
+                            var indexOfPlayer = Players.FindIndex(x => x.Name == player.Name);
+                            var numberOfTricks = TricksCount[indexOfPlayer].Count;
+
+                            ShowPlayerStick.Invoke(player, numberOfTricks);
+                        }
+                        else if (player is HumanPlayer)
+                        {
+                            // TODO: FÅ FEEDBACK FRÅN ANVÄNDAREN
+                            ShowPlayerStick.Invoke(player, 99);
+                            PlayerStickAwaiter.WaitOne();
+                        }
+                    }
+
+                    // KOLLA OM SPELARNA KAN TA DERAS ÖNSKADE STICK
+                    foreach (var player in Players)
+                    {
+                        player.CheckIfTricksAreValid(player, NumberOfSticksThisRound, TricksCount, Players);
+                    }
+
+                    // SE TILL SÅ ATT DEN SPELARE SOM HAR HÖGST STICK EFTER "DEALER" FÅR BÖRJA SPELA UT
+                    var spelare = new PlayerService();
+                    spelare.WhoGoesFirstHighestTricksAfterDealer(Players, WhoGoesFirst, TricksCount);
+
+
+                    foreach (var player in Players)
+                    {
+                        // ANROPA SPELARNA FÖR ATT SPELA UT KORT
+                        //player.PlayOutCard(player, NumberOfSticksThisRound, TricksCount, Players);
+                    }
+                });
         }
 
-        private void StartPlayerTurn(Player player)
+        public void HumanPickedTricks()
         {
-            OnPlayerTurnStarted?.Invoke(player);
-
-            // TODO:
-            // 1. Räkna ut antalet stick
-            // 2. 
-            // 3. 
-            // 4. 
-            // 5. 
+            //if (CORRECT AMOUNT OF TRICKS IS SELECTED THEN MOVE ON)
+            //{
+            //    PlayerStickAwaiter.Set();
+            //}
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void DecideHowManyTricksToTake(Player player)
-        {
-            var tricksCalculator = new TricksCalculator();
-            tricksCalculator.HowManyTricks(new Player, TricksCount, State);
-        }
-
-        public bool CheckIfTricksCountIsValid(Player player)
-        {
-            var tricksRound = new TricksRound();
-            PlayerIsHuman = tricksRound.DecideTricksForPlayer(player, NumberOfSticksThisRound, TricksCount, Players);
-
-            if (PlayerIsHuman == true)
-            {
-                // TODO: BE OM ETT TRICKS COUNT
-                return true;
-            }
-            return false;
-        }
-
-        public void OrderPlayerByTricks()
-        {
-            var spelare = new PlayerService();
-            spelare.InitizialOrderOfPlayers(Players, WhoGoesFirst); // Korten delas ut till den spelare som börjar omgången (vilket kommer att roteras)
-        }
-
-        public void PlayCard(Player player, object card)
-        {
-            // validera att en spelare har kortet dom vill spela
-
-            // end current player turn
-
-            var tricksRound = new TricksRound();
-            tricksRound.PlayTricks(player, TricksCount, NumberOfSticksThisRound);
-
-            Player nextPlayer;
-            // notify next player of turn start
-            //StartPlayerTurn(nextPlayer);
-        }
 
         public void EndGame()
         {
-            var score = Scoreboard[numberOfSticksThisRound];
-
+            var score = Scoreboard[NumberOfSticksThisRound];
         }
     }
 

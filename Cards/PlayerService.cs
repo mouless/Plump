@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Cards.Models;
+﻿using Cards.Models;
+using System.Collections.Generic;
 
 namespace Cards
 {
@@ -20,11 +20,11 @@ namespace Cards
             players.Add(player1);
         }
 
-        public void InitizialOrderOfPlayers(List<Player> players, Player whoGoesFirst)
+        public void InitizialOrderOfPlayers(List<Player> players, Player playerThatGoesFirst)
         {
             var tempOrderedList = new List<Player>();
 
-            var indexInList = players.FindIndex(x => x.Name == whoGoesFirst.Name);
+            var indexInList = players.FindIndex(x => x.Name == playerThatGoesFirst.Name);
 
             tempOrderedList.Add(players[indexInList]);
 
@@ -47,8 +47,50 @@ namespace Cards
             }
         }
 
-        public void WhoGoesFirstHighestTricksAfterDealer(List<Player> players)
+        private void OrderTrickCountList(List<List<Card>> tricksCount, int indexOfFirstTricksCount)
         {
+            var tempOrderedList = new List<List<Card>>();
+            
+            tempOrderedList.Add(tricksCount[indexOfFirstTricksCount]);
+
+            for (int i = 0; i < tricksCount.Count - 1; i++)
+            {
+                indexOfFirstTricksCount++;
+
+                if (indexOfFirstTricksCount > tricksCount.Count - 1)
+                {
+                    indexOfFirstTricksCount = 0;
+                }
+
+                tempOrderedList.Add(tricksCount[indexOfFirstTricksCount]);
+            }
+
+            tricksCount.Clear();
+            foreach (var tricksCountList in tempOrderedList)
+            {
+                tricksCount.Add(tricksCountList);
+            }
+        }
+
+        public void WhoGoesFirstHighestTricksAfterDealer(List<Player> players, Player playerThatGoesFirst, List<List<Card>> tricksCount)
+        {
+            var highestTrick = -1;
+            var indexOfHighestTricksCountListItem = new int();
+
+            foreach (var playerTricks in tricksCount)
+            {
+                if (playerTricks.Count > highestTrick)
+                {
+                    highestTrick = playerTricks.Count;
+                    indexOfHighestTricksCountListItem = tricksCount.FindIndex(x => x == playerTricks);
+                }
+            }
+
+            var indexOfPlayerThatShouldStart = players[indexOfHighestTricksCountListItem];
+            InitizialOrderOfPlayers(players, indexOfPlayerThatShouldStart);
+
+            // MÅSTE OCKSÅ ORDNA OM TRICKSCOUNT-LISTAN SÅ ÄVEN DEN ÄR I RÄTT ORDNING
+            OrderTrickCountList(tricksCount, indexOfHighestTricksCountListItem);
 
         }
     }

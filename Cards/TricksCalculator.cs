@@ -23,7 +23,12 @@ namespace Cards
             {
                 int num = Random.Next(0, 2);
                 if (num == 1) //Bara varannan gång så väljer AI att ta Knekt som ett "säkert" stickkort
+                {
                     playerTricksCount = player.Hand.Where(v => v.Rank > Card.CardRank.Tio).ToList();
+                }
+
+                tricksCount.Add(playerTricksCount);
+                return;
             }
             else if (playerTricksCount.Count == 1) //Om man har ett "säkert" kort på handen
             {
@@ -36,7 +41,12 @@ namespace Cards
 
                 int num = Random.Next(0, 2);
                 if (num == 1) //Bara varannan gång så väljer AI att ta Knekt som ett "säkert" stickkort
+                {
                     playerTricksCount = player.Hand.Where(v => v.Rank > Card.CardRank.Tio).ToList();
+                }
+
+                tricksCount.Add(playerTricksCount);
+                return;
             }
             else if (playerTricksCount.Count == 2) //Om man har två "säkra" kort på handen, så tar man även kort som är tio och uppåt i SAMMA färg
             {
@@ -48,6 +58,9 @@ namespace Cards
                 }
 
                 playerTricksCount = TaMedEnTiaSomStickOchKollaOmDetFinnsNiaISammaFärg(player, playerTricksCount);
+
+                tricksCount.Add(playerTricksCount);
+                return;
             }
             else if (playerTricksCount.Count == 3) //Om man har tre "säkra" kort på handen
             {
@@ -80,12 +93,18 @@ namespace Cards
                 if (num == 1) //Varannan gång så tar man tior och över
                 {
                     playerTricksCount = player.Hand.Where(v => v.Rank > Card.CardRank.Nio).ToList();
+
+                    tricksCount.Add(playerTricksCount);
+                    return;
                 }
                 else //Varannan gång så tar man bara tior och över om de är i samma färg
                 {
                     List<Card> AllaMedSammaFärgSomDeÖverKnekt = player.Hand.Where(v => playerTricksCount.Select(c => c.Suit).Contains(v.Suit)).ToList();
                     AllaMedSammaFärgSomDeÖverKnekt.RemoveAll(x => x.Rank < Card.CardRank.Tio);
                     playerTricksCount = AllaMedSammaFärgSomDeÖverKnekt;
+
+                    tricksCount.Add(playerTricksCount);
+                    return;
                 }
             }
             else if (playerTricksCount.Count == 4) //Om man har fyra "säkra" kort på handen
@@ -112,11 +131,13 @@ namespace Cards
                 }
 
                 playerTricksCount = player.Hand.Where(v => v.Rank > Card.CardRank.Nio).ToList();
+                tricksCount.Add(playerTricksCount);
+                return;
             }
 
-            // MAN BEHÖVER JU INTE RETURNERA NÅGOT EFTERSOM JAG SKICKADE IN REFERENSEN TILL TRICKSCOUNT-LISTAN
+            // HÄR BORDE MAN HA 5 SÄKRA STICK KORT
             tricksCount.Add(playerTricksCount);
-
+            return;
         }
 
         private List<Card> TaMedEnTiaSomStickOchKollaOmDetFinnsNiaISammaFärg(Player player, List<Card> playerTricksCount)

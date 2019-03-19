@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Cards
 {
-    class TricksRound
+    class TricksRoundOld
     {
         public bool DecideTricksForPlayer(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players)
         {

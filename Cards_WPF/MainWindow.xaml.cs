@@ -19,26 +19,21 @@ namespace Cards_WPF
 
         private GameService gameService;
 
+
         public MainWindow()
         {
             InitializeComponent();
-
             CreateVisualStuff();
 
             CreateCroppedBitmapCards(CardPicturesList);
 
             StartNewGame();
 
-
-            gameService.OnPlayerTurnStarted = OnPlayerTurnStarted;
         }
 
-        private void OnPlayerTurnStarted(Player player)
+        private void MainWindow_NextPlayerEvent(Player player)
         {
-            if (player is HumanPlayer)
-            {
-                //Alert("DIN TUR");
-            }
+            throw new NotImplementedException();
         }
 
         private void CreateCroppedBitmapCards(List<CardPicture> cardPicturesList)
@@ -50,25 +45,40 @@ namespace Cards_WPF
         private void StartNewGame()
         {
             gameService = new GameService();
+            gameService.ShowPlayerStick += GameService_ShowPlayerStick;
             StartGame_BackEnd();
 
             StartGame_FrontEnd(gameService);
 
         }
 
-        public void On_SpelareSpelatKort()
+        private void GameService_ShowPlayerStick(object sender, int tricksCount)
         {
-            //var player = gameService.CurrentPlayer;
-            //var card = något;
+            this.Dispatcher.Invoke(() =>
+            {
+                var nameOfPlayer = (Player)sender;
+                switch (nameOfPlayer.Name)
+                {
+                    case "West":
+                        Label_WestnTricks.Content = $"({tricksCount})";
+                        break;
 
+                    case "North":
+                        Label_NorthTricks.Content = $"({tricksCount})";
+                        break;
 
-            //gameService.PlayCard(player, card);
+                    case "East":
+                        Label_EastnTricks.Content = $"({tricksCount})";
+                        break;
 
-        }
+                    case "Player1":
+                        Label_PlayaTricks.Content = $"({tricksCount})";
+                        break;
 
-        public void On_SpelareValtStick()
-        {
-
+                    default:
+                        break;
+                }
+            });
         }
 
         public void StartGame_BackEnd()
@@ -84,20 +94,17 @@ namespace Cards_WPF
         {
             ShowHandText(currentGame);
 
-            ShowTricks(currentGame);
+            //ShowTricks(currentGame);
 
             ShowImageCards(currentGame);
 
-            ShowHighestTricks(currentGame, NumberOfSticks);
+            //ShowHighestTricks(currentGame, NumberOfSticks);
 
-            if (currentGame.PlayerIsHuman == true)
+            if (currentGame.ValidHumanTricksCount == true)
             {
                 MessageBox.Show("Last player's tricks equals the same as the amount of tricks for the current round...");
             }
 
-            //WinnerOfTheTrickRound();
-
-            //UpdateScoreboard();
         }
 
 
@@ -110,14 +117,13 @@ namespace Cards_WPF
             ListBox_Player1.ItemsSource = currentGame.Players.Find(name => name.Name == "Player1").Hand;
         }
 
-        private void ShowTricks(GameService currentGame)
-        {
-
-            Label_WestnTricks.Content = $"({currentGame.TricksCount[0].Count})";
-            Label_NorthTricks.Content = $"({currentGame.TricksCount[1].Count})";
-            Label_EastnTricks.Content = $"({currentGame.TricksCount[2].Count})";
-            Label_PlayaTricks.Content = $"({currentGame.TricksCount[3].Count})";
-        }
+        //private void ShowTricks(GameService currentGame)
+        //{
+        //    Label_WestnTricks.Content = $"({currentGame.TricksCount[0].Count})";
+        //    Label_NorthTricks.Content = $"({currentGame.TricksCount[1].Count})";
+        //    Label_EastnTricks.Content = $"({currentGame.TricksCount[2].Count})";
+        //    Label_PlayaTricks.Content = $"({currentGame.TricksCount[3].Count})";
+        //}
 
         private void ShowImageCards(GameService currentGame)
         {
@@ -160,28 +166,28 @@ namespace Cards_WPF
 
         }
 
-        private void ShowHighestTricks(GameService currentGame, int antalKortIRundan)
-        {
-            // WHO HAS THE MOST TRICKS GOING IN ORDER OR STARTING WITH A NEW ONE EVERY ROUND?
-            var numberOfTricks_West = currentGame.TricksCount[0].Count;
-            var numberOfTricks_North = currentGame.TricksCount[1].Count;
-            var numberOfTricks_East = currentGame.TricksCount[2].Count;
-            var numberOfTricks_Player1 = currentGame.TricksCount[3].Count;
+        //private void ShowHighestTricks(GameService currentGame, int antalKortIRundan)
+        //{
+        //    // WHO HAS THE MOST TRICKS GOING IN ORDER OR STARTING WITH A NEW ONE EVERY ROUND?
+        //    var numberOfTricks_West = currentGame.TricksCount[0].Count;
+        //    var numberOfTricks_North = currentGame.TricksCount[1].Count;
+        //    var numberOfTricks_East = currentGame.TricksCount[2].Count;
+        //    var numberOfTricks_Player1 = currentGame.TricksCount[3].Count;
 
-            var highestTricks = numberOfTricks_West; // FRÅGAN ÄR OM MAN VILL ATT OLIKA SPELARE SKA BÖRJA RUNDORNA
-            var nameOfHighest = currentGame.Players[0]; // FÖR NU BÖRJAR BARA WEST HELA TIDEN
+        //    var highestTricks = numberOfTricks_West; // FRÅGAN ÄR OM MAN VILL ATT OLIKA SPELARE SKA BÖRJA RUNDORNA
+        //    var nameOfHighest = currentGame.Players[0]; // FÖR NU BÖRJAR BARA WEST HELA TIDEN
 
-            for (int i = 0; i < currentGame.TricksCount.Count; i++)
-            {
-                if (highestTricks < currentGame.TricksCount[i].Count)
-                {
-                    highestTricks = currentGame.TricksCount[i].Count;
-                    nameOfHighest = currentGame.Players[i];
-                }
-            }
+        //    for (int i = 0; i < currentGame.TricksCount.Count; i++)
+        //    {
+        //        if (highestTricks < currentGame.TricksCount[i].Count)
+        //        {
+        //            highestTricks = currentGame.TricksCount[i].Count;
+        //            nameOfHighest = currentGame.Players[i];
+        //        }
+        //    }
 
-            HighestTricks_Label.Content = $"{nameOfHighest.Name} har flest stick med {highestTricks}";
-        }
+        //    HighestTricks_Label.Content = $"{nameOfHighest.Name} har flest stick med {highestTricks}";
+        //}
 
         private void StartAnotherRound_Click(object sender, RoutedEventArgs e)
         {
@@ -199,16 +205,6 @@ namespace Cards_WPF
                 temp = "0" + rank.ToString();
             }
             return suit.ToString() + temp;
-        }
-
-        private void UpdateScoreboard()
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void WinnerOfTheTrickRound()
-        {
-            //throw new NotImplementedException();
         }
 
         private void CreateVisualStuff()
@@ -276,13 +272,10 @@ namespace Cards_WPF
 
         private void VäljStick_Click(object sender, RoutedEventArgs e)
         {
-            var canPlayerChooseThatTricks = new bool();
-
-            foreach (var player in gameService.Players)
-            {
-                //gameService.DecideTricks(IndexOfWhoGoesFirst, player);
-            }
-
+            gameService.ValidHumanTricksCount = true;
+            gameService.HumanPickedTricks();
         }
+
+
     }
 }

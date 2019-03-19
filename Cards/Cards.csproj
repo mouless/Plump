@@ -54,7 +54,7 @@
     <Compile Include="Scoreboard.cs" />
     <Compile Include="TricksCalculator - Old.cs" />
     <Compile Include="TricksCalculator.cs" />
-    <Compile Include="TricksRound.cs" />
+    <Compile Include="TricksRound - Old.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

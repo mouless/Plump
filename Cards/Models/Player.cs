@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Cards.Models
 {
@@ -14,6 +15,8 @@ namespace Cards.Models
             Name = name;
         }
 
-        public abstract void BestämmaStick();
+        public abstract void CheckIfTricksAreValid(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players);
+
+        public abstract void PlayOutCard(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players);
     }
 }
