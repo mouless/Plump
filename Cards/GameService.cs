@@ -1,6 +1,7 @@
 ﻿using Cards.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,8 +10,10 @@ namespace Cards
     public class GameService
     {
         #region
-        public event EventHandler<int> ShowPlayerStick;
-        public AutoResetEvent PlayerStickAwaiter { get; set; } = new AutoResetEvent(false);
+        public event EventHandler<int> ShowHumanStick;
+        public event EventHandler<int> InvalidSticksCount;
+        public event EventHandler<int> PlayPlayerCard;
+        public AutoResetEvent HumanPlayerStickAwaiter { get; set; } = new AutoResetEvent(false);
 
         public bool ValidHumanTricksCount { get; set; } = false;
         public int NumberOfSticksThisRound { get; set; }
@@ -31,15 +34,14 @@ namespace Cards
         public Card CardToPlay_Eastn { get; set; }
         public Card CardToPlay_Playa { get; set; }
         #endregion
-        private void ShowPlayerStickEvent(object sender, int i)
-        {
-            //throw new NotImplementedException();
-        }
 
         public GameService()
         {
-            ShowPlayerStick += ShowPlayerStickEvent;
+            ShowHumanStick += ShowHumanStick_Event;
+            PlayPlayerCard += GameService_PlayPlayerCard;
+            InvalidSticksCount += GameService_InvalidSticksCount;
         }
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public void CreateRound(int numberOfSticksThisRound)
@@ -111,20 +113,34 @@ namespace Cards
                             var indexOfPlayer = Players.FindIndex(x => x.Name == player.Name);
                             var numberOfTricks = TricksCount[indexOfPlayer].Count;
 
-                            ShowPlayerStick.Invoke(player, numberOfTricks);
+                            ShowHumanStick.Invoke(player, numberOfTricks);
                         }
                         else if (player is HumanPlayer)
                         {
                             // TODO: FÅ FEEDBACK FRÅN ANVÄNDAREN
-                            ShowPlayerStick.Invoke(player, 99);
-                            PlayerStickAwaiter.WaitOne();
+                            TricksCount.Add(new List<Card>());
+                            ShowHumanStick.Invoke(player, 99);
+                            HumanPlayerStickAwaiter.WaitOne();
                         }
                     }
 
                     // KOLLA OM SPELARNA KAN TA DERAS ÖNSKADE STICK
                     foreach (var player in Players)
                     {
-                        player.CheckIfTricksAreValid(player, NumberOfSticksThisRound, TricksCount, Players);
+                        var resultIsValid = false;
+
+                        do
+                        {
+                            resultIsValid = player.CheckIfTricksAreValid(player, NumberOfSticksThisRound, TricksCount, Players);
+
+                            if (resultIsValid == false)
+                            {
+                                InvalidSticksCount.Invoke(player, 99);
+                                ShowHumanStick.Invoke(player, 99);
+                                HumanPlayerStickAwaiter.WaitOne();
+                            }
+
+                        } while (resultIsValid == false);
                     }
 
                     // SE TILL SÅ ATT DEN SPELARE SOM HAR HÖGST STICK EFTER "DEALER" FÅR BÖRJA SPELA UT
@@ -135,17 +151,31 @@ namespace Cards
                     foreach (var player in Players)
                     {
                         // ANROPA SPELARNA FÖR ATT SPELA UT KORT
-                        //player.PlayOutCard(player, NumberOfSticksThisRound, TricksCount, Players);
+                        player.PlayOutCard(player, NumberOfSticksThisRound, TricksCount, Players);
+                        PlayPlayerCard.Invoke(player, 99);
                     }
                 });
         }
 
-        public void HumanPickedTricks()
+        public void HumanPickedTricks(List<int> indexOfTrickCardsSelected)
         {
-            //if (CORRECT AMOUNT OF TRICKS IS SELECTED THEN MOVE ON)
-            //{
-            //    PlayerStickAwaiter.Set();
-            //}
+            var indexOfHumanPlayer = Players.FindIndex(x => x.Name == "Player1");
+            TricksCount[indexOfHumanPlayer].Clear();
+
+            foreach (var index in indexOfTrickCardsSelected)
+            {
+                TricksCount[indexOfHumanPlayer].Add(Players[indexOfHumanPlayer].Hand.ElementAt(index));
+            }
+
+            HumanPlayerStickAwaiter.Set();
+        }
+
+        public void CheckHumanTricksValidity()
+        {
+            if (false)
+            {
+                HumanPlayerStickAwaiter.Set();
+            }
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,6 +185,14 @@ namespace Cards
         {
             var score = Scoreboard[NumberOfSticksThisRound];
         }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private void ShowHumanStick_Event(object sender, int i) { }
+
+        private void GameService_PlayPlayerCard(object sender, int e) { }
+
+        private void GameService_InvalidSticksCount(object sender, int e) { }
     }
 
     public class MyState

@@ -4,12 +4,12 @@ namespace Cards.Models
 {
     public class HumanPlayer : Player
     {
-        public HumanPlayer(string name) 
+        public HumanPlayer(string name)
             : base(name)
         {
         }
 
-        public override void CheckIfTricksAreValid(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players)
+        public override bool CheckIfTricksAreValid(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players)
         {
             var lastPlayer = players.Count - 1;
             if (player == players[lastPlayer]) // KOLLAR OM DEN SPELARE SOM ANROPAR METODEN ÄR DEN SISTA, ANNARS SÅ BEHÖVER VI INTE BRY OSS VILKET NUMMER DEN VÄLJER
@@ -22,17 +22,20 @@ namespace Cards.Models
 
                 if (numberOfSticksThisRound == totalPlayerSticks) // ÄR DET LIKA MÅNGA STICK TAGNA SOM OMGÅNGEN ÄR PÅ SÅ MÅSTE VI ÅTGÄRDA DEN HÄR
                 {
-
-                    // TODO: INPUT FROM FRONT-END!!!
-                    throw new System.Exception("IMPLEMENT!!!");
+                    return false;
                 }
+                return true;
             }
+            return true;
         }
 
         public override void PlayOutCard(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players)
         {
+
+            //this.CardToPlay = new Card();
+
             // TODO: INPUT FROM FRONT-END!!!
-            throw new System.Exception("IMPLEMENT!!!");
+            //throw new System.Exception("IMPLEMENT!!!");
         }
     }
 }

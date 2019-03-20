@@ -23,7 +23,7 @@ namespace Cards
             foreach (var player in players)
             {
                 var newHand = player.Hand.OrderBy(c => c.Suit).ThenByDescending(c => c.Rank).ToList();
-                player.Hand.Clear();
+                player.ClearHand();
 
                 foreach (var card in newHand)
                 {

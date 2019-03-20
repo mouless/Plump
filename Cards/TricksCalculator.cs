@@ -256,7 +256,7 @@ namespace Cards
 
         private void BytUtKortenIPlayaListan(Player player)
         {
-            player.Hand.Clear();
+            player.ClearHand();
             player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Ess));
             player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Dam));
             player.Hand.Add(new Card(Card.CardSuit.Spader, Card.CardRank.Tio));

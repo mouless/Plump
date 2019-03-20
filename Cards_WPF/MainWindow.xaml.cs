@@ -2,6 +2,7 @@
 using Cards.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,13 +18,13 @@ namespace Cards_WPF
         public List<VisualStuff> VisualStuffList { get; set; }
         public List<CardPicture> CardPicturesList { get; set; } = new List<CardPicture>();
 
-        private GameService gameService;
+        public GameService GameService { get; set; }
 
 
         public MainWindow()
         {
             InitializeComponent();
-            CreateVisualStuff();
+            ClickOnHumanCards();
 
             CreateCroppedBitmapCards(CardPicturesList);
 
@@ -31,61 +32,84 @@ namespace Cards_WPF
 
         }
 
-        private void MainWindow_NextPlayerEvent(Player player)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void CreateCroppedBitmapCards(List<CardPicture> cardPicturesList)
-        {
-            var spriteSheetService = new SpriteSheetService();
-            spriteSheetService.CutImage(cardPicturesList);
-        }
-
         private void StartNewGame()
         {
-            gameService = new GameService();
-            gameService.ShowPlayerStick += GameService_ShowPlayerStick;
+            GameService = new GameService();
+
+            GameService.ShowHumanStick += GameService_ShowHumanStick;
+            GameService.PlayPlayerCard += GameService_PlayPlayerCard;
+            GameService.InvalidSticksCount += GameService_InvalidSticksCount;
+
             StartGame_BackEnd();
 
-            StartGame_FrontEnd(gameService);
+            StartGame_FrontEnd(GameService);
 
         }
 
-        private void GameService_ShowPlayerStick(object sender, int tricksCount)
+        private void GameService_PlayPlayerCard(object sender, int e)
         {
             this.Dispatcher.Invoke(() =>
             {
-                var nameOfPlayer = (Player)sender;
-                switch (nameOfPlayer.Name)
-                {
-                    case "West":
-                        Label_WestnTricks.Content = $"({tricksCount})";
-                        break;
-
-                    case "North":
-                        Label_NorthTricks.Content = $"({tricksCount})";
-                        break;
-
-                    case "East":
-                        Label_EastnTricks.Content = $"({tricksCount})";
-                        break;
-
-                    case "Player1":
-                        Label_PlayaTricks.Content = $"({tricksCount})";
-                        break;
-
-                    default:
-                        break;
-                }
+                ShowHandText(GameService);
             });
+        }
+
+        private void GameService_InvalidSticksCount(object sender, int e)
+        {
+            MessageBox.Show("Invalid number of tricks! Can't be the same as the number of cards this round. \nPlease change your number of tricks.");
+        }
+
+        private void GameService_ShowHumanStick(object sender, int tricksCount)
+        {
+            if (sender is AiPlayer)
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var nameOfPlayer = (Player)sender;
+                    switch (nameOfPlayer.Name)
+                    {
+                        case "West":
+                            Label_WestnTricks.Content = $"({tricksCount})";
+                            break;
+
+                        case "North":
+                            Label_NorthTricks.Content = $"({tricksCount})";
+                            break;
+
+                        case "East":
+                            Label_EastnTricks.Content = $"({tricksCount})";
+                            break;
+
+                        //case "Player1":
+                        //    Label_PlayaTricks.Content = $"({tricksCount})";
+                        //    break;
+
+                        default:
+                            break;
+                    }
+                });
+            }
+            else
+            {
+                // OM VI KOMMER HIT EN ANDRA GÅNG SÅ VILL VI SE TILL SÅ ATT HUMAN SER KNAPPARNA
+                this.Dispatcher.Invoke(() =>
+                {
+                    PlayCard_Button.IsEnabled = false;
+                    PlayCard_Button.Visibility = Visibility.Hidden;
+                    ChooseStick_Button.IsEnabled = true;
+                    ChooseStick_Button.Visibility = Visibility.Visible;
+
+                    var numberOfTricks = VisualStuffList.Count(x => x.CardSelected == true).ToString();
+                    Label_PlayaTricks.Content = $"({numberOfTricks})";
+                });
+            }
         }
 
         public void StartGame_BackEnd()
         {
             Label_Number.Content = NumberOfPlayedRounds.ToString();
 
-            gameService.CreateRound(NumberOfSticks);
+            GameService.CreateRound(NumberOfSticks);
 
             NumberOfPlayedRounds++;
         }
@@ -111,7 +135,7 @@ namespace Cards_WPF
 
         private void ShowHandText(GameService currentGame)
         {
-            ListBox_West.ItemsSource = currentGame.Players.Find(name => name.Name == "West").Hand;
+            ListBox_West.ItemsSource = new ObservableCollection<Card>(currentGame.Players.Find(name => name.Name == "West").Hand);
             ListBox_North.ItemsSource = currentGame.Players.Find(name => name.Name == "North").Hand;
             ListBox_East.ItemsSource = currentGame.Players.Find(name => name.Name == "East").Hand;
             ListBox_Player1.ItemsSource = currentGame.Players.Find(name => name.Name == "Player1").Hand;
@@ -130,7 +154,7 @@ namespace Cards_WPF
             string cardNumber = "";
             for (int j = 0; j < currentGame.Players[3].Hand.Count; j++)
             {
-                cardNumber = CardImageNumber(currentGame.Players[3].Hand[j]);
+                cardNumber = CardImageNumber(currentGame.Players[3].Hand.ElementAt(j));
                 //Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                 Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                 Image img = FindName("Image_Playa" + j) as Image;
@@ -192,7 +216,7 @@ namespace Cards_WPF
         private void StartAnotherRound_Click(object sender, RoutedEventArgs e)
         {
             StartGame_BackEnd();
-            StartGame_FrontEnd(gameService);
+            StartGame_FrontEnd(GameService);
         }
 
         private string CardImageNumber(Card cardToNum)
@@ -207,29 +231,34 @@ namespace Cards_WPF
             return suit.ToString() + temp;
         }
 
-        private void CreateVisualStuff()
+        private void ClickOnHumanCards()
         {
             VisualStuffList = new List<VisualStuff>
             {
                 new VisualStuff
                 {
                     CardName = "Image_Playa0",
+                    CardIndex = 0,
                 },
                 new VisualStuff
                 {
                     CardName = "Image_Playa1",
+                    CardIndex = 1,
                 },
                 new VisualStuff
                 {
                     CardName = "Image_Playa2",
+                    CardIndex = 2,
                 },
                 new VisualStuff
                 {
                     CardName = "Image_Playa3",
+                    CardIndex = 3,
                 },
                 new VisualStuff
                 {
                     CardName = "Image_Playa4",
+                    CardIndex = 4,
                 },
             };
         }
@@ -260,6 +289,8 @@ namespace Cards_WPF
                     return;
                 }
             }
+
+            Label_PlayaTricks.Content = VisualStuffList.Count(x => x.CardSelected == true).ToString();
         }
 
         private void Image_Test_MouseUp(object sender, MouseButtonEventArgs e)
@@ -270,12 +301,52 @@ namespace Cards_WPF
             Image_Test.Source = CardPicturesList[randomNumber].Picture;
         }
 
-        private void VäljStick_Click(object sender, RoutedEventArgs e)
+        private void ChooseTricks_Click(object sender, RoutedEventArgs e)
         {
-            gameService.ValidHumanTricksCount = true;
-            gameService.HumanPickedTricks();
+            PlayCard_Button.IsEnabled = true;
+            PlayCard_Button.Visibility = Visibility.Visible;
+            ChooseStick_Button.IsEnabled = false;
+            ChooseStick_Button.Visibility = Visibility.Hidden;
+
+            this.Dispatcher.Invoke(() =>
+            {
+                var numberOfTricks = 0;
+
+                foreach (var humanCard in VisualStuffList)
+                {
+                    if (humanCard.CardSelected == true)
+                    {
+                        numberOfTricks++;
+                    }
+                }
+
+                Label_PlayaTricks.Content = $"({numberOfTricks})";
+            });
+
+            var indexOfTricksCardsSelected = new List<int>();
+
+            foreach (var humanCard in VisualStuffList)
+            {
+                if (humanCard.CardSelected)
+                {
+                    indexOfTricksCardsSelected.Add(humanCard.CardIndex);
+                }
+
+            }
+
+            GameService.HumanPickedTricks(indexOfTricksCardsSelected);
         }
 
+        private void PlayTricks_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CreateCroppedBitmapCards(List<CardPicture> cardPicturesList)
+        {
+            var spriteSheetService = new SpriteSheetService();
+            spriteSheetService.CutImage(cardPicturesList);
+        }
 
     }
 }

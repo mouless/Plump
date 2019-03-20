@@ -86,6 +86,7 @@ namespace Cards
                 }
             }
 
+            // ORDNA OM PLAYER-LISTAN
             var indexOfPlayerThatShouldStart = players[indexOfHighestTricksCountListItem];
             InitizialOrderOfPlayers(players, indexOfPlayerThatShouldStart);
 

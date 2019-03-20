@@ -9,7 +9,7 @@ namespace Cards.Models
         {
         }
 
-        public override void CheckIfTricksAreValid(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players)
+        public override bool CheckIfTricksAreValid(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players)
         {
             var lastPlayer = players.Count - 1;
             if (player == players[lastPlayer]) // KOLLAR OM DEN SPELARE SOM ANROPAR METODEN ÄR DEN SISTA, ANNARS SÅ BEHÖVER VI INTE BRY OSS VILKET NUMMER DEN VÄLJER
@@ -26,6 +26,7 @@ namespace Cards.Models
                     ChangeToValidTricksCount(numberOfSticksThisRound, tricksCount, player, lastPlayer);
                 }
             }
+            return true;
         }
 
         private void ChangeToValidTricksCount(int numberOfSticksThisRound, List<List<Card>> tricksCount, Player player, int lastPlayerIndex)
@@ -91,8 +92,9 @@ namespace Cards.Models
                         cardToPlay = card;
                     }
                 }
+                player.CardToPlay = cardToPlay;
                 playersTricksCards.Remove(cardToPlay);
-                player.Hand.Remove(cardToPlay);
+                player.Hand.TryTake(out cardToPlay);
             }
             else
             {
@@ -105,7 +107,8 @@ namespace Cards.Models
                         cardToPlay = card;
                     }
                 }
-                player.Hand.Remove(cardToPlay);
+                player.CardToPlay = cardToPlay;
+                player.Hand.TryTake(out cardToPlay);
                 playersTricksCards.Remove(cardToPlay);
             }
 
