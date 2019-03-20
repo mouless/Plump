@@ -72,7 +72,7 @@ namespace Cards.Models
             }
         }
 
-        public override void PlayOutCard(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players)
+        public override bool PlayOutCard(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players, Card firstCardPlayed)
         {
             var indexOfPlayer = players.FindIndex(x => x.Name == player.Name);
 
@@ -113,7 +113,7 @@ namespace Cards.Models
             }
 
             // FÅR INTE GLÖMMA BORT ATT SKICKA ETT KORT TILL FRONTEND SÅ ATT MAN VET VILKET KORT SOM SKALL SPELAS
-
+            return true;
         }
     }
 }

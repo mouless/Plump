@@ -29,6 +29,8 @@ namespace Cards
 
         public List<List<Card>> TricksCount { get; set; } = new List<List<Card>>();
 
+        public Card FirstCardPlayed { get; set; }
+
         public Card CardToPlay_Westn { get; set; }
         public Card CardToPlay_North { get; set; }
         public Card CardToPlay_Eastn { get; set; }
@@ -68,6 +70,7 @@ namespace Cards
         private void ConfigureVariableThings(int indexOfWhoGoesFirst, Player whoGoesFirst, int numberOfSticksThisRound)
         {
             r = new Random();
+            FirstCardPlayed = null;
             Scoreboard.Add(numberOfSticksThisRound, new Scoreboard());
             NumberOfSticksThisRound = numberOfSticksThisRound;
             TricksCount.Clear();
@@ -151,7 +154,9 @@ namespace Cards
                     foreach (var player in Players)
                     {
                         // ANROPA SPELARNA FÖR ATT SPELA UT KORT
-                        player.PlayOutCard(player, NumberOfSticksThisRound, TricksCount, Players);
+
+                        // MÅSTE SE TILL SÅ ATT SPELAREN FÖLJER FÄRG
+                        player.PlayOutCard(player, NumberOfSticksThisRound, TricksCount, Players, FirstCardPlayed);
                         PlayPlayerCard.Invoke(player, 99);
                     }
                 });

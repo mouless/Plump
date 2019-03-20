@@ -29,13 +29,14 @@ namespace Cards.Models
             return true;
         }
 
-        public override void PlayOutCard(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players)
+        public override bool PlayOutCard(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players, Card firstCardPlayed)
         {
 
             //this.CardToPlay = new Card();
 
             // TODO: INPUT FROM FRONT-END!!!
             //throw new System.Exception("IMPLEMENT!!!");
+            return true;
         }
     }
 }

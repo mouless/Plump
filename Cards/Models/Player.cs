@@ -10,7 +10,7 @@ namespace Cards.Models
         public string Name { get; set; }
         public Card CardToPlay { get; set; }
 
-        public Player(string name)
+        protected Player(string name)
         {
             Hand = new ConcurrentBag<Card>();
             Name = name;
@@ -18,7 +18,7 @@ namespace Cards.Models
 
         public abstract bool CheckIfTricksAreValid(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players);
 
-        public abstract void PlayOutCard(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players);
+        public abstract bool PlayOutCard(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players, Card firstCardPlayed);
 
         public void ClearHand()
         {
