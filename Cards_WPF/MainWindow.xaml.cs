@@ -1,6 +1,4 @@
-﻿using Cards;
-using Cards.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,6 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Cards;
+using Cards.Models;
 
 namespace Cards_WPF
 {
@@ -39,11 +39,20 @@ namespace Cards_WPF
             GameService.ShowHumanStick += GameService_ShowHumanStick;
             GameService.PlayPlayerCard += GameService_PlayPlayerCard;
             GameService.InvalidSticksCount += GameService_InvalidSticksCount;
+            GameService.ShowPlayedCard += GameService_ShowPlayedCard;
 
             StartGame_BackEnd();
 
             StartGame_FrontEnd(GameService);
 
+        }
+
+        private void GameService_ShowPlayedCard(object sender, Card e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                ShowPlayersTrickCard(GameService, sender as Player, e);
+            });
         }
 
         private void GameService_PlayPlayerCard(object sender, Card e)
@@ -122,7 +131,7 @@ namespace Cards_WPF
 
             ShowImageCards(currentGame);
 
-            //ShowHighestTricks(currentGame, NumberOfSticks);
+            //ShowHighestTricks(currentGame);
 
             if (currentGame.ValidHumanTricksCount == true)
             {
@@ -162,32 +171,49 @@ namespace Cards_WPF
             }
         }
 
-        public void ShowPlayersTrickCard(GameService currentGame)
+        public void ShowPlayersTrickCard(GameService currentGame, Player player = null, Card cardToDisplay = null)
         {
-            currentGame.CardToPlay_Westn = currentGame.Players[0].Hand.OrderByDescending(v => v.Rank).First();
-            string cardNumber = CardImageNumber(currentGame.CardToPlay_Westn);
-            //var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Image_WestnPlayed.Source = new BitmapImage(uri);
+            string cardNumber = "101";
+            Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
 
-            currentGame.CardToPlay_North = currentGame.Players[1].Hand.OrderByDescending(v => v.Rank).First();
-            cardNumber = CardImageNumber(currentGame.CardToPlay_North);
-            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Image_NorthPlayed.Source = new BitmapImage(uri);
+            switch (player.Name)
+            {
+                case "West":
+                    {
+                        cardNumber = CardImageNumber(cardToDisplay);
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        Image_WestnPlayed.Source = new BitmapImage(uri);
+                        break;
+                    }
 
-            currentGame.CardToPlay_Eastn = currentGame.Players[2].Hand.OrderByDescending(v => v.Rank).First();
-            cardNumber = CardImageNumber(currentGame.CardToPlay_Eastn);
-            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Image_EastnPlayed.Source = new BitmapImage(uri);
+                case "North":
+                    {
+                        cardNumber = CardImageNumber(cardToDisplay);
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        Image_NorthPlayed.Source = new BitmapImage(uri);
+                        break;
+                    }
 
-            currentGame.CardToPlay_Playa = currentGame.Players[3].Hand.OrderByDescending(v => v.Rank).First();
-            cardNumber = CardImageNumber(currentGame.CardToPlay_Playa);
-            //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-            Image_PlayaPlayed.Source = new BitmapImage(uri);
+                case "East":
+                    {
+                        cardNumber = CardImageNumber(cardToDisplay);
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        Image_EastnPlayed.Source = new BitmapImage(uri);
+                        break;
+                    }
 
+                case "Player1":
+                    {
+                        cardNumber = CardImageNumber(cardToDisplay);
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        Image_PlayaPlayed.Source = new BitmapImage(uri);
+                        break;
+                    }
+            }
         }
 
         //private void ShowHighestTricks(GameService currentGame, int antalKortIRundan)
