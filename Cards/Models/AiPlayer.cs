@@ -72,7 +72,7 @@ namespace Cards.Models
             }
         }
 
-        public override Card PlayOutCard(Player player, int numberOfSticksThisRound, List<Player> players, Card firstCardPlayed)
+        public override bool PlayOutCard(Player player, int numberOfSticksThisRound, List<Player> players, Card firstCardPlayed)
         {
             var indexOfPlayer = players.FindIndex(x => x.Name == player.Name);
 
@@ -94,6 +94,8 @@ namespace Cards.Models
                             cardToPlay = card;
                         }
                     }
+
+                    firstCardPlayed = cardToPlay; // HÄR SÄTTER VI DET KORTET SOM BLIR FÖRST LAGT PÅ BORDET I RUNDAN
                     player.CardToPlay = cardToPlay;
                     player.TricksCount.Remove(cardToPlay);
                     player.Hand.Remove(cardToPlay);
@@ -109,6 +111,8 @@ namespace Cards.Models
                             cardToPlay = card;
                         }
                     }
+
+                    firstCardPlayed = cardToPlay; // HÄR SÄTTER VI DET KORTET SOM BLIR FÖRST LAGT PÅ BORDET I RUNDAN
                     player.CardToPlay = cardToPlay;
                     player.Hand.Remove(cardToPlay);
                     player.TricksCount.Remove(cardToPlay);
@@ -132,6 +136,7 @@ namespace Cards.Models
                             }
                         }
                     }
+
                     player.CardToPlay = cardToPlay;
                     player.TricksCount.Remove(cardToPlay);
                     player.Hand.Remove(cardToPlay);
@@ -140,7 +145,7 @@ namespace Cards.Models
             }
 
             // TODO: FÅR INTE GLÖMMA BORT ATT SKICKA ETT KORT TILL FRONTEND SÅ ATT MAN VET VILKET KORT SOM SKALL SPELAS
-            return player.CardToPlay;
+            return true;
         }
     }
 }

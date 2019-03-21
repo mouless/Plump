@@ -158,22 +158,26 @@ namespace Cards
                     {
                         // ANROPA SPELARNA FÖR ATT SPELA UT KORT
                         Card cardToBePlayed = null;
+                        var resultIsValid = false;
 
-                        do // MÅSTE VARA BOOL I PLAYER-KLASSEN SÅ ATT MAN KAN LOOPA RUNT OM SPELAREN FÖRSÖKER LÄGGA UT ETT OGILTIGT KORT
+                        do 
                         {
-
                             // MÅSTE SE TILL SÅ ATT SPELAREN FÖLJER FÄRG
                             if (FirstCardPlayed == null)
                             {
-                                FirstCardPlayed = player.PlayOutCard(player, NumberOfSticksThisRound, Players, FirstCardPlayed);
+                                resultIsValid = player.PlayOutCard(player, NumberOfSticksThisRound, Players, FirstCardPlayed);
                                 cardToBePlayed = FirstCardPlayed;
                             }
                             else
                             {
-                                cardToBePlayed = player.PlayOutCard(player, NumberOfSticksThisRound, Players, FirstCardPlayed);
+                                resultIsValid = player.PlayOutCard(player, NumberOfSticksThisRound, Players, FirstCardPlayed);
                             }
 
-                        } while (true);
+                            // Väntar på att Human ska välja ett kort att spela
+                            HumanPlayerStickAwaiter.WaitOne();
+
+                        } while (resultIsValid == false);
+
                         PlayPlayerCard.Invoke(player, cardToBePlayed);
                     }
                 });

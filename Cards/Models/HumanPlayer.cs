@@ -29,11 +29,56 @@ namespace Cards.Models
             return true;
         }
 
-        public override Card PlayOutCard(Player player, int numberOfSticksThisRound, List<Player> players, Card firstCardPlayed)
+        public override bool PlayOutCard(Player player, int numberOfSticksThisRound, List<Player> players, Card firstCardPlayed)
         {
-            // TODO: INPUT FROM FRONT-END!!!
+            //// TODO: HÄR SKA VI GÖRA LOGIK SOM KOLLAR OM HUMAN HAR VALT ETT KORT SOM FAKTISKT ÄR VALID ATT SPELA UT
 
-            return null;
+            Card cardToPlay = player.CardToPlay;
+
+            if (player.CardToPlay != null) // OM HUMAN INTE HAR VALT NÅGOT KORT ATT SPELA UT, VALID OR NOT
+            {
+                if (firstCardPlayed == null) // OM DET INTE FANNS NÅGOT KORT SOM VAR SPELAT SEDAN TIDIGARE, HUMAN ÄR FÖRST
+                {
+                    firstCardPlayed = cardToPlay;
+                    player.CardToPlay = cardToPlay;
+                    player.Hand.Remove(cardToPlay);
+                    player.TricksCount.Remove(cardToPlay);
+
+                    return true;
+                }
+                else // NU MÅSTE HUMAN SPELA ENLIGT FÄRG (SUIT)
+                {
+                    var howManyCardInSameSuit = 0;
+
+                    foreach (var card in player.Hand)
+                    {
+                        if (card.Suit == firstCardPlayed.Suit)
+                        {
+                            howManyCardInSameSuit++;
+                        }
+                    }
+
+                    if (howManyCardInSameSuit != 0)
+                    {
+                        // TODO: SKICKA MEDDELANDE TILL FRONT-END ATT MAN HAR KORT I SAMMA FÄRG OCH ATT MAN MÅSTE FÖLJA FÄRG
+                        return false;
+                    }
+                    else
+                    {
+                        player.CardToPlay = cardToPlay;
+                        player.TricksCount.Remove(cardToPlay); // TODO: KOLLA ÖVER ALLT HUR JAG SKA GÖRA MED DEN HÄR OM DET INTE FINNS NÅGOT MATCHANDE ELEMENT I LISTORNA
+                        player.Hand.Remove(cardToPlay);
+
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+
         }
     }
 }
