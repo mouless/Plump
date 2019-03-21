@@ -9,12 +9,11 @@ namespace Cards
     {
         public Random Random { get; set; } = new Random();
 
-        public void HowManyTricks(Player player, List<List<Card>> tricksCount, MyState state)
+        public void HowManyTricks(Player player, MyState state)
         {
-            List<Card> playerTricksCount = new List<Card>(new List<Card>());
+            var playerTricksCount = player.Hand;
 
-            //BytUtKortenIPlayaListan(players.Find(x => x.Name == "Player1"));
-
+            var tricksCount = player.TricksCount;
 
             // Plockar ut alla kort som är över KNEKT som "säkra" kort
             playerTricksCount = player.Hand.Where(v => v.Rank > Card.CardRank.Knekt).ToList();
@@ -27,7 +26,7 @@ namespace Cards
                     playerTricksCount = player.Hand.Where(v => v.Rank > Card.CardRank.Tio).ToList();
                 }
 
-                tricksCount.Add(playerTricksCount);
+                tricksCount.AddRange(playerTricksCount);
                 return;
             }
             else if (playerTricksCount.Count == 1) //Om man har ett "säkert" kort på handen
@@ -35,7 +34,7 @@ namespace Cards
                 playerTricksCount = KollaOmDetFinnsKnektEllerLägreIFärgstege(player.Hand.ToList(), playerTricksCount);
                 if (playerTricksCount.Count == player.Hand.Count())
                 {
-                    tricksCount.Add(playerTricksCount);
+                    tricksCount.AddRange(playerTricksCount);
                     return;
                 }
 
@@ -45,7 +44,7 @@ namespace Cards
                     playerTricksCount = player.Hand.Where(v => v.Rank > Card.CardRank.Tio).ToList();
                 }
 
-                tricksCount.Add(playerTricksCount);
+                tricksCount.AddRange(playerTricksCount);
                 return;
             }
             else if (playerTricksCount.Count == 2) //Om man har två "säkra" kort på handen, så tar man även kort som är tio och uppåt i SAMMA färg
@@ -53,13 +52,13 @@ namespace Cards
                 playerTricksCount = KollaOmDetFinnsKnektEllerLägreIFärgstege(player.Hand.ToList(), playerTricksCount);
                 if (playerTricksCount.Count == player.Hand.Count())
                 {
-                    tricksCount.Add(playerTricksCount);
+                    tricksCount.AddRange(playerTricksCount);
                     return;
                 }
 
                 playerTricksCount = TaMedEnTiaSomStickOchKollaOmDetFinnsNiaISammaFärg(player, playerTricksCount);
 
-                tricksCount.Add(playerTricksCount);
+                tricksCount.AddRange(playerTricksCount);
                 return;
             }
             else if (playerTricksCount.Count == 3) //Om man har tre "säkra" kort på handen
@@ -67,7 +66,7 @@ namespace Cards
                 playerTricksCount = KollaOmDetFinnsKnektEllerLägreIFärgstege(player.Hand.ToList(), playerTricksCount);
                 if (playerTricksCount.Count == player.Hand.Count())
                 {
-                    tricksCount.Add(playerTricksCount);
+                    tricksCount.AddRange(playerTricksCount);
                     return;
                 }
 
@@ -83,7 +82,7 @@ namespace Cards
 
                         playerTricksCount = player.Hand.ToList();
 
-                        tricksCount.Add(playerTricksCount);
+                        tricksCount.AddRange(playerTricksCount);
                         return;
                     }
                 }
@@ -94,7 +93,7 @@ namespace Cards
                 {
                     playerTricksCount = player.Hand.Where(v => v.Rank > Card.CardRank.Nio).ToList();
 
-                    tricksCount.Add(playerTricksCount);
+                    tricksCount.AddRange(playerTricksCount);
                     return;
                 }
                 else //Varannan gång så tar man bara tior och över om de är i samma färg
@@ -103,7 +102,7 @@ namespace Cards
                     AllaMedSammaFärgSomDeÖverKnekt.RemoveAll(x => x.Rank < Card.CardRank.Tio);
                     playerTricksCount = AllaMedSammaFärgSomDeÖverKnekt;
 
-                    tricksCount.Add(playerTricksCount);
+                    tricksCount.AddRange(playerTricksCount);
                     return;
                 }
             }
@@ -112,31 +111,31 @@ namespace Cards
                 playerTricksCount = FyraKortIEnFärgMedEssOchKung(player.Hand.ToList(), playerTricksCount);
                 if (playerTricksCount.Count == player.Hand.Count())
                 {
-                    tricksCount.Add(playerTricksCount);
+                    tricksCount.AddRange(playerTricksCount);
                     return;
                 }
 
                 playerTricksCount = FyraSäkraVaravTvåIEnFärgManHarTreKortAv(player.Hand.ToList(), playerTricksCount);
                 if (playerTricksCount.Count == player.Hand.Count())
                 {
-                    tricksCount.Add(playerTricksCount);
+                    tricksCount.AddRange(playerTricksCount);
                     return;
                 }
 
                 playerTricksCount = KollaOmDetFinnsKnektEllerLägreIFärgstege(player.Hand.ToList(), playerTricksCount);
                 if (playerTricksCount.Count == player.Hand.Count())
                 {
-                    tricksCount.Add(playerTricksCount);
+                    tricksCount.AddRange(playerTricksCount);
                     return;
                 }
 
                 playerTricksCount = player.Hand.Where(v => v.Rank > Card.CardRank.Nio).ToList();
-                tricksCount.Add(playerTricksCount);
+                tricksCount.AddRange(playerTricksCount);
                 return;
             }
 
             // HÄR BORDE MAN HA 5 SÄKRA STICK KORT
-            tricksCount.Add(playerTricksCount);
+            tricksCount.AddRange(playerTricksCount);
             return;
         }
 
@@ -218,9 +217,11 @@ namespace Cards
             var damSuit = tempCardList[0].Suit;
             for (int i = 0; i < tempCardList.Count; i++)
             {
+                // OM DET FÖRSTA KORTET INTE ÄR EN DAM SÅ GÅR VI UR METODEN
                 if (tempCardList[0].Rank != Card.CardRank.Dam)
                     return tricksCount;
 
+                // Om kortet är en Knekt & det inte är det första kortet i listan & kortet är i samma färg (suit)
                 if (tempCardList[i].Rank == Card.CardRank.Dam - i && tempCardList[i] != tempCardList[0] && tempCardList[i].Suit == damSuit)
                 {
                     tricksCount.Add(tempCardList[i]);

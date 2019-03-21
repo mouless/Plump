@@ -72,26 +72,26 @@ namespace Cards
             }
         }
 
-        public void WhoGoesFirstHighestTricksAfterDealer(List<Player> players, Player playerThatGoesFirst, List<List<Card>> tricksCount)
+        public void WhoGoesFirstHighestTricksAfterDealer(List<Player> players, Player playerThatGoesFirst)
         {
             var highestTrick = -1;
             var indexOfHighestTricksCountListItem = new int();
 
-            foreach (var playerTricks in tricksCount)
+            foreach (var player in players)
             {
-                if (playerTricks.Count > highestTrick)
+                if (player.TricksCount.Count > highestTrick)
                 {
-                    highestTrick = playerTricks.Count;
-                    indexOfHighestTricksCountListItem = tricksCount.FindIndex(x => x == playerTricks);
+                    highestTrick = player.TricksCount.Count;
+                    indexOfHighestTricksCountListItem = players.FindIndex(x => x == player);
                 }
             }
 
-            // ORDNA OM PLAYER-LISTAN
+            // ORDNA OM PLAYER-LISTAN med Player som vi hittade tack vare index som vi fick från foreachen ovan
             var indexOfPlayerThatShouldStart = players[indexOfHighestTricksCountListItem];
             InitizialOrderOfPlayers(players, indexOfPlayerThatShouldStart);
 
-            // MÅSTE OCKSÅ ORDNA OM TRICKSCOUNT-LISTAN SÅ ÄVEN DEN ÄR I RÄTT ORDNING
-            OrderTrickCountList(tricksCount, indexOfHighestTricksCountListItem);
+            // TROR INTE ATT JAG BEHÖVER DEN HÄR LÄNGRE EFTERSOM NU LIGGER STICKEN PÅ SPELAREN ISTÄLLET FÖR SOM EN SEPARAT LISTA???
+            //OrderTrickCountList(tricksCount, indexOfHighestTricksCountListItem);
 
         }
     }

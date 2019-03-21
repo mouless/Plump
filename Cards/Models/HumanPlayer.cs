@@ -9,15 +9,15 @@ namespace Cards.Models
         {
         }
 
-        public override bool CheckIfTricksAreValid(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players)
+        public override bool CheckIfTricksAreValid(Player player, int numberOfSticksThisRound, List<Player> players)
         {
             var lastPlayer = players.Count - 1;
             if (player == players[lastPlayer]) // KOLLAR OM DEN SPELARE SOM ANROPAR METODEN ÄR DEN SISTA, ANNARS SÅ BEHÖVER VI INTE BRY OSS VILKET NUMMER DEN VÄLJER
             {
                 var totalPlayerSticks = new int();
-                foreach (var spelare in tricksCount)
+                foreach (var spelare in players)
                 {
-                    totalPlayerSticks += spelare.Count;
+                    totalPlayerSticks += spelare.TricksCount.Count;
                 }
 
                 if (numberOfSticksThisRound == totalPlayerSticks) // ÄR DET LIKA MÅNGA STICK TAGNA SOM OMGÅNGEN ÄR PÅ SÅ MÅSTE VI ÅTGÄRDA DEN HÄR
@@ -29,14 +29,11 @@ namespace Cards.Models
             return true;
         }
 
-        public override bool PlayOutCard(Player player, int numberOfSticksThisRound, List<List<Card>> tricksCount, List<Player> players, Card firstCardPlayed)
+        public override Card PlayOutCard(Player player, int numberOfSticksThisRound, List<Player> players, Card firstCardPlayed)
         {
-
-            //this.CardToPlay = new Card();
-
             // TODO: INPUT FROM FRONT-END!!!
-            //throw new System.Exception("IMPLEMENT!!!");
-            return true;
+
+            return null;
         }
     }
 }

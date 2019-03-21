@@ -46,7 +46,7 @@ namespace Cards_WPF
 
         }
 
-        private void GameService_PlayPlayerCard(object sender, int e)
+        private void GameService_PlayPlayerCard(object sender, Card e)
         {
             this.Dispatcher.Invoke(() =>
             {
