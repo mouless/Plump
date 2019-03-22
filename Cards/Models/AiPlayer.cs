@@ -124,117 +124,42 @@ namespace Cards.Models
                 // TODO: SE TILL ATT AI TAR ETT KORT I SAMMA FÄRG FAST LÄGRE RANK FÖR ATT INTE "SLÖSA" PÅ SINA STICK-KORT
                 // TODO: JAG BEHÖVER JU HA ALLA KORT SOM LIGGER PÅ BORDET FÖR ATT VETA VILKET KORT JAG BEHÖVER JÄMFÖRA MED
 
-                if (player.TricksCount.Count != 0) // ANVÄND TRICKS-CARD OM DET FINNS NÅGRA I SAMMA FÄRG OCH SOM ÄR HÖGRE RANK
-                {
-                    var anyCardInSameSuit = 0;
-                    foreach (var card in player.TricksCount) // KOLLA HUR MÅNGA DET FINNS I DEN HÄR FÄRGEN
-                    {
-                        if (card.Suit == leadingSuit)
-                        {
-                            anyCardInSameSuit++;
-                        }
-                    }
 
-                    if (anyCardInSameSuit != 0) // FINNS DET NÅGRA STICK-KORT I DEN HÄR FÄRGEN
+                if (player.Hand.Exists(x => x.Suit == leadingSuit)) // Det finns kort på hand i samma färg
+                {
+                    if (player.TricksCount.Exists(x => x.Suit == leadingSuit)) // Finns det ett stick-kort
                     {
+                        theCardRank = 15; // För att kunna ta det lägsta kortet
                         foreach (var card in player.TricksCount)
                         {
-                            if (card.Suit == leadingSuit && (int)card.Rank > theCardRank) // OM KORTET ÄR I SAMMA FÄRG SAMT VILKEN RANK
+                            if (card.Suit == leadingSuit && card.Rank > leadingRank && (int)card.Rank < theCardRank) // Lägsta tillgängliga triks-kort som är högre rank än det som ligger
                             {
                                 theCardRank = (int)card.Rank;
                                 cardToPlay = card;
                             }
-                        }
+                            else if (card.Suit == leadingSuit)
+                            {
 
-                        if (cardToPlay.Rank < leadingRank) // ÄR KORTET HÖGRE RANKAT ÄN DET SOM LIGGER
-                        {
-                            player.CardToPlay = cardToPlay;
-                            player.TricksCount.Remove(cardToPlay);
-                            player.Hand.Remove(cardToPlay);
-                            return true;
-                        }
-                        else // ÄR KORTET LÄGRE RANKAT
-                        {
-                            foreach (var card in player.Hand) // TA DET HÖGSTA KORTET FRÅN HANDEN ISTÄLLET VILKET KANSKE INTE ÄR ETT STICK-KORT
-                            {
-                                if (card.Suit == leadingSuit && (int)card.Rank > theCardRank)
-                                {
-                                    theCardRank = (int)card.Rank;
-                                    cardToPlay = card;
-                                }
-                            }
-
-                            player.CardToPlay = cardToPlay;
-                            player.Hand.Remove(cardToPlay);
-                            player.TricksCount.Remove(cardToPlay);
-                            return true;
-                        }
-                    }
-                    else // HIT KOMMER VI BARA OM DET INTE FINNS NÅGOT KORT PÅ HAND I DEN FÄRGEN SOM ÄR SPELAD
-                    {
-                        foreach (var card in player.Hand) // TA DET LÄGSTA KORTET FRÅN HANDEN ISTÄLLET VILKET KANSKE INTE ÄR ETT STICK-KORT
-                        {
-                            if (player.TricksCount.Exists(x => x.Rank == card.Rank && x.Suit == card.Suit))
-                            {
-                                continue;
-                            }
-                            if ((int)card.Rank < theCardRank)
-                            {
-                                theCardRank = (int)card.Rank;
-                                cardToPlay = card;
                             }
                         }
-
-                        player.CardToPlay = cardToPlay;
-                        player.Hand.Remove(cardToPlay);
-                        player.TricksCount.Remove(cardToPlay);
-                        return true;
                     }
                 }
-                else
+                else // Inga kort i samma färg, får spela vad man vill
                 {
-                    var anyCardInSameSuit = 0;
-                    foreach (var card in player.Hand) // KOLLA HUR MÅNGA DET FINNS I DEN HÄR FÄRGEN
+                    theCardRank = 15; // För att kunna ta det lägsta kortet
+                    foreach (var card in player.Hand)
                     {
-                        if (card.Suit == leadingSuit)
+                        if ((int)card.Rank < theCardRank)
                         {
-                            anyCardInSameSuit++;
+                            theCardRank = (int)card.Rank;
+                            cardToPlay = card;
                         }
                     }
 
-                    if (anyCardInSameSuit != 0)
-                    {
-
-                        foreach (var card in player.Hand)
-                        {
-                            if (card.Suit == leadingSuit && (int)card.Rank > theCardRank)
-                            {
-                                theCardRank = (int)card.Rank;
-                                cardToPlay = card;
-                            }
-                        }
-
-                        player.CardToPlay = cardToPlay;
-                        player.Hand.Remove(cardToPlay);
-                        player.TricksCount.Remove(cardToPlay);
-                        return true;
-                    }
-                    else // HÄR FINNS DET INGA KORT PÅ HAND SOM ÄR I SAMMA FÄRG SOM DET SOM LIGGER, DVS FÅR LÄGGA VAD VI VILL
-                    {
-                        foreach (var card in player.Hand)
-                        {
-                            if ((int)card.Rank < theCardRank) // SÅ JUST HÄR VÄLJER VI DET LÄGSTA KORTET ATT SPELA UT
-                            {
-                                theCardRank = (int)card.Rank;
-                                cardToPlay = card;
-                            }
-                        }
-
-                        player.CardToPlay = cardToPlay;
-                        player.Hand.Remove(cardToPlay);
-                        player.TricksCount.Remove(cardToPlay);
-                        return true;
-                    }
+                    player.CardToPlay = cardToPlay;
+                    player.Hand.Remove(cardToPlay);
+                    player.TricksCount.Remove(cardToPlay);
+                    return true;
                 }
             }
         }
