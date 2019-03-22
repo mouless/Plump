@@ -23,7 +23,7 @@ namespace Cards_ML
 
                 var players = gameService.Players.Select((player, j) =>
                 {
-                    var playerTricksCount = gameService.TricksCount[j];
+                    var playerTricksCount = gameService.Players[j].TricksCount;
 
                     var mlPlayer = new MLPlayer(player, playerTricksCount);
 

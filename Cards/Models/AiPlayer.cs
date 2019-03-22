@@ -95,6 +95,7 @@ namespace Cards.Models
                     player.CardToPlay = cardToPlay;
                     player.TricksCount.Remove(cardToPlay);
                     player.Hand.Remove(cardToPlay);
+                    return true;
                 }
                 else
                 {
@@ -112,6 +113,7 @@ namespace Cards.Models
                     player.CardToPlay = cardToPlay;
                     player.Hand.Remove(cardToPlay);
                     player.TricksCount.Remove(cardToPlay);
+                    return true;
                 }
             }
             else // NU MÅSTE SPELARE FÖRSÖKA VINNA ÖVER 
@@ -120,6 +122,7 @@ namespace Cards.Models
                 var leadingRank = firstCardPlayed.Rank;
 
                 // TODO: SE TILL ATT AI TAR ETT KORT I SAMMA FÄRG FAST LÄGRE RANK FÖR ATT INTE "SLÖSA" PÅ SINA STICK-KORT
+                // TODO: JAG BEHÖVER JU HA ALLA KORT SOM LIGGER PÅ BORDET FÖR ATT VETA VILKET KORT JAG BEHÖVER JÄMFÖRA MED
 
                 if (player.TricksCount.Count != 0) // ANVÄND TRICKS-CARD OM DET FINNS NÅGRA I SAMMA FÄRG OCH SOM ÄR HÖGRE RANK
                 {
@@ -143,18 +146,18 @@ namespace Cards.Models
                             }
                         }
 
-                        // TODO: JAG BEHÖVER JU HA ALLA KORT SOM LIGGER PÅ BORDET FÖR ATT VETA VILKET KORT JAG BEHÖVER JÄMFÖRA MED
                         if (cardToPlay.Rank < leadingRank) // ÄR KORTET HÖGRE RANKAT ÄN DET SOM LIGGER
                         {
                             player.CardToPlay = cardToPlay;
                             player.TricksCount.Remove(cardToPlay);
                             player.Hand.Remove(cardToPlay);
+                            return true;
                         }
-                        else
+                        else // ÄR KORTET LÄGRE RANKAT
                         {
                             foreach (var card in player.Hand) // TA DET HÖGSTA KORTET FRÅN HANDEN ISTÄLLET VILKET KANSKE INTE ÄR ETT STICK-KORT
                             {
-                                if ((int)card.Rank > theCardRank)
+                                if (card.Suit == leadingSuit && (int)card.Rank > theCardRank)
                                 {
                                     theCardRank = (int)card.Rank;
                                     cardToPlay = card;
@@ -164,13 +167,18 @@ namespace Cards.Models
                             player.CardToPlay = cardToPlay;
                             player.Hand.Remove(cardToPlay);
                             player.TricksCount.Remove(cardToPlay);
+                            return true;
                         }
                     }
                     else // HIT KOMMER VI BARA OM DET INTE FINNS NÅGOT KORT PÅ HAND I DEN FÄRGEN SOM ÄR SPELAD
                     {
-                        foreach (var card in player.Hand) // TA DET HÖGSTA KORTET FRÅN HANDEN ISTÄLLET VILKET KANSKE INTE ÄR ETT STICK-KORT
+                        foreach (var card in player.Hand) // TA DET LÄGSTA KORTET FRÅN HANDEN ISTÄLLET VILKET KANSKE INTE ÄR ETT STICK-KORT
                         {
-                            if ((int)card.Rank > theCardRank)
+                            if (player.TricksCount.Exists(x => x.Rank == card.Rank && x.Suit == card.Suit))
+                            {
+                                continue;
+                            }
+                            if ((int)card.Rank < theCardRank)
                             {
                                 theCardRank = (int)card.Rank;
                                 cardToPlay = card;
@@ -180,6 +188,7 @@ namespace Cards.Models
                         player.CardToPlay = cardToPlay;
                         player.Hand.Remove(cardToPlay);
                         player.TricksCount.Remove(cardToPlay);
+                        return true;
                     }
                 }
                 else
@@ -208,6 +217,7 @@ namespace Cards.Models
                         player.CardToPlay = cardToPlay;
                         player.Hand.Remove(cardToPlay);
                         player.TricksCount.Remove(cardToPlay);
+                        return true;
                     }
                     else // HÄR FINNS DET INGA KORT PÅ HAND SOM ÄR I SAMMA FÄRG SOM DET SOM LIGGER, DVS FÅR LÄGGA VAD VI VILL
                     {
@@ -223,13 +233,10 @@ namespace Cards.Models
                         player.CardToPlay = cardToPlay;
                         player.Hand.Remove(cardToPlay);
                         player.TricksCount.Remove(cardToPlay);
+                        return true;
                     }
                 }
-
             }
-
-            // TODO: FÅR INTE GLÖMMA BORT ATT SKICKA ETT KORT TILL FRONTEND SÅ ATT MAN VET VILKET KORT SOM SKALL SPELAS
-            return true;
         }
     }
 }
