@@ -170,6 +170,7 @@ namespace Cards
                             {
                                 HumanPlayerStickAwaiter.WaitOne();
                             }
+
                             ShowPlayedCard.Invoke(player, player.CardToPlay);
 
                         } while (resultIsValid == false);

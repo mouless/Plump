@@ -123,36 +123,122 @@ namespace Cards.Models
 
                 // TODO: SE TILL ATT AI TAR ETT KORT I SAMMA FÄRG FAST LÄGRE RANK FÖR ATT INTE "SLÖSA" PÅ SINA STICK-KORT
                 // TODO: JAG BEHÖVER JU HA ALLA KORT SOM LIGGER PÅ BORDET FÖR ATT VETA VILKET KORT JAG BEHÖVER JÄMFÖRA MED
+                var tempTricksCount = player.TricksCount;
+                var tempPlayerHand = new List<Card>();
+
+                foreach (var card in player.Hand)
+                {
+                    if (!tempTricksCount.Exists(x => x == card)) // Skapar en lista med alla kort som inte finns i tricksCount
+                    {
+                        tempPlayerHand.Add(card);
+                    }
+                }
 
 
                 if (player.Hand.Exists(x => x.Suit == leadingSuit)) // Det finns kort på hand i samma färg
                 {
-                    if (player.TricksCount.Exists(x => x.Suit == leadingSuit)) // Finns det ett stick-kort
+                    if (tempTricksCount.Exists(x => x.Suit == leadingSuit)) // Finns det ett STICK-kort i samma färg
                     {
-                        theCardRank = 15; // För att kunna ta det lägsta kortet
-                        foreach (var card in player.TricksCount)
+                        theCardRank = 15; // För att kunna ta det lägsta stick-kortet
+                        foreach (var card in tempTricksCount)
                         {
-                            if (card.Suit == leadingSuit && card.Rank > leadingRank && (int)card.Rank < theCardRank) // Lägsta tillgängliga triks-kort som är högre rank än det som ligger
+                            if (card.Suit == leadingSuit)
+                            {
+                                if (card.Rank > leadingRank) // Lägsta tillgängliga tricks-kort som är högre rank än det som ligger
+                                {
+                                    if ((int)card.Rank < theCardRank) // Finns det fler stick-kort som är högre än det som ligger
+                                    {
+                                        theCardRank = (int)card.Rank;
+                                        cardToPlay = card;
+                                    }
+
+                                }
+                                else if (!tempPlayerHand.Exists(x => x.Suit == leadingSuit)) // Om trick-kort är lägre rankat och hand-kort i samma färg är tom, så måste vi välja ett kort ändå
+                                {
+                                    if ((int)card.Rank < theCardRank) // Finns det fler stick-kort som är högre än det som ligger
+                                    {
+                                        theCardRank = (int)card.Rank;
+                                        cardToPlay = card;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (cardToPlay != null) // Om vi hittat ett Tricks-kort så tar vi det, finns det inte går vi vidare till nästa if
+                        {
+                            player.CardToPlay = cardToPlay;
+                            player.Hand.Remove(cardToPlay);
+                            player.TricksCount.Remove(cardToPlay);
+                            return true;
+                        }
+                    }
+
+                    if (tempPlayerHand.Exists(x => x.Suit == leadingSuit)) // Finns HAND-kort i samma färg
+                    {
+                        theCardRank = 15; // För att kunna ta det lägsta stick-kortet
+                        foreach (var card in tempPlayerHand)
+                        {
+                            if (card.Suit == leadingSuit)
+                            {
+                                if (card.Rank > leadingRank)
+                                {
+                                    if ((int)card.Rank < theCardRank) // Finns det fler hand-kort som är högre än det som ligger
+                                    {
+                                        theCardRank = (int)card.Rank;
+                                        cardToPlay = card;
+                                    }
+                                }
+                                else if ((int)card.Rank < theCardRank) // Finns det fler hand-kort som är högre än det som ligger
+                                {
+                                    theCardRank = (int)card.Rank;
+                                    cardToPlay = card;
+                                }
+                            }
+                        }
+                        player.CardToPlay = cardToPlay;
+                        player.Hand.Remove(cardToPlay);
+                        player.TricksCount.Remove(cardToPlay);
+                        return true;
+                    }
+
+                }
+                else // Inga kort i samma färg, får spela vad man vill (gärna undvika stick-kort)
+                {
+                    theCardRank = 15; // För att kunna ta det lägsta kortet
+                    foreach (var card in tempPlayerHand)
+                    {
+                        if (card.Rank > leadingRank)
+                        {
+                            if ((int)card.Rank < theCardRank)
                             {
                                 theCardRank = (int)card.Rank;
                                 cardToPlay = card;
                             }
-                            else if (card.Suit == leadingSuit)
-                            {
-
-                            }
                         }
-                    }
-                }
-                else // Inga kort i samma färg, får spela vad man vill
-                {
-                    theCardRank = 15; // För att kunna ta det lägsta kortet
-                    foreach (var card in player.Hand)
-                    {
-                        if ((int)card.Rank < theCardRank)
+                        else if ((int)card.Rank < theCardRank)
                         {
                             theCardRank = (int)card.Rank;
                             cardToPlay = card;
+                        }
+                    }
+
+                    if (cardToPlay == null) // Om det inte fanns kort utan vi måste använda stick-kort
+                    {
+                        foreach (var card in tempTricksCount)
+                        {
+                            if (card.Rank > leadingRank)
+                            {
+                                if ((int)card.Rank < theCardRank)
+                                {
+                                    theCardRank = (int)card.Rank;
+                                    cardToPlay = card;
+                                }
+                            }
+                            else if ((int)card.Rank < theCardRank)
+                            {
+                                theCardRank = (int)card.Rank;
+                                cardToPlay = card;
+                            }
                         }
                     }
 
@@ -162,6 +248,8 @@ namespace Cards.Models
                     return true;
                 }
             }
+
+            return false; // FÖRSTÅR INTE RIKTIGT VARFÖR DEN HÄR MÅSTE VARA HÄR???
         }
     }
 }

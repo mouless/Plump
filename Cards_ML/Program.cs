@@ -9,7 +9,7 @@ using static Cards.Models.Card;
 
 namespace Cards_ML
 {
-    public class Program
+    public static class Program
     {
         static void Main(string[] args)
         {
