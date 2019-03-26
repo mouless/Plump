@@ -3,10 +3,6 @@
 DONE:
 
 1. Bestämma vilken spelare som ska få börja, utifrån antalet stick
-
-/////////////////////////////////////////////////////////////////////
-
-TODO:
 	1.1 Användaren måste kunna själv välja hur många stick de tror de kommer att kunna ta
 	1.5 Se till så att ordningen som Players skapas i är samma som ordningen som de ska spela just den omgången
 2. Se till att det gemensamma antalet stick inte är lika många som omgångens nummer
@@ -15,6 +11,10 @@ TODO:
 	3.1 Se till att spelaren inte spelar ett kort som riskerar att öka antalet stick över det önskade värdet
 4. De andra AI-spelarna följer färg
 	4.1 Har de inte färgen så vill de spela ut en annan färg
+
+/////////////////////////////////////////////////////////////////////
+
+TODO:
 		4.1.1 Det lägsta kortet om de behöver ta fler stick
 		4.1.2 Det högsta kortet om de INTE vill ta fler stick
 5. Begränsa att Player inte kan lägga kort som inte är i samma färg
@@ -27,3 +27,5 @@ TODO:
 
 1. Göra om Deck<Card> till en Stack<Card>
 2. Ändra Player-klassen till att bli tre nya klasser. Human och AI som kan ärva från Player
+
+4. BEHÖVER EN PROP SOM HÅLLER KOLL PÅ VILKEN SOM BÖRJAR NÄSTA STICK OCH VEM SOM BÖRJAR NÄSTA OMGÅNG

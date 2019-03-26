@@ -13,7 +13,6 @@ namespace Cards
         public event EventHandler<int> ShowHumanStick;
         public event EventHandler<int> InvalidSticksCount;
         public event EventHandler<int> InvalidPlayedCard;
-        public event EventHandler<Card> ValidPlayedCard;
         public event EventHandler<Card> PlayPlayerCard;
         public event EventHandler<Card> ShowPlayedCard;
         public AutoResetEvent HumanPlayerStickAwaiter { get; set; } = new AutoResetEvent(false);
@@ -28,6 +27,7 @@ namespace Cards
 
         public List<Player> Players { get; set; } = new List<Player>();
         public Player WhoGoesFirst { get; set; } // DET HÄR VÄRDET SÄTTS I "ResetVariableThings"
+        public Player WhoStartsNextTrick { get; set; } // DET HÄR VÄRDET SÄTTS I "ResetVariableThings"
         public int IndexOfWhoGoesFirst { get; set; } = -1;
 
         private Card _firstCardPlayed = new Card(Card.CardSuit.Hjärter, Card.CardRank.Två);
@@ -45,7 +45,6 @@ namespace Cards
             InvalidSticksCount += GameService_InvalidSticksCount;
             ShowPlayedCard += GameService_ShowPlayedCard;
             InvalidPlayedCard += GameService_InvalidPlayedCard;
-            ValidPlayedCard += GameService_ValidPlayedCard;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,6 +225,27 @@ namespace Cards
         public void EndGame()
         {
             var score = Scoreboard[NumberOfSticksThisRound];
+            var winningCard = _firstCardPlayed;
+            Player winningPlayer = null;
+
+            foreach (var player in Players)
+            {
+                if (player.CardToPlay.Rank > _firstCardPlayed.Rank && player.CardToPlay.Suit == _firstCardPlayed.Suit)
+                {
+                    player.CardToPlay = winningCard;
+                }
+            }
+
+            if (winningCard != _firstCardPlayed) // Någon spelade ett högre kort än det som spelades först
+            {
+                winningPlayer = Players.Find(x => x.Hand.Exists(y => y == winningCard));
+            }
+            else // Det första kortet vann rundan
+            {
+                winningPlayer = Players.Find(x => x.Hand.Exists(y => y == _firstCardPlayed));
+            }
+
+            
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

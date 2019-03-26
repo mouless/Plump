@@ -41,17 +41,11 @@ namespace Cards_WPF
             GameService.InvalidSticksCount += GameService_InvalidSticksCount;
             GameService.ShowPlayedCard += GameService_ShowPlayedCard;
             GameService.InvalidPlayedCard += GameService_InvalidPlayedCard;
-            GameService.ValidPlayedCard += GameService_ValidPlayedCard;
 
             StartGame_BackEnd();
 
             StartGame_FrontEnd(GameService);
 
-        }
-
-        private void GameService_ValidPlayedCard(object sender, Card e)
-        {
-            
         }
 
         private void GameService_InvalidPlayedCard(object sender, int e)

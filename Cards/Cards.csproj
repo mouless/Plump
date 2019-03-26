@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DealCards.cs" />
-    <Compile Include="Models\AiPlayer - Copy.cs" />
     <Compile Include="Models\AiPlayer.cs" />
     <Compile Include="Models\Card.cs" />
     <Compile Include="GameService.cs" />
@@ -51,11 +50,8 @@
     <Compile Include="PlayerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Deck.cs" />
-    <Compile Include="Models\Tricks.cs" />
     <Compile Include="Scoreboard.cs" />
-    <Compile Include="TricksCalculator - Old.cs" />
     <Compile Include="TricksCalculator.cs" />
-    <Compile Include="TricksRound - Old.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
