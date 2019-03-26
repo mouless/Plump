@@ -29,7 +29,7 @@ namespace Cards.Models
             return true;
         }
 
-        public override bool PlayOutCard(Player player, int numberOfSticksThisRound, List<Player> players, Card firstCardPlayed)
+        public override bool PlayOutCard(Player player, int numberOfSticksThisRound, List<Player> players, ref Card firstCardPlayed)
         {
             //// TODO: HÄR SKA VI GÖRA LOGIK SOM KOLLAR OM HUMAN HAR VALT ETT KORT SOM FAKTISKT ÄR VALID ATT SPELA UT
 
@@ -58,9 +58,8 @@ namespace Cards.Models
                         }
                     }
 
-                    if (howManyCardInSameSuit != 0)
+                    if (howManyCardInSameSuit != 0 && player.CardToPlay.Suit != firstCardPlayed.Suit) // Finns det kort i samma färg, samt är det man försöker spela inte i den färgen
                     {
-                        // TODO: SKICKA MEDDELANDE TILL FRONT-END ATT MAN HAR KORT I SAMMA FÄRG OCH ATT MAN MÅSTE FÖLJA FÄRG
                         return false;
                     }
                     else
@@ -73,12 +72,8 @@ namespace Cards.Models
                     }
                 }
             }
-            else
-            {
-                return false;
-            }
 
-
+            return false;
         }
     }
 }

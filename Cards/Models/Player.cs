@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Cards.Models
 {
@@ -15,16 +14,18 @@ namespace Cards.Models
             Hand = new List<Card>();
             TricksCount = new List<Card>();
             Name = name;
+            CardToPlay = new Card(Card.CardSuit.Hjärter, Card.CardRank.Två);
         }
 
         public abstract bool CheckIfTricksAreValid(Player player, int numberOfSticksThisRound, List<Player> players);
 
-        public abstract bool PlayOutCard(Player player, int numberOfSticksThisRound, List<Player> players, Card firstCardPlayed);
+        public abstract bool PlayOutCard(Player player, int numberOfSticksThisRound, List<Player> players, ref Card firstCardPlayed);
 
         public void ClearHand()
         {
             Hand = new List<Card>();
             TricksCount = new List<Card>();
+            CardToPlay = null;
         }
     }
 }

@@ -72,7 +72,7 @@ namespace Cards.Models
             }
         }
 
-        public override bool PlayOutCard(Player player, int numberOfSticksThisRound, List<Player> players, Card firstCardPlayed)
+        public override bool PlayOutCard(Player player, int numberOfSticksThisRound, List<Player> players, ref Card firstCardPlayed)
         {
             var theCardRank = new int();
             Card cardToPlay = null;

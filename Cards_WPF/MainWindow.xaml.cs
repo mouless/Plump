@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cards;
+using Cards.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -6,8 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Cards;
-using Cards.Models;
 
 namespace Cards_WPF
 {
@@ -40,6 +40,8 @@ namespace Cards_WPF
             GameService.PlayPlayerCard += GameService_PlayPlayerCard;
             GameService.InvalidSticksCount += GameService_InvalidSticksCount;
             GameService.ShowPlayedCard += GameService_ShowPlayedCard;
+            GameService.InvalidPlayedCard += GameService_InvalidPlayedCard;
+            GameService.ValidPlayedCard += GameService_ValidPlayedCard;
 
             StartGame_BackEnd();
 
@@ -47,10 +49,34 @@ namespace Cards_WPF
 
         }
 
+        private void GameService_ValidPlayedCard(object sender, Card e)
+        {
+            
+        }
+
+        private void GameService_InvalidPlayedCard(object sender, int e)
+        {
+            // Human har valt ett kort som man inte får spela ut
+            MessageBox.Show("That card is not a valid pick!\nPlease choose a valid card.");
+        }
+
         private void GameService_ShowPlayedCard(object sender, Card e)
         {
             this.Dispatcher.Invoke(() =>
             {
+                if (sender is HumanPlayer)
+                {
+                    var indexOfPlayedCard = VisualStuffList.FindIndex(x => x.CardSelected == true);
+                    var cardThatWasPlayed = VisualStuffList[indexOfPlayedCard];
+
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        var cardToHide = FindName(cardThatWasPlayed.CardName) as Image;
+                        cardToHide.Visibility = Visibility.Hidden;
+                        cardToHide.IsEnabled = false;
+                    });
+                }
+
                 ShowPlayersTrickCard(GameService, sender as Player, e);
             });
         }
@@ -156,8 +182,8 @@ namespace Cards_WPF
             for (int j = 0; j < currentGame.Players[3].Hand.Count; j++)
             {
                 cardNumber = CardImageNumber(currentGame.Players[3].Hand.ElementAt(j));
-                Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                //Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                //Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                 Image img = FindName("Image_Playa" + j) as Image;
                 img.Source = new BitmapImage(uri);
             }
@@ -173,8 +199,8 @@ namespace Cards_WPF
                 case "West":
                     {
                         cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_WestnPlayed.Source = new BitmapImage(uri);
                         break;
                     }
@@ -182,8 +208,8 @@ namespace Cards_WPF
                 case "North":
                     {
                         cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_NorthPlayed.Source = new BitmapImage(uri);
                         break;
                     }
@@ -191,8 +217,8 @@ namespace Cards_WPF
                 case "East":
                     {
                         cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_EastnPlayed.Source = new BitmapImage(uri);
                         break;
                     }
@@ -200,8 +226,8 @@ namespace Cards_WPF
                 case "Player1":
                     {
                         cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_PlayaPlayed.Source = new BitmapImage(uri);
                         break;
                     }
@@ -329,12 +355,37 @@ namespace Cards_WPF
 
             }
 
+            this.Dispatcher.Invoke(() =>
+            {
+                foreach (var humanCard in VisualStuffList)
+                {
+                    var nameOfCard = FindName(humanCard.CardName) as Image;
+                    MouseButtonEventArgs arg = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left);
+                    if (humanCard.CardSelected == true)
+                    {
+                        Image_PlayaCard_MouseUp(nameOfCard, arg);
+                    }
+                }
+            });
+
             GameService.HumanPickedTricks(indexOfTricksCardsSelected);
         }
 
         private void PlayTricks_Click(object sender, RoutedEventArgs e)
         {
+            // Se till att det bara är ett kort som spelas, samt att det är i rätt färg (om nödvändigt)
+            if (VisualStuffList.Count(x => x.CardSelected == true) != 1)
+            {
+                MessageBox.Show("You can only pick ONE card!");
+                return;
+            }
 
+            var indexOfPlayedCard = VisualStuffList.FindIndex(x => x.CardSelected == true);
+            var cardThatWasPlayed = VisualStuffList[indexOfPlayedCard];
+
+            GameService.HumanPlayedCardCheckForValidity(indexOfPlayedCard);
+
+            // Ta bort det kortet från Front-End (samt sätta till disabled och inte-klickat osv)
         }
 
         private void CreateCroppedBitmapCards(List<CardPicture> cardPicturesList)

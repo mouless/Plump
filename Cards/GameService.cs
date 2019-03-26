@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Cards.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Cards.Models;
 
 namespace Cards
 {
@@ -12,6 +12,8 @@ namespace Cards
         #region
         public event EventHandler<int> ShowHumanStick;
         public event EventHandler<int> InvalidSticksCount;
+        public event EventHandler<int> InvalidPlayedCard;
+        public event EventHandler<Card> ValidPlayedCard;
         public event EventHandler<Card> PlayPlayerCard;
         public event EventHandler<Card> ShowPlayedCard;
         public AutoResetEvent HumanPlayerStickAwaiter { get; set; } = new AutoResetEvent(false);
@@ -28,7 +30,7 @@ namespace Cards
         public Player WhoGoesFirst { get; set; } // DET HÄR VÄRDET SÄTTS I "ResetVariableThings"
         public int IndexOfWhoGoesFirst { get; set; } = -1;
 
-        public Card FirstCardPlayed { get; set; }
+        private Card _firstCardPlayed = new Card(Card.CardSuit.Hjärter, Card.CardRank.Två);
 
         public Card CardToPlay_Westn { get; set; }
         public Card CardToPlay_North { get; set; }
@@ -42,6 +44,8 @@ namespace Cards
             PlayPlayerCard += GameService_PlayPlayerCard;
             InvalidSticksCount += GameService_InvalidSticksCount;
             ShowPlayedCard += GameService_ShowPlayedCard;
+            InvalidPlayedCard += GameService_InvalidPlayedCard;
+            ValidPlayedCard += GameService_ValidPlayedCard;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +74,7 @@ namespace Cards
         private void ConfigureVariableThings(int indexOfWhoGoesFirst, Player whoGoesFirst, int numberOfSticksThisRound)
         {
             r = new Random();
-            FirstCardPlayed = null;
+            _firstCardPlayed = null;
             Scoreboard.Add(numberOfSticksThisRound, new Scoreboard());
             NumberOfSticksThisRound = numberOfSticksThisRound;
             DeckOfCards.Clear();
@@ -139,7 +143,7 @@ namespace Cards
                             // Ifall en Player har ett non-valid tricks count, gå in här
                             if (resultIsValid == false)
                             {
-                                // Meddela Human att man har valt ett non-valid stick nummer
+                                // Meddela Human att man har valt ett non-valid stick nummer (Messagebox.Show)
                                 InvalidSticksCount.Invoke(player, 99);
                                 // Visa upp resultatet av vilka stick som är valda
                                 ShowHumanStick.Invoke(player, 99);
@@ -158,24 +162,36 @@ namespace Cards
                     // ANROPA SPELARNA FÖR ATT SPELA UT KORT
                     foreach (var player in Players)
                     {
-                        var resultIsValid = false;
-
-                        do
+                        if (player is AiPlayer)
                         {
-                            // MÅSTE SE TILL SÅ ATT SPELAREN FÖLJER FÄRG
-                            resultIsValid = player.PlayOutCard(player, NumberOfSticksThisRound, Players, FirstCardPlayed);
-
-                            // Väntar på att Human ska välja ett kort att spela
-                            if (resultIsValid == false)
-                            {
-                                HumanPlayerStickAwaiter.WaitOne();
-                            }
+                            player.PlayOutCard(player, NumberOfSticksThisRound, Players, ref _firstCardPlayed);
 
                             ShowPlayedCard.Invoke(player, player.CardToPlay);
+                            PlayPlayerCard.Invoke(player, player.CardToPlay); // Visa i Front-End att man spelat ut ett kort & ta bort det från "listan"
+                        }
+                        else if (player is HumanPlayer)
+                        {
+                            HumanPlayerStickAwaiter.WaitOne(); // PAUSA SPELET och vänta på input (dvs att Human väljer vilket kort som denne vill spela)
 
-                        } while (resultIsValid == false);
+                            var resultIsValid = false;
 
-                        PlayPlayerCard.Invoke(player, player.CardToPlay);
+                            do
+                            {
+                                // MÅSTE SE TILL SÅ ATT SPELAREN FÖLJER FÄRG
+                                resultIsValid = player.PlayOutCard(player, NumberOfSticksThisRound, Players, ref _firstCardPlayed);
+
+                                // Väntar på att Human ska välja ett kort att spela
+                                if (resultIsValid == false)
+                                {
+                                    InvalidPlayedCard(player, 99); // Visa i Front-End att det man har valt är INVALID (Messagebox.Show)
+                                    HumanPlayerStickAwaiter.WaitOne();
+                                }
+
+                            } while (resultIsValid == false);
+
+                            ShowPlayedCard.Invoke(player, player.CardToPlay);
+                            PlayPlayerCard.Invoke(player, player.CardToPlay); // Visa i Front-End att man spelat ut ett kort & ta bort det från "listan"
+                        }
                     }
                 });
         }
@@ -194,9 +210,14 @@ namespace Cards
             HumanPlayerStickAwaiter.Set();
         }
 
-        public void CheckHumanTricksValidity()
+        public void HumanPlayedCardCheckForValidity(int indexOfPlayedCard)
         {
-            //HumanPlayerStickAwaiter.Set();
+            var indexOfHumanPlayer = Players.FindIndex(x => x.Name == "Player1");
+            var humanPlayer = Players[indexOfHumanPlayer];
+
+            humanPlayer.CardToPlay = humanPlayer.Hand[indexOfPlayedCard];
+
+            HumanPlayerStickAwaiter.Set();
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,6 +238,9 @@ namespace Cards
 
         private void GameService_ShowPlayedCard(object sender, Card e) { }
 
+        private void GameService_InvalidPlayedCard(object sender, int e) { }
+
+        private void GameService_ValidPlayedCard(object sender, Card e) { }
     }
 
     public class MyState
