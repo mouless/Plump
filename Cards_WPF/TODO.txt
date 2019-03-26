@@ -10,13 +10,14 @@ DONE:
 3. Första spelaren spelar sitt första stick
 	3.1 Se till att spelaren inte spelar ett kort som riskerar att öka antalet stick över det önskade värdet
 4. De andra AI-spelarna följer färg
-	4.1 Har de inte färgen så vill de spela ut en annan färg
+	4.1 Se till att de även kan kolla på vilka kort de andra spelarna har och välja stick därefter
+	4.2 Har de inte färgen så vill de spela ut en annan färg
 
 /////////////////////////////////////////////////////////////////////
 
 TODO:
-		4.1.1 Det lägsta kortet om de behöver ta fler stick
-		4.1.2 Det högsta kortet om de INTE vill ta fler stick
+		4.2.1 Det lägsta kortet om de behöver ta fler stick
+		4.2.2 Det högsta kortet om de INTE vill ta fler stick
 5. Begränsa att Player inte kan lägga kort som inte är i samma färg
 6. Avsluta sticket
 7. Låt den som vann föregående stick påbörja nästa stick
@@ -29,3 +30,10 @@ TODO:
 2. Ändra Player-klassen till att bli tre nya klasser. Human och AI som kan ärva från Player
 
 4. BEHÖVER EN PROP SOM HÅLLER KOLL PÅ VILKEN SOM BÖRJAR NÄSTA STICK OCH VEM SOM BÖRJAR NÄSTA OMGÅNG
+
+6. Något måste hålla kolla på nedräkningen av de olika omgångarna också => 5,4,3,2,1,2,3,4,5 osv...
+
+
+
+
+DET BEHÖVER VARA OLIKA SAKER SOM SKER MELLAN DEN FÖRSTA RUNDAN I EN OMGÅNG OCH DE FÖLJANDE RUNDORNA (MAN VILL INTE KOLLA HUR MÅNGA STICK OSV...)

@@ -1,9 +1,8 @@
-﻿using Cards.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Cards.Models;
 
 namespace Cards
 {
@@ -27,7 +26,7 @@ namespace Cards
 
         public List<Player> Players { get; set; } = new List<Player>();
         public Player WhoGoesFirst { get; set; } // DET HÄR VÄRDET SÄTTS I "ResetVariableThings"
-        public Player WhoStartsNextTrick { get; set; } // DET HÄR VÄRDET SÄTTS I "ResetVariableThings"
+        public Player WhoStartsNextTrick { get; set; } = new HumanPlayer("Placeholder"); // DET HÄR VÄRDET SÄTTS I "ResetVariableThings"
         public int IndexOfWhoGoesFirst { get; set; } = -1;
 
         private Card _firstCardPlayed = new Card(Card.CardSuit.Hjärter, Card.CardRank.Två);
@@ -65,7 +64,7 @@ namespace Cards
 
             StartRound();
 
-            EndGame();
+            //EndGame();
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,92 +106,111 @@ namespace Cards
         public void StartRound()
         {
             Task.Run(() =>
-                {
-                    // ANROPA SPELARNA FÖR ATT BESTÄMMA ANTAL STICK
-                    var tricksCalculator = new TricksCalculator();
-                    foreach (var player in Players)
-                    {
-                        if (player is AiPlayer)
-                        {
-                            tricksCalculator.HowManyTricks(player, State);
-                            var indexOfPlayer = Players.FindIndex(x => x.Name == player.Name);
-                            var numberOfTricks = player.TricksCount.Count;
+            {
+                // ANROPA SPELARNA FÖR ATT BESTÄMMA ANTAL STICK
+                DecidePlayerTricks();
 
-                            ShowHumanStick.Invoke(player, numberOfTricks);
-                        }
-                        else if (player is HumanPlayer)
+                // KOLLA OM SPELARNA KAN TA DERAS ÖNSKADE STICK
+                ValidatePlayerTricksCount();
+
+                // SE TILL SÅ ATT DEN SPELARE SOM HAR HÖGST STICK EFTER "DEALER" FÅR BÖRJA SPELA UT
+                var spelare = new PlayerService();
+                spelare.WhoGoesFirstHighestTricksAfterDealer(Players, WhoGoesFirst);
+
+
+                // ANROPA SPELARNA FÖR ATT SPELA UT KORT
+                PlayPlayerCards();
+                EndGame();
+            });
+
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        private void PlayPlayerCards()
+        {
+            foreach (var player in Players)
+            {
+                if (player is AiPlayer)
+                {
+                    player.PlayOutCard(player, NumberOfSticksThisRound, Players, ref _firstCardPlayed);
+
+                    ShowPlayedCard.Invoke(player, player.CardToPlay);
+                    PlayPlayerCard.Invoke(player, player.CardToPlay); // Visa i Front-End att man spelat ut ett kort & ta bort det från "listan"
+                }
+                else if (player is HumanPlayer)
+                {
+                    HumanPlayerStickAwaiter.WaitOne(); // PAUSA SPELET och vänta på input (dvs att Human väljer vilket kort som denne vill spela)
+
+                    var resultIsValid = false;
+
+                    do
+                    {
+                        // MÅSTE SE TILL SÅ ATT SPELAREN FÖLJER FÄRG
+                        resultIsValid = player.PlayOutCard(player, NumberOfSticksThisRound, Players, ref _firstCardPlayed);
+
+                        // Väntar på att Human ska välja ett kort att spela
+                        if (resultIsValid == false)
                         {
-                            // Här visar vi upp hur många stick de andra spelarna har tagit innan Human får möjlighet
-                            ShowHumanStick.Invoke(player, 99);
-                            // Här väntar vi på input ifrån Human innan vi kan gå vidare
+                            InvalidPlayedCard(player, 99); // Visa i Front-End att det man har valt är INVALID (Messagebox.Show)
                             HumanPlayerStickAwaiter.WaitOne();
                         }
-                    }
 
-                    // KOLLA OM SPELARNA KAN TA DERAS ÖNSKADE STICK
-                    foreach (var player in Players)
+                    } while (resultIsValid == false);
+
+                    ShowPlayedCard.Invoke(player, player.CardToPlay);
+                    PlayPlayerCard.Invoke(player, player.CardToPlay); // Visa i Front-End att man spelat ut ett kort & ta bort det från "listan"
+                }
+            }
+        }
+
+        private void ValidatePlayerTricksCount()
+        {
+            foreach (var player in Players)
+            {
+                var resultIsValid = false;
+
+                do
+                {
+                    // Kolla ifall en spelare kan ta en viss mängd stick, AI borde alltid returnera TRUE
+                    resultIsValid = player.CheckIfTricksAreValid(player, NumberOfSticksThisRound, Players);
+
+                    // Ifall en Player har ett non-valid tricks count, gå in här
+                    if (resultIsValid == false)
                     {
-                        var resultIsValid = false;
-
-                        do
-                        {
-                            // Kolla ifall en spelare kan ta en viss mängd stick, AI borde alltid returnera TRUE
-                            resultIsValid = player.CheckIfTricksAreValid(player, NumberOfSticksThisRound, Players);
-
-                            // Ifall en Player har ett non-valid tricks count, gå in här
-                            if (resultIsValid == false)
-                            {
-                                // Meddela Human att man har valt ett non-valid stick nummer (Messagebox.Show)
-                                InvalidSticksCount.Invoke(player, 99);
-                                // Visa upp resultatet av vilka stick som är valda
-                                ShowHumanStick.Invoke(player, 99);
-                                // Väntar på att Human ska välja ett nytt stick nummer
-                                HumanPlayerStickAwaiter.WaitOne();
-                            }
-
-                        } while (resultIsValid == false);
+                        // Meddela Human att man har valt ett non-valid stick nummer (Messagebox.Show)
+                        InvalidSticksCount.Invoke(player, 99);
+                        // Visa upp resultatet av vilka stick som är valda
+                        ShowHumanStick.Invoke(player, 99);
+                        // Väntar på att Human ska välja ett nytt stick nummer
+                        HumanPlayerStickAwaiter.WaitOne();
                     }
 
-                    // SE TILL SÅ ATT DEN SPELARE SOM HAR HÖGST STICK EFTER "DEALER" FÅR BÖRJA SPELA UT
-                    var spelare = new PlayerService();
-                    spelare.WhoGoesFirstHighestTricksAfterDealer(Players, WhoGoesFirst);
+                } while (resultIsValid == false);
+            }
+        }
 
+        private void DecidePlayerTricks()
+        {
+            var tricksCalculator = new TricksCalculator();
+            foreach (var player in Players)
+            {
+                if (player is AiPlayer)
+                {
+                    tricksCalculator.HowManyTricks(player, State);
+                    var indexOfPlayer = Players.FindIndex(x => x.Name == player.Name);
+                    var numberOfTricks = player.TricksCount.Count;
 
-                    // ANROPA SPELARNA FÖR ATT SPELA UT KORT
-                    foreach (var player in Players)
-                    {
-                        if (player is AiPlayer)
-                        {
-                            player.PlayOutCard(player, NumberOfSticksThisRound, Players, ref _firstCardPlayed);
-
-                            ShowPlayedCard.Invoke(player, player.CardToPlay);
-                            PlayPlayerCard.Invoke(player, player.CardToPlay); // Visa i Front-End att man spelat ut ett kort & ta bort det från "listan"
-                        }
-                        else if (player is HumanPlayer)
-                        {
-                            HumanPlayerStickAwaiter.WaitOne(); // PAUSA SPELET och vänta på input (dvs att Human väljer vilket kort som denne vill spela)
-
-                            var resultIsValid = false;
-
-                            do
-                            {
-                                // MÅSTE SE TILL SÅ ATT SPELAREN FÖLJER FÄRG
-                                resultIsValid = player.PlayOutCard(player, NumberOfSticksThisRound, Players, ref _firstCardPlayed);
-
-                                // Väntar på att Human ska välja ett kort att spela
-                                if (resultIsValid == false)
-                                {
-                                    InvalidPlayedCard(player, 99); // Visa i Front-End att det man har valt är INVALID (Messagebox.Show)
-                                    HumanPlayerStickAwaiter.WaitOne();
-                                }
-
-                            } while (resultIsValid == false);
-
-                            ShowPlayedCard.Invoke(player, player.CardToPlay);
-                            PlayPlayerCard.Invoke(player, player.CardToPlay); // Visa i Front-End att man spelat ut ett kort & ta bort det från "listan"
-                        }
-                    }
-                });
+                    ShowHumanStick.Invoke(player, numberOfTricks);
+                }
+                else if (player is HumanPlayer)
+                {
+                    // Här visar vi upp hur många stick de andra spelarna har tagit innan Human får möjlighet
+                    ShowHumanStick.Invoke(player, 99);
+                    // Här väntar vi på input ifrån Human innan vi kan gå vidare
+                    HumanPlayerStickAwaiter.WaitOne();
+                }
+            }
         }
 
         public void HumanPickedTricks(List<int> indexOfTrickCardsSelected)
@@ -203,7 +221,7 @@ namespace Cards
 
             foreach (var index in indexOfTrickCardsSelected)
             {
-                Players[indexOfHumanPlayer].TricksCount.Add(Players[indexOfHumanPlayer].Hand.ElementAt(index));
+                Players[indexOfHumanPlayer].TricksCount.Add(Players[indexOfHumanPlayer].Hand[index]);
             }
 
             HumanPlayerStickAwaiter.Set();
@@ -227,25 +245,28 @@ namespace Cards
             var score = Scoreboard[NumberOfSticksThisRound];
             var winningCard = _firstCardPlayed;
             Player winningPlayer = null;
+            Player playerThatWon = null;
 
             foreach (var player in Players)
             {
-                if (player.CardToPlay.Rank > _firstCardPlayed.Rank && player.CardToPlay.Suit == _firstCardPlayed.Suit)
+                if (player.CardToPlay.Rank > winningCard.Rank && player.CardToPlay.Suit == winningCard.Suit)
                 {
-                    player.CardToPlay = winningCard;
+                     winningCard = player.CardToPlay;
                 }
             }
 
             if (winningCard != _firstCardPlayed) // Någon spelade ett högre kort än det som spelades först
             {
-                winningPlayer = Players.Find(x => x.Hand.Exists(y => y == winningCard));
+                winningPlayer = Players.Find(x => x.CardToPlay == winningCard);
+                playerThatWon = Players.Find(x => x == winningPlayer);
             }
             else // Det första kortet vann rundan
             {
-                winningPlayer = Players.Find(x => x.Hand.Exists(y => y == _firstCardPlayed));
+                winningPlayer = Players.Find(x => x.CardToPlay == _firstCardPlayed);
+                playerThatWon = Players[0];
             }
 
-            
+            WhoStartsNextTrick = playerThatWon;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -260,8 +281,9 @@ namespace Cards
 
         private void GameService_InvalidPlayedCard(object sender, int e) { }
 
-        private void GameService_ValidPlayedCard(object sender, Card e) { }
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public class MyState
     {
