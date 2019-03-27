@@ -351,18 +351,23 @@ namespace Cards_WPF
 
             this.Dispatcher.Invoke(() =>
             {
-                foreach (var humanCard in VisualStuffList)
-                {
-                    var nameOfCard = FindName(humanCard.CardName) as Image;
-                    MouseButtonEventArgs arg = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left);
-                    if (humanCard.CardSelected == true)
-                    {
-                        Image_PlayaCard_MouseUp(nameOfCard, arg);
-                    }
-                }
+                ResetHumanCards();
             });
 
             GameService.HumanPickedTricks(indexOfTricksCardsSelected);
+        }
+
+        private void ResetHumanCards()
+        {
+            foreach (var humanCard in VisualStuffList)
+            {
+                var nameOfCard = FindName(humanCard.CardName) as Image;
+                MouseButtonEventArgs arg = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left);
+                if (humanCard.CardSelected == true)
+                {
+                    Image_PlayaCard_MouseUp(nameOfCard, arg);
+                }
+            }
         }
 
         private void PlayTricks_Click(object sender, RoutedEventArgs e)
@@ -378,8 +383,6 @@ namespace Cards_WPF
             var cardThatWasPlayed = VisualStuffList[indexOfPlayedCard];
 
             GameService.HumanPlayedCardCheckForValidity(indexOfPlayedCard);
-
-            // Ta bort det kortet från Front-End (samt sätta till disabled och inte-klickat osv)
         }
 
         private void CreateCroppedBitmapCards(List<CardPicture> cardPicturesList)
