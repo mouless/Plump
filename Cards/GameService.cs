@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Cards.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Cards.Models;
 
 namespace Cards
 {
@@ -31,10 +31,6 @@ namespace Cards
 
         private Card _firstCardPlayed = new Card(Card.CardSuit.Hjärter, Card.CardRank.Två);
 
-        public Card CardToPlay_Westn { get; set; }
-        public Card CardToPlay_North { get; set; }
-        public Card CardToPlay_Eastn { get; set; }
-        public Card CardToPlay_Playa { get; set; }
         #endregion
 
         public GameService()
@@ -62,9 +58,8 @@ namespace Cards
             var fördelaKort = new DealCards();
             fördelaKort.DistributeCards(Players, DeckOfCards, numberOfSticksThisRound);
 
-            StartRound();
+            var task = StartFirstTurn();
 
-            //EndGame();
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,9 +98,9 @@ namespace Cards
             }
         }
 
-        public void StartRound()
+        public Task StartFirstTurn()
         {
-            Task.Run(() =>
+            return Task.Run(() =>
             {
                 // ANROPA SPELARNA FÖR ATT BESTÄMMA ANTAL STICK
                 DecidePlayerTricks();
@@ -113,16 +108,26 @@ namespace Cards
                 // KOLLA OM SPELARNA KAN TA DERAS ÖNSKADE STICK
                 ValidatePlayerTricksCount();
 
-                // SE TILL SÅ ATT DEN SPELARE SOM HAR HÖGST STICK EFTER "DEALER" FÅR BÖRJA SPELA UT
-                var spelare = new PlayerService();
-                spelare.WhoGoesFirstHighestTricksAfterDealer(Players, WhoGoesFirst);
-
-
-                // ANROPA SPELARNA FÖR ATT SPELA UT KORT
-                PlayPlayerCards();
-                EndGame();
+            }).ContinueWith(x =>
+            {
+                for (int i = 0; i < Players[0].Hand.Count; i++)
+                {
+                    StartFollowingRound(Players[0].Hand.Count);
+                }
             });
+        }
 
+        private void StartFollowingRound(int cardsRemaining)
+        {
+            // SE TILL SÅ ATT DEN SPELARE SOM VANN FÖREGÅENDE STICK FÅR BÖRJA
+            var spelare = new PlayerService();
+            spelare.WhoGoesFirstHighestTricksAfterDealer(Players, WhoGoesFirst);
+
+            // ANROPA SPELARNA FÖR ATT SPELA UT KORT
+            PlayPlayerCards();
+
+            // POÄNGSTÄLLNING SAMT ANROPA NÄSTA STICK/RUNDA
+            EndGame();
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -251,7 +256,7 @@ namespace Cards
             {
                 if (player.CardToPlay.Rank > winningCard.Rank && player.CardToPlay.Suit == winningCard.Suit)
                 {
-                     winningCard = player.CardToPlay;
+                    winningCard = player.CardToPlay;
                 }
             }
 
