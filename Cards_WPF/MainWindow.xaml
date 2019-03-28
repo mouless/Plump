@@ -36,6 +36,7 @@
         <Image x:Name="Image_Test" HorizontalAlignment="Left" Height="131" Margin="807,568,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_Test_MouseUp"/>
         <Button x:Name="PlayCard_Button" IsEnabled="False" Visibility="Hidden" Content="Spela kort" HorizontalAlignment="Left" Margin="534,766,0,0" VerticalAlignment="Top" Width="75" Height="39" Click="PlayTricks_Click"/>
         <Button x:Name="ChooseStick_Button" IsEnabled="False" Visibility="Hidden" Content="Välj stick" HorizontalAlignment="Left" Margin="534,766,0,0" VerticalAlignment="Top" Width="75" Height="39" Click="ChooseTricks_Click"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="982,132,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
 
     </Grid>
 </Window>

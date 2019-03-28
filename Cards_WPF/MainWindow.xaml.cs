@@ -41,11 +41,24 @@ namespace Cards_WPF
             GameService.InvalidSticksCount += GameService_InvalidSticksCount;
             GameService.ShowPlayedCard += GameService_ShowPlayedCard;
             GameService.InvalidPlayedCard += GameService_InvalidPlayedCard;
+            GameService.ResetPlayerCards += GameService_ResetPlayerCards;
 
             StartGame_BackEnd();
 
             StartGame_FrontEnd(GameService);
 
+        }
+
+        private void GameService_ResetPlayerCards(object sender, int e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                var uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\101.jpeg");
+                Image_WestnPlayed.Source = new BitmapImage(uri);
+                Image_NorthPlayed.Source = new BitmapImage(uri);
+                Image_EastnPlayed.Source = new BitmapImage(uri);
+                Image_PlayaPlayed.Source = new BitmapImage(uri);
+            });
         }
 
         private void GameService_InvalidPlayedCard(object sender, int e)
@@ -68,6 +81,7 @@ namespace Cards_WPF
                         var cardToHide = FindName(cardThatWasPlayed.CardName) as Image;
                         cardToHide.Visibility = Visibility.Hidden;
                         cardToHide.IsEnabled = false;
+                        cardThatWasPlayed.CardSelected = false;
                     });
                 }
 
@@ -147,20 +161,13 @@ namespace Cards_WPF
         {
             ShowHandText(currentGame);
 
-            //ShowTricks(currentGame);
-
             ShowImageCards(currentGame);
-
-            //ShowHighestTricks(currentGame);
 
             if (currentGame.ValidHumanTricksCount == true)
             {
                 MessageBox.Show("Last player's tricks equals the same as the amount of tricks for the current round...");
             }
-
         }
-
-
 
         private void ShowHandText(GameService currentGame)
         {
@@ -308,14 +315,6 @@ namespace Cards_WPF
             Label_PlayaTricks.Content = VisualStuffList.Count(x => x.CardSelected == true).ToString();
         }
 
-        private void Image_Test_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            var numberOfCards = CardPicturesList.Count;
-            var randomCard = new Random();
-            var randomNumber = randomCard.Next(0, 52);
-            Image_Test.Source = CardPicturesList[randomNumber].Picture;
-        }
-
         private void ChooseTricks_Click(object sender, RoutedEventArgs e)
         {
             PlayCard_Button.IsEnabled = true;
@@ -372,17 +371,17 @@ namespace Cards_WPF
 
         private void PlayTricks_Click(object sender, RoutedEventArgs e)
         {
-            // Se till att det bara är ett kort som spelas, samt att det är i rätt färg (om nödvändigt)
+            // Se till att det bara är ett kort som spelas
             if (VisualStuffList.Count(x => x.CardSelected == true) != 1)
             {
                 MessageBox.Show("You can only pick ONE card!");
                 return;
             }
 
-            var indexOfPlayedCard = VisualStuffList.FindIndex(x => x.CardSelected == true);
-            var cardThatWasPlayed = VisualStuffList[indexOfPlayedCard];
+            var indexOfPlayedCard = VisualStuffList.Find(x => x.CardSelected == true);
+            var cardImage = FindName(indexOfPlayedCard.CardName) as Image;
 
-            GameService.HumanPlayedCardCheckForValidity(indexOfPlayedCard);
+            GameService.HumanPlayedCardCheckForValidity(cardImage.Source.ToString());
         }
 
         private void CreateCroppedBitmapCards(List<CardPicture> cardPicturesList)
@@ -390,6 +389,17 @@ namespace Cards_WPF
             var spriteSheetService = new SpriteSheetService();
             spriteSheetService.CutImage(cardPicturesList);
         }
+        private void Image_Test_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var numberOfCards = CardPicturesList.Count;
+            var randomCard = new Random();
+            var randomNumber = randomCard.Next(0, 52);
+            Image_Test.Source = CardPicturesList[randomNumber].Picture;
+        }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            GameService.MoveOn();
+        }
     }
 }

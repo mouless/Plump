@@ -1,6 +1,7 @@
 ﻿using Cards.Models;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace Cards
         public event EventHandler<int> InvalidSticksCount;
         public event EventHandler<int> InvalidPlayedCard;
         public event EventHandler<Card> PlayPlayerCard;
+        public event EventHandler<int> ResetPlayerCards;
         public event EventHandler<Card> ShowPlayedCard;
         public AutoResetEvent HumanPlayerStickAwaiter { get; set; } = new AutoResetEvent(false);
 
@@ -40,7 +42,9 @@ namespace Cards
             InvalidSticksCount += GameService_InvalidSticksCount;
             ShowPlayedCard += GameService_ShowPlayedCard;
             InvalidPlayedCard += GameService_InvalidPlayedCard;
+            ResetPlayerCards += GameService_ResetPlayerCards;
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -108,20 +112,33 @@ namespace Cards
                 // KOLLA OM SPELARNA KAN TA DERAS ÖNSKADE STICK
                 ValidatePlayerTricksCount();
 
+                // SE TILL SÅ ATT DEN SPELARE SOM VANN FÖREGÅENDE STICK FÅR BÖRJA
+                var spelare = new PlayerService();
+                spelare.WhoGoesFirstHighestTricksAfterDealer(Players, WhoGoesFirst);
+
+                // ANROPA SPELARNA FÖR ATT SPELA UT KORT
+                PlayPlayerCards();
+
+                // POÄNGSTÄLLNING SAMT ANROPA NÄSTA STICK/RUNDA
+                EndGame();
+
             }).ContinueWith(x =>
             {
-                for (int i = 0; i < Players[0].Hand.Count; i++)
+                var startingCount = Players[0].Hand.Count;
+                for (int i = 0; i < startingCount; i++)
                 {
                     StartFollowingRound(Players[0].Hand.Count);
+                    HumanPlayerStickAwaiter.WaitOne();
                 }
             });
         }
 
         private void StartFollowingRound(int cardsRemaining)
         {
+            _firstCardPlayed = null;
             // SE TILL SÅ ATT DEN SPELARE SOM VANN FÖREGÅENDE STICK FÅR BÖRJA
             var spelare = new PlayerService();
-            spelare.WhoGoesFirstHighestTricksAfterDealer(Players, WhoGoesFirst);
+            spelare.InitizialOrderOfPlayers(Players, WhoStartsNextTrick);
 
             // ANROPA SPELARNA FÖR ATT SPELA UT KORT
             PlayPlayerCards();
@@ -232,12 +249,30 @@ namespace Cards
             HumanPlayerStickAwaiter.Set();
         }
 
-        public void HumanPlayedCardCheckForValidity(int indexOfPlayedCard)
+        public void HumanPlayedCardCheckForValidity(string nameOfPlayedCard)
         {
             var indexOfHumanPlayer = Players.FindIndex(x => x.Name == "Player1");
             var humanPlayer = Players[indexOfHumanPlayer];
+            Card cardToBePlayed = null;
 
-            humanPlayer.CardToPlay = humanPlayer.Hand[indexOfPlayedCard];
+            Regex reg = new Regex(@"\d+");
+
+            var numberOfCard = reg.Match(nameOfPlayedCard);
+
+            if (numberOfCard.Success)
+            {
+                var suitPart = numberOfCard.Value.Substring(0, 1);
+                var rankPart = numberOfCard.Value.Substring(1);
+
+                Card.CardSuit suit = (Card.CardSuit)Enum.Parse(typeof(Card.CardSuit), suitPart);
+                Card.CardRank rank = (Card.CardRank)Enum.Parse(typeof(Card.CardRank), rankPart);
+
+                cardToBePlayed = new Card(suit, rank);
+            }
+
+            var card = humanPlayer.Hand.Find(x => x.Rank == cardToBePlayed.Rank && x.Suit == cardToBePlayed.Suit);
+
+            humanPlayer.CardToPlay = card;
 
             HumanPlayerStickAwaiter.Set();
         }
@@ -271,11 +306,14 @@ namespace Cards
                 playerThatWon = Players[0];
             }
 
+            HumanPlayerStickAwaiter.WaitOne();
+
+            ResetPlayerCards.Invoke(this, 99);
             WhoStartsNextTrick = playerThatWon;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        // EVENTS
         private void ShowHumanStick_Event(object sender, int i) { }
 
         private void GameService_PlayPlayerCard(object sender, Card e) { }
@@ -286,6 +324,13 @@ namespace Cards
 
         private void GameService_InvalidPlayedCard(object sender, int e) { }
 
+        private void GameService_ResetPlayerCards(object sender, int e) { }
+
+        public void MoveOn()
+        {
+            HumanPlayerStickAwaiter.Set();
+
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
