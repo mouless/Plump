@@ -1,9 +1,9 @@
-﻿using Cards.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Cards.Models;
 
 namespace Cards
 {
@@ -15,6 +15,7 @@ namespace Cards
         public event EventHandler<int> InvalidPlayedCard;
         public event EventHandler<Card> PlayPlayerCard;
         public event EventHandler<int> ResetPlayerCards;
+        public event EventHandler<int> RoundIsFinished;
         public event EventHandler<Card> ShowPlayedCard;
         public AutoResetEvent HumanPlayerStickAwaiter { get; set; } = new AutoResetEvent(false);
 
@@ -22,7 +23,8 @@ namespace Cards
         public int NumberOfSticksThisRound { get; set; }
 
         public static Random r;
-        public Dictionary<int, Scoreboard> Scoreboard { get; set; } = new Dictionary<int, Scoreboard>();
+        public Scoreboard Scoreboard { get; set; } = new Scoreboard();
+        public Round Round { get; set; } = new Round();
         public MyState State { get; set; } = new MyState();
         public List<Card> DeckOfCards { get; set; } = new List<Card>();
 
@@ -43,8 +45,8 @@ namespace Cards
             ShowPlayedCard += GameService_ShowPlayedCard;
             InvalidPlayedCard += GameService_InvalidPlayedCard;
             ResetPlayerCards += GameService_ResetPlayerCards;
+            RoundIsFinished += GameService_RoundIsFinished;
         }
-
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -64,6 +66,13 @@ namespace Cards
 
             var task = StartFirstTurn();
 
+            EndRound();
+        }
+
+        private void EndRound()
+        {
+            // SCOREBOARDEN VILL FÅ LITE KÄRLEK
+            RoundIsFinished.Invoke(this, 99);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +81,6 @@ namespace Cards
         {
             r = new Random();
             _firstCardPlayed = null;
-            Scoreboard.Add(numberOfSticksThisRound, new Scoreboard());
             NumberOfSticksThisRound = numberOfSticksThisRound;
             DeckOfCards.Clear();
             Players.Clear();
@@ -120,20 +128,20 @@ namespace Cards
                 PlayPlayerCards();
 
                 // POÄNGSTÄLLNING SAMT ANROPA NÄSTA STICK/RUNDA
-                EndGame();
+                EndTurn();
 
             }).ContinueWith(x =>
             {
                 var startingCount = Players[0].Hand.Count;
                 for (int i = 0; i < startingCount; i++)
                 {
-                    StartFollowingRound(Players[0].Hand.Count);
+                    StartFollowingRound();
                     HumanPlayerStickAwaiter.WaitOne();
                 }
             });
         }
 
-        private void StartFollowingRound(int cardsRemaining)
+        private void StartFollowingRound()
         {
             _firstCardPlayed = null;
             // SE TILL SÅ ATT DEN SPELARE SOM VANN FÖREGÅENDE STICK FÅR BÖRJA
@@ -144,7 +152,7 @@ namespace Cards
             PlayPlayerCards();
 
             // POÄNGSTÄLLNING SAMT ANROPA NÄSTA STICK/RUNDA
-            EndGame();
+            EndTurn();
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -280,9 +288,8 @@ namespace Cards
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        public void EndGame()
+        public void EndTurn()
         {
-            var score = Scoreboard[NumberOfSticksThisRound];
             var winningCard = _firstCardPlayed;
             Player winningPlayer = null;
             Player playerThatWon = null;
@@ -306,7 +313,13 @@ namespace Cards
                 playerThatWon = Players[0];
             }
 
-            HumanPlayerStickAwaiter.WaitOne();
+            Round.RoundName = NumberOfSticksThisRound;
+            var turn = new Turn();
+
+            foreach (var player in Players)
+            {
+                turn.TurnName = player.Hand.Count + 1;
+            }
 
             ResetPlayerCards.Invoke(this, 99);
             WhoStartsNextTrick = playerThatWon;
@@ -325,6 +338,8 @@ namespace Cards
         private void GameService_InvalidPlayedCard(object sender, int e) { }
 
         private void GameService_ResetPlayerCards(object sender, int e) { }
+
+        private void GameService_RoundIsFinished(object sender, int e) { }
 
         public void MoveOn()
         {

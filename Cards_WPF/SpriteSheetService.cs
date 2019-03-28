@@ -11,15 +11,15 @@ namespace Cards_WPF
         {
             var uriList = new List<Uri>
             {
-                //new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Hjärter_Transp.png"),
-                //new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Spader_Transp.png"),
-                //new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Ruter_Transp.png"),
-                //new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Klöver_Transp.png"),
+                new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Hjärter_Transp.png"),
+                new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Spader_Transp.png"),
+                new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Ruter_Transp.png"),
+                new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Klöver_Transp.png"),
 
-                new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Hjärter_Transp.png"),
-                new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Spader_Transp.png"),
-                new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Ruter_Transp.png"),
-                new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Klöver_Transp.png"),
+                //new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Hjärter_Transp.png"),
+                //new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Spader_Transp.png"),
+                //new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Ruter_Transp.png"),
+                //new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Klöver_Transp.png"),
             };
 
             var bitmapSources = new List<BitmapImage>();
