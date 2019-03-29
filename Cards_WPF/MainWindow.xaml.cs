@@ -50,8 +50,8 @@ namespace Cards_WPF
         {
             this.Dispatcher.Invoke(() =>
             {
-                //var uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\101.jpeg");
-                var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\101.jpeg");
+                var uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\101.jpeg");
+                //var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\101.jpeg");
                 Image_WestnPlayed.Source = new BitmapImage(uri);
                 Image_NorthPlayed.Source = new BitmapImage(uri);
                 Image_EastnPlayed.Source = new BitmapImage(uri);
@@ -181,8 +181,8 @@ namespace Cards_WPF
             for (int j = 0; j < currentGame.Players[3].Hand.Count; j++)
             {
                 cardNumber = CardImageNumber(currentGame.Players[3].Hand.ElementAt(j));
-                Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                //Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                //Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                 Image img = FindName("Image_Playa" + j) as Image;
                 img.Source = new BitmapImage(uri);
             }
@@ -198,8 +198,8 @@ namespace Cards_WPF
                 case "West":
                     {
                         cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_WestnPlayed.Source = new BitmapImage(uri);
                         break;
                     }
@@ -207,8 +207,8 @@ namespace Cards_WPF
                 case "North":
                     {
                         cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_NorthPlayed.Source = new BitmapImage(uri);
                         break;
                     }
@@ -216,8 +216,8 @@ namespace Cards_WPF
                 case "East":
                     {
                         cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_EastnPlayed.Source = new BitmapImage(uri);
                         break;
                     }
@@ -225,8 +225,8 @@ namespace Cards_WPF
                 case "Player1":
                     {
                         cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        //uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                        uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_PlayaPlayed.Source = new BitmapImage(uri);
                         break;
                     }

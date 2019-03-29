@@ -11,15 +11,15 @@ namespace Cards_WPF
         {
             var uriList = new List<Uri>
             {
-                new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Hjärter_Transp.png"),
-                new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Spader_Transp.png"),
-                new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Ruter_Transp.png"),
-                new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Klöver_Transp.png"),
+                //new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Hjärter_Transp.png"),
+                //new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Spader_Transp.png"),
+                //new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Ruter_Transp.png"),
+                //new Uri("C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\Klöver_Transp.png"),
 
-                //new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Hjärter_Transp.png"),
-                //new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Spader_Transp.png"),
-                //new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Ruter_Transp.png"),
-                //new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Klöver_Transp.png"),
+                new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Hjärter_Transp.png"),
+                new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Spader_Transp.png"),
+                new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Ruter_Transp.png"),
+                new Uri("C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\Klöver_Transp.png"),
             };
 
             var bitmapSources = new List<BitmapImage>();
@@ -92,25 +92,5 @@ namespace Cards_WPF
                 }
             }
         }
-
-
-
-        #region
-        //int count = 0;
-
-        //BitmapImage src = new BitmapImage();
-        //src.BeginInit();
-        //src.UriSource = new Uri(img, UriKind.Relative);
-        //src.CacheOption = BitmapCacheOption.OnLoad;
-        //src.EndInit();
-
-        //for (int i = 0; i < 3; i++)
-        //{
-        //    for (int j = 0; j < 5; j++)
-        //    {
-        //        objImg[count++] = new CroppedBitmap(src, new Int32Rect(j * 120, i * 120, 120, 120));
-        //    }
-        //}
-        #endregion
     }
 }
