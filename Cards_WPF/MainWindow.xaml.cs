@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cards;
+using Cards.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -6,8 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Cards;
-using Cards.Models;
 
 namespace Cards_WPF
 {
@@ -24,21 +24,31 @@ namespace Cards_WPF
         public MainWindow()
         {
             InitializeComponent();
+            GameService = new GameService();
+
             ClickOnHumanCards();
 
             CreateCroppedBitmapCards(CardPicturesList);
+            ClearFrontEndStuff();
+        }
+
+        private void ClearFrontEndStuff()
+        {
+            Label_Westn_Won.Content = "";
+            Label_North_Won.Content = "";
+            Label_Eastn_Won.Content = "";
+            Label_Playa_Won.Content = "";
         }
 
         private void StartNewGame()
         {
-            GameService = new GameService();
-
-            GameService.ShowHumanStick += GameService_ShowHumanStick;
-            GameService.PlayPlayerCard += GameService_PlayPlayerCard;
-            GameService.InvalidSticksCount += GameService_InvalidSticksCount;
-            GameService.ShowPlayedCard += GameService_ShowPlayedCard;
-            GameService.InvalidPlayedCard += GameService_InvalidPlayedCard;
-            GameService.ResetPlayerCards += GameService_ResetPlayerCards;
+            GameService.ShowHumanStick += Event_ShowHumanStick;
+            GameService.PlayPlayerCard += Event_PlayPlayerCard;
+            GameService.InvalidSticksCount += Event_InvalidSticksCount;
+            GameService.ShowPlayedCard += Event_ShowPlayedCard;
+            GameService.InvalidPlayedCard += Event_InvalidPlayedCard;
+            GameService.ResetPlayerCards += Event_ResetPlayerCards;
+            GameService.UpdateCrowne += Event_UpdateCrowne;
 
             StartGame_BackEnd();
 
@@ -46,12 +56,21 @@ namespace Cards_WPF
 
         }
 
-        private void GameService_ResetPlayerCards(object sender, int e)
+        private void Event_UpdateCrowne(object sender, Player player)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                Crowne_Show(player);
+            });
+        }
+
+        private void Event_ResetPlayerCards(object sender, int e)
         {
             this.Dispatcher.Invoke(() =>
             {
                 var uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\101.jpeg");
                 //var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\101.jpeg");
+
                 Image_WestnPlayed.Source = new BitmapImage(uri);
                 Image_NorthPlayed.Source = new BitmapImage(uri);
                 Image_EastnPlayed.Source = new BitmapImage(uri);
@@ -59,13 +78,13 @@ namespace Cards_WPF
             });
         }
 
-        private void GameService_InvalidPlayedCard(object sender, int e)
+        private void Event_InvalidPlayedCard(object sender, int e)
         {
             // Human har valt ett kort som man inte får spela ut
             MessageBox.Show("That card is not a valid pick!\nPlease choose a valid card.");
         }
 
-        private void GameService_ShowPlayedCard(object sender, Card e)
+        private void Event_ShowPlayedCard(object sender, Card e)
         {
             this.Dispatcher.Invoke(() =>
             {
@@ -87,7 +106,7 @@ namespace Cards_WPF
             });
         }
 
-        private void GameService_PlayPlayerCard(object sender, Card e)
+        private void Event_PlayPlayerCard(object sender, Card e)
         {
             this.Dispatcher.Invoke(() =>
             {
@@ -95,12 +114,12 @@ namespace Cards_WPF
             });
         }
 
-        private void GameService_InvalidSticksCount(object sender, int e)
+        private void Event_InvalidSticksCount(object sender, int e)
         {
             MessageBox.Show("Invalid number of tricks! Can't be the same as the number of cards this round. \nPlease change your number of tricks.");
         }
 
-        private void GameService_ShowHumanStick(object sender, int tricksCount)
+        private void Event_ShowHumanStick(object sender, int tricksCount)
         {
             if (sender is AiPlayer)
             {
@@ -311,6 +330,30 @@ namespace Cards_WPF
             }
 
             Label_PlayaTricks.Content = VisualStuffList.Count(x => x.CardSelected == true).ToString();
+        }
+
+        private void Crowne_Show(Player player)
+        {
+            Crown_Westn_Image.Visibility = Visibility.Hidden;
+            Crown_North_Image.Visibility = Visibility.Hidden;
+            Crown_Eastn_Image.Visibility = Visibility.Hidden;
+            Crown_Playa_Image.Visibility = Visibility.Hidden;
+
+            switch (player.Name)
+            {
+                case "West":
+                    Crown_Westn_Image.Visibility = Visibility.Visible;
+                    break;
+                case "North":
+                    Crown_North_Image.Visibility = Visibility.Visible;
+                    break;
+                case "East":
+                    Crown_Eastn_Image.Visibility = Visibility.Visible;
+                    break;
+                case "Player1":
+                    Crown_Playa_Image.Visibility = Visibility.Visible;
+                    break;
+            }
         }
 
         private void ChooseTricks_Click(object sender, RoutedEventArgs e)

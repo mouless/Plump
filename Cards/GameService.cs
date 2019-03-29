@@ -17,6 +17,7 @@ namespace Cards
         public event EventHandler<int> ResetPlayerCards;
         public event EventHandler<int> RoundIsFinished;
         public event EventHandler<Card> ShowPlayedCard;
+        public event EventHandler<Player> UpdateCrowne;
         public AutoResetEvent HumanPlayerStickAwaiter { get; set; } = new AutoResetEvent(false);
 
         public bool ValidHumanTricksCount { get; set; } = false;
@@ -46,6 +47,7 @@ namespace Cards
             InvalidPlayedCard += GameService_InvalidPlayedCard;
             ResetPlayerCards += GameService_ResetPlayerCards;
             RoundIsFinished += GameService_RoundIsFinished;
+            UpdateCrowne += GameService_UpdateCrowne;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,6 +125,7 @@ namespace Cards
                 // SE TILL SÅ ATT DEN SPELARE SOM VANN FÖREGÅENDE STICK FÅR BÖRJA
                 var spelare = new PlayerService();
                 spelare.WhoGoesFirstHighestTricksAfterDealer(Players, WhoGoesFirst);
+                UpdateCrowne.Invoke(this, Players[0]);
 
                 // ANROPA SPELARNA FÖR ATT SPELA UT KORT
                 PlayPlayerCards();
@@ -136,7 +139,7 @@ namespace Cards
                 for (int i = 0; i < startingCount; i++)
                 {
                     StartFollowingRound();
-                    HumanPlayerStickAwaiter.WaitOne();
+                    //HumanPlayerStickAwaiter.WaitOne();
                 }
             });
         }
@@ -147,6 +150,7 @@ namespace Cards
             // SE TILL SÅ ATT DEN SPELARE SOM VANN FÖREGÅENDE STICK FÅR BÖRJA
             var spelare = new PlayerService();
             spelare.InitizialOrderOfPlayers(Players, WhoStartsNextTrick);
+            UpdateCrowne.Invoke(this, WhoStartsNextTrick);
 
             // ANROPA SPELARNA FÖR ATT SPELA UT KORT
             PlayPlayerCards();
@@ -156,6 +160,9 @@ namespace Cards
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        #region Kodbas
+
 
         private void PlayPlayerCards()
         {
@@ -167,6 +174,8 @@ namespace Cards
 
                     ShowPlayedCard.Invoke(player, player.CardToPlay);
                     PlayPlayerCard.Invoke(player, player.CardToPlay); // Visa i Front-End att man spelat ut ett kort & ta bort det från "listan"
+
+                    Thread.Sleep(888);
                 }
                 else if (player is HumanPlayer)
                 {
@@ -285,8 +294,9 @@ namespace Cards
             HumanPlayerStickAwaiter.Set();
         }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #endregion
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public void EndTurn()
         {
@@ -340,6 +350,8 @@ namespace Cards
         private void GameService_ResetPlayerCards(object sender, int e) { }
 
         private void GameService_RoundIsFinished(object sender, int e) { }
+
+        private void GameService_UpdateCrowne(object sender, Player e) { }
 
         public void MoveOn()
         {

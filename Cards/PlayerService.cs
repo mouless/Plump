@@ -89,10 +89,6 @@ namespace Cards
             // ORDNA OM PLAYER-LISTAN med Player som vi hittade tack vare index som vi fick från foreachen ovan
             var indexOfPlayerThatShouldStart = players[indexOfHighestTricksCountListItem];
             InitizialOrderOfPlayers(players, indexOfPlayerThatShouldStart);
-
-            // TROR INTE ATT JAG BEHÖVER DEN HÄR LÄNGRE EFTERSOM NU LIGGER STICKEN PÅ SPELAREN ISTÄLLET FÖR SOM EN SEPARAT LISTA???
-            //OrderTrickCountList(tricksCount, indexOfHighestTricksCountListItem);
-
         }
     }
 }
