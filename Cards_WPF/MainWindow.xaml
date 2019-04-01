@@ -22,7 +22,7 @@
         <Label x:Name="Label_EastnTricks" Content="Stick" HorizontalAlignment="Left" Margin="1001,284,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Label x:Name="Label_PlayaTricks" Content="Stick" HorizontalAlignment="Left" Margin="328,591,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Label x:Name="Label_Number" Content="Antal rundor" HorizontalAlignment="Left" Margin="936,707,0,0" VerticalAlignment="Top" FontSize="18"/>
-        <Button Content="Gå en runda frammåt" IsEnabled="False" HorizontalAlignment="Left" Margin="936,746,0,0" VerticalAlignment="Top" Width="132" Height="39" Click="StartAnotherRound_Click"/>
+        <Button x:Name="NextRound_Button" Content="Next round" IsEnabled="False" HorizontalAlignment="Left" Margin="936,746,0,0" VerticalAlignment="Top" Width="132" Height="39" Click="StartAnotherRound_Click"/>
         <Image x:Name="Image_WestnPlayed" HorizontalAlignment="Left" Height="131" Margin="204,347,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
         <Image x:Name="Image_NorthPlayed" HorizontalAlignment="Left" Height="131" Margin="498,258,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
         <Image x:Name="Image_EastnPlayed" HorizontalAlignment="Left" Height="131" Margin="775,347,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
@@ -36,7 +36,6 @@
         <Image x:Name="Image_Test" HorizontalAlignment="Left" Height="131" Margin="807,568,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_Test_MouseUp"/>
         <Button x:Name="PlayCard_Button" IsEnabled="False" Visibility="Hidden" Content="Spela kort" HorizontalAlignment="Left" Margin="534,766,0,0" VerticalAlignment="Top" Width="75" Height="39" Click="PlayTricks_Click"/>
         <Button x:Name="ChooseStick_Button" IsEnabled="False" Visibility="Hidden" Content="Välj stick" HorizontalAlignment="Left" Margin="534,766,0,0" VerticalAlignment="Top" Width="75" Height="39" Click="ChooseTricks_Click"/>
-        <Button Content="Gå turn" IsEnabled="False" HorizontalAlignment="Left" Margin="982,132,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Button x:Name="StartGame_Button" Content="Start Game" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="96" Height="37" Click="StartGame_Button_Click"/>
         <Image x:Name="Crown_Westn_Image" Visibility="Hidden" HorizontalAlignment="Left" Height="28" Margin="20,260,0,0" VerticalAlignment="Top" Width="42" Source="Graphics/Crowne.png"/>
         <Image x:Name="Crown_North_Image" Visibility="Hidden" HorizontalAlignment="Left" Height="28" Margin="498,14,0,0" VerticalAlignment="Top" Width="42" Source="Graphics/Crowne.png"/>

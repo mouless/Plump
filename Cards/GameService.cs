@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Cards.Models;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Cards.Models;
 
 namespace Cards
 {
     public class GameService
     {
         #region
+        #region Events
         public event EventHandler<int> ShowHumanStick;
         public event EventHandler<int> InvalidSticksCount;
         public event EventHandler<int> InvalidPlayedCard;
@@ -19,6 +20,7 @@ namespace Cards
         public event EventHandler<Card> ShowPlayedCard;
         public event EventHandler<Player> UpdateCrowne;
         public AutoResetEvent HumanPlayerStickAwaiter { get; set; } = new AutoResetEvent(false);
+        #endregion
 
         public bool ValidHumanTricksCount { get; set; } = false;
         public int NumberOfSticksThisRound { get; set; }
@@ -68,7 +70,7 @@ namespace Cards
 
             var task = StartFirstTurn();
 
-            EndRound();
+            EndRound(); // End ROUND!
         }
 
         private void EndRound()
@@ -131,7 +133,7 @@ namespace Cards
                 PlayPlayerCards();
 
                 // POÄNGSTÄLLNING SAMT ANROPA NÄSTA STICK/RUNDA
-                EndTurn();
+                EndTurn(); // End TURN!
 
             }).ContinueWith(x =>
             {
@@ -141,6 +143,8 @@ namespace Cards
                     StartFollowingRound();
                     //HumanPlayerStickAwaiter.WaitOne();
                 }
+
+                UpdateCrowne.Invoke(this, WhoStartsNextTrick);
             });
         }
 
@@ -156,7 +160,7 @@ namespace Cards
             PlayPlayerCards();
 
             // POÄNGSTÄLLNING SAMT ANROPA NÄSTA STICK/RUNDA
-            EndTurn();
+            EndTurn(); // End TURN!
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -316,11 +320,13 @@ namespace Cards
             {
                 winningPlayer = Players.Find(x => x.CardToPlay == winningCard);
                 playerThatWon = Players.Find(x => x == winningPlayer);
+                playerThatWon.TricksWon++;
             }
             else // Det första kortet vann rundan
             {
                 winningPlayer = Players.Find(x => x.CardToPlay == _firstCardPlayed);
                 playerThatWon = Players[0];
+                playerThatWon.TricksWon++;
             }
 
             Round.RoundName = NumberOfSticksThisRound;
@@ -356,7 +362,6 @@ namespace Cards
         public void MoveOn()
         {
             HumanPlayerStickAwaiter.Set();
-
         }
     }
 
