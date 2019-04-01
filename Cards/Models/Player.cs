@@ -9,6 +9,7 @@ namespace Cards.Models
         public string Name { get; set; }
         public Card CardToPlay { get; set; }
         public int NumberOfTricks { get; set; }
+        public int TricksWon { get; set; } = 0;
 
         protected Player(string name)
         {

@@ -49,6 +49,7 @@ namespace Cards_WPF
             GameService.InvalidPlayedCard += Event_InvalidPlayedCard;
             GameService.ResetPlayerCards += Event_ResetPlayerCards;
             GameService.UpdateCrowne += Event_UpdateCrowne;
+            GameService.RoundIsFinished += GameService_RoundIsFinished;
 
             StartGame_BackEnd();
 
@@ -56,11 +57,24 @@ namespace Cards_WPF
 
         }
 
+        private void GameService_RoundIsFinished(object sender, int e)
+        {
+            // TODO: Kolla så man inte är färdig med hela spelet
+            NumberOfSticks--;
+
+            NextRound_Button.IsEnabled = true;
+        }
+
         private void Event_UpdateCrowne(object sender, Player player)
         {
             this.Dispatcher.Invoke(() =>
             {
                 Crowne_Show(player);
+
+                Label_Westn_Won.Content = GameService.Players.Find(x => x.Name == "West").TricksWon;
+                Label_North_Won.Content = GameService.Players.Find(x => x.Name == "North").TricksWon;
+                Label_Eastn_Won.Content = GameService.Players.Find(x => x.Name == "East").TricksWon;
+                Label_Playa_Won.Content = GameService.Players.Find(x => x.Name == "Player1").TricksWon;
             });
         }
 
@@ -254,6 +268,9 @@ namespace Cards_WPF
 
         private void StartAnotherRound_Click(object sender, RoutedEventArgs e)
         {
+            ClearFrontEndStuff();
+            NextRound_Button.IsEnabled = false;
+
             StartGame_BackEnd();
             StartGame_FrontEnd(GameService);
         }
@@ -436,11 +453,6 @@ namespace Cards_WPF
             var randomCard = new Random();
             var randomNumber = randomCard.Next(0, 52);
             Image_Test.Source = CardPicturesList[randomNumber].Picture;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            GameService.MoveOn();
         }
 
         private void StartGame_Button_Click(object sender, RoutedEventArgs e)
