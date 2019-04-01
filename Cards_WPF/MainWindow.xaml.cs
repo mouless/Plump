@@ -1,6 +1,4 @@
-﻿using Cards;
-using Cards.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,6 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Cards;
+using Cards.Models;
 
 namespace Cards_WPF
 {
@@ -62,7 +62,15 @@ namespace Cards_WPF
             // TODO: Kolla så man inte är färdig med hela spelet
             NumberOfSticks--;
 
-            NextRound_Button.IsEnabled = true;
+            this.Dispatcher.Invoke(() =>
+            {
+                // Nollställa 
+                foreach (var card in VisualStuffList)
+                {
+                    card.CardSelected = true;
+                }
+                NextRound_Button.IsEnabled = true;
+            });
         }
 
         private void Event_UpdateCrowne(object sender, Player player)
@@ -218,6 +226,11 @@ namespace Cards_WPF
                 //Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                 Image img = FindName("Image_Playa" + j) as Image;
                 img.Source = new BitmapImage(uri);
+                img.Visibility = Visibility.Visible; // Behövs för alla andra omgångar man kommer hit
+                img.IsEnabled = true;
+
+                // För att återställa de korten som man klickade bort förra omgången
+                ResetHumanCards();
             }
         }
 
@@ -268,8 +281,8 @@ namespace Cards_WPF
 
         private void StartAnotherRound_Click(object sender, RoutedEventArgs e)
         {
-            ClearFrontEndStuff();
             NextRound_Button.IsEnabled = false;
+            ClearFrontEndStuff();
 
             StartGame_BackEnd();
             StartGame_FrontEnd(GameService);

@@ -1,9 +1,9 @@
-﻿using Cards.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Cards.Models;
 
 namespace Cards
 {
@@ -32,9 +32,9 @@ namespace Cards
         public List<Card> DeckOfCards { get; set; } = new List<Card>();
 
         public List<Player> Players { get; set; } = new List<Player>();
-        public Player WhoGoesFirst { get; set; } // DET HÄR VÄRDET SÄTTS I "ResetVariableThings"
+        public Player WhoGoesFirst { get; set; } // DET HÄR VÄRDET SÄTTS I "ConfigureVariableThings()"
         public Player WhoStartsNextTrick { get; set; } = new HumanPlayer("Placeholder"); // DET HÄR VÄRDET SÄTTS I "ResetVariableThings"
-        public int IndexOfWhoGoesFirst { get; set; } = -1;
+        private int _indexOfWhoGoesFirst = -1;
 
         private Card _firstCardPlayed = new Card(Card.CardSuit.Hjärter, Card.CardRank.Två);
 
@@ -56,7 +56,7 @@ namespace Cards
 
         public void CreateRound(int numberOfSticksThisRound)
         {
-            ConfigureVariableThings(IndexOfWhoGoesFirst, WhoGoesFirst, numberOfSticksThisRound);
+            ConfigureVariableThings(ref _indexOfWhoGoesFirst, WhoGoesFirst, numberOfSticksThisRound);
 
             var kortleksLista = new Deck();
             DeckOfCards = kortleksLista.CreateDeck(DeckOfCards);
@@ -69,8 +69,6 @@ namespace Cards
             fördelaKort.DistributeCards(Players, DeckOfCards, numberOfSticksThisRound);
 
             var task = StartFirstTurn();
-
-            EndRound(); // End ROUND!
         }
 
         private void EndRound()
@@ -81,7 +79,7 @@ namespace Cards
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private void ConfigureVariableThings(int indexOfWhoGoesFirst, Player whoGoesFirst, int numberOfSticksThisRound)
+        private void ConfigureVariableThings(ref int theBigClass, Player whoGoesFirst, int numberOfSticksThisRound)
         {
             r = new Random();
             _firstCardPlayed = null;
@@ -89,13 +87,13 @@ namespace Cards
             DeckOfCards.Clear();
             Players.Clear();
             ValidHumanTricksCount = false;
-            indexOfWhoGoesFirst++;
+            theBigClass++;
 
-            if (indexOfWhoGoesFirst >= Players.Count)
+            if (theBigClass >= 4)
             {
-                indexOfWhoGoesFirst = 0;
+                theBigClass = 0;
             }
-            switch (indexOfWhoGoesFirst)
+            switch (theBigClass)
             {
                 case 0:
                     WhoGoesFirst = new AiPlayer("West");
@@ -145,6 +143,7 @@ namespace Cards
                 }
 
                 UpdateCrowne.Invoke(this, WhoStartsNextTrick);
+                EndRound(); // End ROUND!
             });
         }
 
