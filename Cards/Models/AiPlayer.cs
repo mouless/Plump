@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Cards.Models
 {
@@ -123,7 +124,7 @@ namespace Cards.Models
 
                 // TODO: SE TILL ATT AI TAR ETT KORT I SAMMA FÄRG FAST LÄGRE RANK FÖR ATT INTE "SLÖSA" PÅ SINA STICK-KORT
                 // TODO: JAG BEHÖVER JU HA ALLA KORT SOM LIGGER PÅ BORDET FÖR ATT VETA VILKET KORT JAG BEHÖVER JÄMFÖRA MED
-                var tempTricksCount = player.TricksCount;
+                var tempTricksCount = player.TricksCount.Where(x => x != null).ToList();
                 var tempPlayerHand = new List<Card>();
 
                 foreach (var card in player.Hand)

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Cards.Models;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Cards.Models;
 
 namespace Cards
 {
@@ -11,6 +11,7 @@ namespace Cards
     {
         #region
         #region Events
+        public event EventHandler<string> PresentTextInfo;
         public event EventHandler<int> ShowHumanStick;
         public event EventHandler<int> InvalidSticksCount;
         public event EventHandler<int> InvalidPlayedCard;
@@ -28,6 +29,8 @@ namespace Cards
         public static Random r;
         public Scoreboard Scoreboard { get; set; } = new Scoreboard();
         public Round Round { get; set; } = new Round();
+        public Turn Turn { get; set; }
+
         public MyState State { get; set; } = new MyState();
         public List<Card> DeckOfCards { get; set; } = new List<Card>();
 
@@ -42,6 +45,7 @@ namespace Cards
 
         public GameService()
         {
+            PresentTextInfo += GameService_PresentTextInfo;
             ShowHumanStick += ShowHumanStick_Event;
             PlayPlayerCard += GameService_PlayPlayerCard;
             InvalidSticksCount += GameService_InvalidSticksCount;
@@ -150,6 +154,7 @@ namespace Cards
         private void StartFollowingRound()
         {
             _firstCardPlayed = null;
+
             // SE TILL SÅ ATT DEN SPELARE SOM VANN FÖREGÅENDE STICK FÅR BÖRJA
             var spelare = new PlayerService();
             spelare.InitizialOrderOfPlayers(Players, WhoStartsNextTrick);
@@ -342,6 +347,9 @@ namespace Cards
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // EVENTS
+
+        private void GameService_PresentTextInfo(object sender, string e) { }
+
         private void ShowHumanStick_Event(object sender, int i) { }
 
         private void GameService_PlayPlayerCard(object sender, Card e) { }

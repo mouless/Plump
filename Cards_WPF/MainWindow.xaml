@@ -32,7 +32,7 @@
         <Image x:Name="Image_Playa2" HorizontalAlignment="Left" Height="131" Margin="520,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_PlayaCard_MouseUp"/>
         <Image x:Name="Image_Playa3" HorizontalAlignment="Left" Height="131" Margin="560,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_PlayaCard_MouseUp"/>
         <Image x:Name="Image_Playa4" HorizontalAlignment="Left" Height="131" Margin="600,630,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_PlayaCard_MouseUp"/>
-        <Label x:Name="HighestTricks_Label" FontWeight="Bold" FontSize="18" Content="Vem som har högst stick" HorizontalAlignment="Left" Margin="427,400,0,0" VerticalAlignment="Top" Height="35" Width="273"/>
+        <Label x:Name="GameInfo_Label" FontWeight="Bold" FontSize="18" Content="Das PlumP" HorizontalAlignment="Left" Margin="386,400,0,0" VerticalAlignment="Top" Height="35" Width="314" HorizontalContentAlignment="Center"/>
         <Image x:Name="Image_Test" HorizontalAlignment="Left" Height="131" Margin="807,568,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg" MouseUp="Image_Test_MouseUp"/>
         <Button x:Name="PlayCard_Button" IsEnabled="False" Visibility="Hidden" Content="Spela kort" HorizontalAlignment="Left" Margin="534,766,0,0" VerticalAlignment="Top" Width="75" Height="39" Click="PlayTricks_Click"/>
         <Button x:Name="ChooseStick_Button" IsEnabled="False" Visibility="Hidden" Content="Välj stick" HorizontalAlignment="Left" Margin="534,766,0,0" VerticalAlignment="Top" Width="75" Height="39" Click="ChooseTricks_Click"/>

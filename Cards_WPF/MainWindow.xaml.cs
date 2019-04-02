@@ -18,6 +18,7 @@ namespace Cards_WPF
         public int NumberOfPlayedRounds { get; set; } = 1;
         public List<VisualStuff> VisualStuffList { get; set; }
         public List<CardPicture> CardPicturesList { get; set; } = new List<CardPicture>();
+        public bool GåUppåt { get; set; } = false;
 
         public GameService GameService { get; set; }
 
@@ -43,6 +44,7 @@ namespace Cards_WPF
 
         private void StartNewGame()
         {
+            GameService.PresentTextInfo += Event_PresentTextInfo;
             GameService.ShowHumanStick += Event_ShowHumanStick;
             GameService.PlayPlayerCard += Event_PlayPlayerCard;
             GameService.InvalidSticksCount += Event_InvalidSticksCount;
@@ -50,7 +52,7 @@ namespace Cards_WPF
             GameService.InvalidPlayedCard += Event_InvalidPlayedCard;
             GameService.ResetPlayerCards += Event_ResetPlayerCards;
             GameService.UpdateCrowne += Event_UpdateCrowne;
-            GameService.RoundIsFinished += GameService_RoundIsFinished;
+            GameService.RoundIsFinished += Event_RoundIsFinished;
 
             StartGame_BackEnd();
 
@@ -58,10 +60,27 @@ namespace Cards_WPF
 
         }
 
-        private void GameService_RoundIsFinished(object sender, int e)
+        private void Event_PresentTextInfo(object sender, string textFromBackend)
+        {
+            GameInfo_Label.Content = textFromBackend;
+        }
+
+        private void Event_RoundIsFinished(object sender, int e)
         {
             // TODO: Kolla så man inte är färdig med hela spelet
-            NumberOfSticks--;
+            if (GåUppåt == false)
+            {
+                NumberOfSticks--;
+                if (NumberOfSticks == 0)
+                {
+                    NumberOfSticks++;
+                    GåUppåt = true;
+                }
+            }
+            if (GåUppåt == true)
+            {
+                NumberOfSticks++;
+            }
 
             this.Dispatcher.Invoke(() =>
             {
@@ -220,7 +239,7 @@ namespace Cards_WPF
         private void ShowImageCards(GameService currentGame)
         {
             string cardNumber = "";
-            
+
             for (int j = 0; j < currentGame.Players.Find(x => x.Name == "Player1").Hand.Count; j++)
             {
                 cardNumber = CardImageNumber(currentGame.Players.Find(x => x.Name == "Player1").Hand.ElementAt(j));
@@ -449,6 +468,7 @@ namespace Cards_WPF
             var spriteSheetService = new SpriteSheetService();
             spriteSheetService.CutImage(cardPicturesList);
         }
+
         private void Image_Test_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var numberOfCards = CardPicturesList.Count;
