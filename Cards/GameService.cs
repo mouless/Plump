@@ -79,7 +79,7 @@ namespace Cards
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private void ConfigureVariableThings(ref int theBigClass, Player whoGoesFirst, int numberOfSticksThisRound)
+        private void ConfigureVariableThings(ref int indexOfFirstPlayer, Player whoGoesFirst, int numberOfSticksThisRound)
         {
             r = new Random();
             _firstCardPlayed = null;
@@ -87,13 +87,13 @@ namespace Cards
             DeckOfCards.Clear();
             Players.Clear();
             ValidHumanTricksCount = false;
-            theBigClass++;
+            indexOfFirstPlayer++;
 
-            if (theBigClass >= 4)
+            if (indexOfFirstPlayer >= 4)
             {
-                theBigClass = 0;
+                indexOfFirstPlayer = 0;
             }
-            switch (theBigClass)
+            switch (indexOfFirstPlayer)
             {
                 case 0:
                     WhoGoesFirst = new AiPlayer("West");

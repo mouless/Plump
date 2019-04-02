@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Cards;
+using Cards.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Cards;
-using Cards.Models;
 
 namespace Cards_WPF
 {
@@ -90,8 +91,8 @@ namespace Cards_WPF
         {
             this.Dispatcher.Invoke(() =>
             {
-                //var uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\101.jpeg");
-                var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\101.jpeg");
+                var uri = GetUriForCard("101");
+                //var uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\101.jpeg");
 
                 Image_WestnPlayed.Source = new BitmapImage(uri);
                 Image_NorthPlayed.Source = new BitmapImage(uri);
@@ -219,11 +220,11 @@ namespace Cards_WPF
         private void ShowImageCards(GameService currentGame)
         {
             string cardNumber = "";
-            for (int j = 0; j < currentGame.Players[3].Hand.Count; j++)
+            
+            for (int j = 0; j < currentGame.Players.Find(x => x.Name == "Player1").Hand.Count; j++)
             {
-                cardNumber = CardImageNumber(currentGame.Players[3].Hand.ElementAt(j));
-                Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                //Uri uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+                cardNumber = CardImageNumber(currentGame.Players.Find(x => x.Name == "Player1").Hand.ElementAt(j));
+                Uri uri = GetUriForCard(cardNumber);
                 Image img = FindName("Image_Playa" + j) as Image;
                 img.Source = new BitmapImage(uri);
                 img.Visibility = Visibility.Visible; // Behövs för alla andra omgångar man kommer hit
@@ -236,43 +237,31 @@ namespace Cards_WPF
 
         public void ShowPlayersTrickCard(GameService currentGame, Player player = null, Card cardToDisplay = null)
         {
-            string cardNumber = "101";
-            Uri uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
+            var cardNumber = cardToDisplay == null ? "101" : CardImageNumber(cardToDisplay);
+            var uri = GetUriForCard(cardNumber);
 
             switch (player.Name)
             {
                 case "West":
                     {
-                        cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_WestnPlayed.Source = new BitmapImage(uri);
                         break;
                     }
 
                 case "North":
                     {
-                        cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_NorthPlayed.Source = new BitmapImage(uri);
                         break;
                     }
 
                 case "East":
                     {
-                        cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_EastnPlayed.Source = new BitmapImage(uri);
                         break;
                     }
 
                 case "Player1":
                     {
-                        cardNumber = CardImageNumber(cardToDisplay);
-                        uri = new Uri($"C:\\Users\\Mouless\\Source\\Repos\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
-                        //uri = new Uri($"C:\\Users\\William Boquist\\Plump\\Cards_WPF\\Graphics\\{cardNumber}.jpeg");
                         Image_PlayaPlayed.Source = new BitmapImage(uri);
                         break;
                     }
@@ -474,6 +463,11 @@ namespace Cards_WPF
             StartGame_Button.IsEnabled = false;
 
             StartNewGame();
+        }
+
+        private static Uri GetUriForCard(string cardNumber)
+        {
+            return new Uri($@"{Directory.GetCurrentDirectory()}\..\..\Graphics\{cardNumber}.jpeg");
         }
     }
 }
