@@ -8,7 +8,7 @@ namespace Cards.Models
         public List<Card> TricksCount { get; set; }
         public string Name { get; set; }
         public Card CardToPlay { get; set; }
-        public int NumberOfTricks { get; set; }
+        public int NumberOfTricksChosen { get; set; }
         public int TricksWon { get; set; } = 0;
 
         protected Player(string name)

@@ -27,9 +27,9 @@ namespace Cards
         public int NumberOfSticksThisRound { get; set; }
 
         public static Random r;
-        public Scoreboard Scoreboard { get; set; } = new Scoreboard();
+        public Scoreboard Scoreboarden { get; set; } = new Scoreboard();
+        public PlayerScore PlayerScoreList { get; set; } = new PlayerScore();
         public Round Round { get; set; } = new Round();
-        public Turn Turn { get; set; }
 
         public MyState State { get; set; } = new MyState();
         public List<Card> DeckOfCards { get; set; } = new List<Card>();
@@ -77,9 +77,12 @@ namespace Cards
 
         private void EndRound()
         {
-            // SCOREBOARDEN VILL FÅ LITE KÄRLEK
+            // UPPDATERA SCOREBOARDEN NÄR ALLA KORT I EN OMGÅNG ÄR UTSPELADE
+            UpdateScoreboard();
+
             RoundIsFinished.Invoke(this, 99);
         }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -92,6 +95,13 @@ namespace Cards
             Players.Clear();
             ValidHumanTricksCount = false;
             indexOfFirstPlayer++;
+
+            foreach (var player in Players)
+            {
+                var playerScoren = new PlayerScore();
+                playerScoren.Name = player.Name;
+                Scoreboarden.PlayerScoreList.Add(playerScoren);
+            }
 
             if (indexOfFirstPlayer >= 4)
             {
@@ -139,15 +149,15 @@ namespace Cards
 
             }).ContinueWith(x =>
             {
+                // OM DET FINNS FLER KORT ATT SPELA UT I EN OMGÅNG
                 var startingCount = Players[0].Hand.Count;
                 for (int i = 0; i < startingCount; i++)
                 {
                     StartFollowingRound();
-                    //HumanPlayerStickAwaiter.WaitOne();
                 }
 
                 UpdateCrowne.Invoke(this, WhoStartsNextTrick);
-                EndRound(); // End ROUND!
+                EndRound(); // NÄR ALLA KORT PÅ HANDEN ÄR UTSPELADE
             });
         }
 
@@ -234,6 +244,7 @@ namespace Cards
                     }
 
                 } while (resultIsValid == false);
+                player.NumberOfTricksChosen = player.TricksCount.Count;
             }
         }
 
@@ -302,6 +313,23 @@ namespace Cards
             HumanPlayerStickAwaiter.Set();
         }
 
+        private void UpdateScoreboard()
+        {
+            foreach (var playerScore in Scoreboarden.PlayerScoreList)
+            {
+                var playerTricksCount = Players.Find(x => x.Name == playerScore.Name).NumberOfTricksChosen;
+                var playerTricksWon = Players.Find(x => x.Name == playerScore.Name).TricksWon;
+
+
+
+
+
+
+
+            }
+        }
+
+
         #endregion
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -334,12 +362,7 @@ namespace Cards
             }
 
             Round.RoundName = NumberOfSticksThisRound;
-            var turn = new Turn();
 
-            foreach (var player in Players)
-            {
-                turn.TurnName = player.Hand.Count + 1;
-            }
 
             ResetPlayerCards.Invoke(this, 99);
             WhoStartsNextTrick = playerThatWon;

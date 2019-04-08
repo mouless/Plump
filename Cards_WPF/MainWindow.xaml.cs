@@ -84,12 +84,26 @@ namespace Cards_WPF
 
             this.Dispatcher.Invoke(() =>
             {
-                // Nollställa 
-                foreach (var card in VisualStuffList)
+
+                // Nollställa platsen på skärmen för de 5 korten på hand
+                var listOfCards = new List<Image>
                 {
-                    card.CardSelected = true;
+                    Image_Playa0,
+                    Image_Playa1,
+                    Image_Playa2,
+                    Image_Playa3,
+                    Image_Playa4,
+                };
+
+                foreach (var card in listOfCards)
+                {
+                    var marg = card.Margin;
+                    marg.Top = 630;
+                    card.Margin = marg;
                 }
+
                 NextRound_Button.IsEnabled = true;
+
             });
         }
 
