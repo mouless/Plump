@@ -4,13 +4,13 @@ namespace Cards
 {
     public class Scoreboard
     {
-        public List<PlayerScore> PlayerScoreList { get; set; }
+        public List<PlayerScore> PlayerScoreList { get; set; } = new List<PlayerScore>();
     }
 
     public class PlayerScore
     {
-        public List<Round> RoundList { get; set; }
         public string Name { get; set; }
+        public List<Round> RoundList { get; set; } = new List<Round>();
         public int TotalScore { get; set; }
     }
 

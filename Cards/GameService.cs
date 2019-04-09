@@ -95,14 +95,7 @@ namespace Cards
             Players.Clear();
             ValidHumanTricksCount = false;
             indexOfFirstPlayer++;
-
-            foreach (var player in Players)
-            {
-                var playerScoren = new PlayerScore();
-                playerScoren.Name = player.Name;
-                Scoreboarden.PlayerScoreList.Add(playerScoren);
-            }
-
+                       
             if (indexOfFirstPlayer >= 4)
             {
                 indexOfFirstPlayer = 0;
@@ -315,17 +308,34 @@ namespace Cards
 
         private void UpdateScoreboard()
         {
+            foreach (var player in Players)
+            {
+                var playerScoren = new PlayerScore();
+                playerScoren.Name = player.Name;
+                Scoreboarden.PlayerScoreList.Add(playerScoren);
+            }
+
             foreach (var playerScore in Scoreboarden.PlayerScoreList)
             {
                 var playerTricksCount = Players.Find(x => x.Name == playerScore.Name).NumberOfTricksChosen;
                 var playerTricksWon = Players.Find(x => x.Name == playerScore.Name).TricksWon;
+                var roundName = NumberOfSticksThisRound;
 
+                var newRound = new Round
+                {
+                    RoundName = roundName,
+                    RoundScore = 0,
+                    TricksCount = playerTricksCount,
+                    TricksWon = playerTricksWon,
+                };
 
+                if (playerTricksCount == playerTricksWon)
+                {
+                    newRound.RoundScore = 10 + playerTricksWon;
+                }
 
-
-
-
-
+                playerScore.RoundList.Add(newRound);
+                playerScore.TotalScore += newRound.RoundScore;
             }
         }
 
@@ -362,8 +372,7 @@ namespace Cards
             }
 
             Round.RoundName = NumberOfSticksThisRound;
-
-
+            
             ResetPlayerCards.Invoke(this, 99);
             WhoStartsNextTrick = playerThatWon;
         }

@@ -19,6 +19,7 @@ namespace Cards_WPF
         public List<VisualStuff> VisualStuffList { get; set; }
         public List<CardPicture> CardPicturesList { get; set; } = new List<CardPicture>();
         public bool GåUppåt { get; set; } = false;
+        public List<ScoreboardData> ScoreboardItemsSource { get; set; } = new List<ScoreboardData>();
 
         public GameService GameService { get; set; }
 
@@ -104,7 +105,36 @@ namespace Cards_WPF
 
                 NextRound_Button.IsEnabled = true;
 
+                Scoreboard_Datagrid.Visibility = Visibility.Visible;
+                ScoreboardItemsSource.Add(LoadScoreboardData());
+                Scoreboard_Datagrid.ItemsSource = null;
+                Scoreboard_Datagrid.ItemsSource = ScoreboardItemsSource;
+
+                PlayCard_Button.Visibility = Visibility.Hidden;
+                PlayCard_Button.IsEnabled = false;
+
+                if (GåUppåt == true && NumberOfSticks == 5)
+                {
+                    NextRound_Button.IsEnabled = false;
+                    NextRound_Button.Visibility = Visibility.Hidden;
+
+                    // TODO: END GAME!!!
+                }
             });
+        }
+
+        private ScoreboardData LoadScoreboardData()
+        {
+            var result = new ScoreboardData
+            {
+                RoundNumber = GameService.NumberOfSticksThisRound,
+                West = GameService.Scoreboarden.PlayerScoreList.Find(x => x.Name == "West").TotalScore,
+                North = GameService.Scoreboarden.PlayerScoreList.Find(x => x.Name == "North").TotalScore,
+                East = GameService.Scoreboarden.PlayerScoreList.Find(x => x.Name == "East").TotalScore,
+                Player1 = GameService.Scoreboarden.PlayerScoreList.Find(x => x.Name == "Player1").TotalScore,
+            };
+
+            return result;
         }
 
         private void Event_UpdateCrowne(object sender, Player player)
@@ -495,6 +525,7 @@ namespace Cards_WPF
         {
             NumberOfSticks--;
             StartGame_Button.IsEnabled = false;
+            StartGame_Button.Visibility = Visibility.Hidden;
 
             StartNewGame();
         }
@@ -503,5 +534,14 @@ namespace Cards_WPF
         {
             return new Uri($@"{Directory.GetCurrentDirectory()}\..\..\Graphics\{cardNumber}.jpeg");
         }
+    }
+
+    public class ScoreboardData
+    {
+        public int RoundNumber { get; set; }
+        public int West { get; set; }
+        public int North { get; set; }
+        public int East { get; set; }
+        public int Player1 { get; set; }
     }
 }

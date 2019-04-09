@@ -39,12 +39,14 @@
         <Button x:Name="StartGame_Button" Content="Start Game" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="96" Height="37" Click="StartGame_Button_Click"/>
         <Image x:Name="Crown_Westn_Image" Visibility="Hidden" HorizontalAlignment="Left" Height="28" Margin="20,260,0,0" VerticalAlignment="Top" Width="42" Source="Graphics/Crowne.png"/>
         <Image x:Name="Crown_North_Image" Visibility="Hidden" HorizontalAlignment="Left" Height="28" Margin="498,14,0,0" VerticalAlignment="Top" Width="42" Source="Graphics/Crowne.png"/>
-        <Image x:Name="Crown_Eastn_Image" Visibility="Hidden" HorizontalAlignment="Left" Height="28" Margin="950,260,0,0" VerticalAlignment="Top" Width="42" Source="Graphics/Crowne.png"/>
+        <Image x:Name="Crown_Eastn_Image" Visibility="Hidden" HorizontalAlignment="Left" Height="28" Margin="901,284,0,0" VerticalAlignment="Top" Width="42" Source="Graphics/Crowne.png"/>
         <Image x:Name="Crown_Playa_Image" Visibility="Hidden" HorizontalAlignment="Left" Height="28" Margin="262,565,0,0" VerticalAlignment="Top" Width="42" Source="Graphics/Crowne.png"/>
         <Label x:Name="Label_Westn_Won" Content="Wins" HorizontalAlignment="Left" Margin="49,431,0,0" VerticalAlignment="Top" FontSize="18" Width="48" FontWeight="Bold"/>
         <Label x:Name="Label_North_Won" Content="Wins" HorizontalAlignment="Left" Margin="520,186,0,0" VerticalAlignment="Top" FontSize="18" Width="48" FontWeight="Bold"/>
         <Label x:Name="Label_Eastn_Won" Content="Wins" HorizontalAlignment="Left" Margin="982,431,0,0" VerticalAlignment="Top" FontSize="18" Width="48" FontWeight="Bold"/>
         <Label x:Name="Label_Playa_Won" Content="Wins" HorizontalAlignment="Left" Margin="281,737,0,0" VerticalAlignment="Top" FontSize="18" Width="48" FontWeight="Bold"/>
+        <DataGrid x:Name="Scoreboard_Datagrid" Visibility="Hidden" HorizontalAlignment="Left" Height="Auto" Margin="828,26,0,0" VerticalAlignment="Top" Width="Auto"/>
+        <Label Content="Scoreboard:" HorizontalAlignment="Left" Margin="828,0,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
