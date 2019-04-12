@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace Cards
 {
@@ -102,7 +101,7 @@ namespace Cards
             Players.Clear();
             ValidHumanTricksCount = false;
             indexOfFirstPlayer++;
-                       
+
             if (indexOfFirstPlayer >= 4)
             {
                 indexOfFirstPlayer = 0;
@@ -139,6 +138,7 @@ namespace Cards
                 // SE TILL SÅ ATT DEN SPELARE SOM VANN FÖREGÅENDE STICK FÅR BÖRJA
                 var spelare = new PlayerService();
                 spelare.WhoGoesFirstHighestTricksAfterDealer(Players, WhoGoesFirst);
+                PresentTextInfo.Invoke(this, $"{Players[0].Name} starts the round!");
                 UpdateCrowne.Invoke(this, Players[0]);
 
                 // ANROPA SPELARNA FÖR ATT SPELA UT KORT
@@ -193,10 +193,13 @@ namespace Cards
                     ShowPlayedCard.Invoke(player, player.CardToPlay);
                     PlayPlayerCard.Invoke(player, player.CardToPlay); // Visa i Front-End att man spelat ut ett kort & ta bort det från "listan"
 
+                    PresentTextInfo.Invoke(this, $"{player.Name} plays a card!");
+
                     Thread.Sleep(888);
                 }
                 else if (player is HumanPlayer)
                 {
+                    PresentTextInfo.Invoke(this, $"{player.Name} play a card!");
                     HumanPlayerStickAwaiter.WaitOne(); // PAUSA SPELET och vänta på input (dvs att Human väljer vilket kort som denne vill spela)
 
                     var resultIsValid = false;
@@ -255,6 +258,7 @@ namespace Cards
             {
                 if (player is AiPlayer)
                 {
+                    PresentTextInfo.Invoke(player, $"{player.Name} decides their tricks");
                     tricksCalculator.HowManyTricks(player, State);
                     var indexOfPlayer = Players.FindIndex(x => x.Name == player.Name);
                     var numberOfTricks = player.TricksCount.Count;
@@ -263,6 +267,7 @@ namespace Cards
                 }
                 else if (player is HumanPlayer)
                 {
+                    PresentTextInfo.Invoke(player, $"How many tricks do you want?");
                     // Här visar vi upp hur många stick de andra spelarna har tagit innan Human får möjlighet
                     ShowHumanStick.Invoke(player, 99);
                     // Här väntar vi på input ifrån Human innan vi kan gå vidare
@@ -372,7 +377,7 @@ namespace Cards
             }
 
             Round.RoundName = NumberOfSticksThisRound;
-            
+
             ResetPlayerCards.Invoke(this, 99);
             WhoStartsNextTrick = playerThatWon;
         }

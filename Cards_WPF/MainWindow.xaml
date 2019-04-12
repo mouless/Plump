@@ -20,7 +20,6 @@
         <Label x:Name="Label_NorthTricks" Content="Stick" HorizontalAlignment="Left" Margin="564,39,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Label x:Name="Label_EastnTricks" Content="Stick" HorizontalAlignment="Left" Margin="1001,284,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Label x:Name="Label_PlayaTricks" Content="Stick" HorizontalAlignment="Left" Margin="328,591,0,0" VerticalAlignment="Top" FontSize="18"/>
-        <Label x:Name="Label_Number" Content="Antal rundor" HorizontalAlignment="Left" Margin="936,707,0,0" VerticalAlignment="Top" FontSize="18"/>
         <Button x:Name="NextRound_Button" Content="Next round" IsEnabled="False" HorizontalAlignment="Left" Margin="936,746,0,0" VerticalAlignment="Top" Width="132" Height="39" Click="StartAnotherRound_Click"/>
         <Image x:Name="Image_WestnPlayed" HorizontalAlignment="Left" Height="131" Margin="204,347,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>
         <Image x:Name="Image_NorthPlayed" HorizontalAlignment="Left" Height="131" Margin="498,258,0,0" VerticalAlignment="Top" Width="100" Source="Graphics/101.jpeg"/>

@@ -63,7 +63,10 @@ namespace Cards_WPF
 
         private void Event_PresentTextInfo(object sender, string textFromBackend)
         {
-            GameInfo_Label.Content = textFromBackend;
+            this.Dispatcher.Invoke(() =>
+            {
+                GameInfo_Label.Content = textFromBackend;
+            });
         }
 
         private void Event_RoundIsFinished(object sender, int e)
@@ -85,6 +88,7 @@ namespace Cards_WPF
 
             this.Dispatcher.Invoke(() =>
             {
+                Event_PresentTextInfo(this, "Round is over...");
 
                 // Nollställa platsen på skärmen för de 5 korten på hand
                 var listOfCards = new List<Image>
@@ -253,8 +257,6 @@ namespace Cards_WPF
 
         public void StartGame_BackEnd()
         {
-            Label_Number.Content = NumberOfPlayedRounds.ToString();
-
             GameService.CreateRound(NumberOfSticks);
 
             NumberOfPlayedRounds++;

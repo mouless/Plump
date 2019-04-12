@@ -56,7 +56,6 @@
     </ApplicationDefinition>
     <Compile Include="CardPicture.cs" />
     <Compile Include="SpriteSheetService.cs" />
-    <Compile Include="ValueColorConverter.cs" />
     <Compile Include="VisualStuff.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
