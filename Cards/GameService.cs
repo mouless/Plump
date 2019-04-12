@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Cards
 {
@@ -67,6 +68,12 @@ namespace Cards
 
             var spelare = new PlayerService();
             spelare.CreatePlayers(Players);
+            foreach (var player in Players)
+            {
+                var playerScoren = new PlayerScore();
+                playerScoren.Name = player.Name;
+                Scoreboarden.PlayerScoreList.Add(playerScoren);
+            }
             spelare.InitizialOrderOfPlayers(Players, WhoGoesFirst); // Korten delas ut till den spelare som börjar omgången (vilket kommer att roteras)
 
             var fördelaKort = new DealCards();
@@ -308,13 +315,6 @@ namespace Cards
 
         private void UpdateScoreboard()
         {
-            foreach (var player in Players)
-            {
-                var playerScoren = new PlayerScore();
-                playerScoren.Name = player.Name;
-                Scoreboarden.PlayerScoreList.Add(playerScoren);
-            }
-
             foreach (var playerScore in Scoreboarden.PlayerScoreList)
             {
                 var playerTricksCount = Players.Find(x => x.Name == playerScore.Name).NumberOfTricksChosen;

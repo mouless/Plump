@@ -113,7 +113,7 @@ namespace Cards_WPF
                 PlayCard_Button.Visibility = Visibility.Hidden;
                 PlayCard_Button.IsEnabled = false;
 
-                if (GåUppåt == true && NumberOfSticks == 5)
+                if (GåUppåt == true && NumberOfSticks > 5)
                 {
                     NextRound_Button.IsEnabled = false;
                     NextRound_Button.Visibility = Visibility.Hidden;
