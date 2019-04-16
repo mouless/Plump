@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DealCards.cs" />
-    <Compile Include="GameService2.cs" />
     <Compile Include="Models\AiPlayer.cs" />
     <Compile Include="Models\Card.cs" />
     <Compile Include="GameService.cs" />

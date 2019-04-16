@@ -16,7 +16,7 @@ namespace Cards
             Player east = new AiPlayer("East");
             players.Add(east);
 
-            Player player1 = new HumanPlayer("Player1");
+            Player player1 = new AiPlayer("Player1");
             players.Add(player1);
         }
 

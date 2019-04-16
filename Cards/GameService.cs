@@ -118,7 +118,7 @@ namespace Cards
                     WhoGoesFirst = new AiPlayer("East");
                     break;
                 case 3:
-                    WhoGoesFirst = new HumanPlayer("Player1");
+                    WhoGoesFirst = new AiPlayer("Player1");
                     break;
                 default:
                     break;
@@ -195,7 +195,7 @@ namespace Cards
 
                     PresentTextInfo.Invoke(this, $"{player.Name} plays a card!");
 
-                    Thread.Sleep(888);
+                    Thread.Sleep(8);
                 }
                 else if (player is HumanPlayer)
                 {

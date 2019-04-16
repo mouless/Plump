@@ -122,7 +122,15 @@ namespace Cards_WPF
                     NextRound_Button.IsEnabled = false;
                     NextRound_Button.Visibility = Visibility.Hidden;
 
+                    Event_PresentTextInfo(this, "Game is over...");
                     // TODO: END GAME!!!
+                    this.Visibility = Visibility.Hidden;
+                    this.IsEnabled = false;
+
+                    Scorescreen sc = new Scorescreen();
+                    sc.GameOver_ScoreboardItemsSource = ScoreboardItemsSource;
+
+                    sc.ShowScoreboard(ScoreboardItemsSource);
                 }
             });
         }
@@ -165,6 +173,11 @@ namespace Cards_WPF
                 Image_NorthPlayed.Source = new BitmapImage(uri);
                 Image_EastnPlayed.Source = new BitmapImage(uri);
                 Image_PlayaPlayed.Source = new BitmapImage(uri);
+
+                Image_WestnPlayed.Visibility = Visibility.Hidden;
+                Image_NorthPlayed.Visibility = Visibility.Hidden;
+                Image_EastnPlayed.Visibility = Visibility.Hidden;
+                Image_PlayaPlayed.Visibility = Visibility.Hidden;
             });
         }
 
@@ -309,24 +322,28 @@ namespace Cards_WPF
             {
                 case "West":
                     {
+                        Image_WestnPlayed.Visibility = Visibility.Visible;
                         Image_WestnPlayed.Source = new BitmapImage(uri);
                         break;
                     }
 
                 case "North":
                     {
+                        Image_NorthPlayed.Visibility = Visibility.Visible;
                         Image_NorthPlayed.Source = new BitmapImage(uri);
                         break;
                     }
 
                 case "East":
                     {
+                        Image_EastnPlayed.Visibility = Visibility.Visible;
                         Image_EastnPlayed.Source = new BitmapImage(uri);
                         break;
                     }
 
                 case "Player1":
                     {
+                        Image_PlayaPlayed.Visibility = Visibility.Visible;
                         Image_PlayaPlayed.Source = new BitmapImage(uri);
                         break;
                     }
